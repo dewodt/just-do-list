@@ -18,8 +18,8 @@ body {
 
 body {
   color: rbg(--foreground-rgb);
-  background: rgba(40, 40, 40, 0.99);
   background: radial-gradient(65.56% 65.56% at 50.73% 50%, rgba(91, 91, 91, 0.479167) 0%, rgba(36, 35, 35, 0.99) 100%);
+  background: rgba(40, 40, 40, 0.99);
 }
 
 
@@ -32,6 +32,11 @@ a {
 /* div{
   @apply border-2 border-rose-500;
 } */
+#circle{
+  width: 12vw;
+  height: 12vw;
+  border-radius: 50rem 0 0 0;
+}
 
 @media (prefers-color-scheme: dark) {
   html {
