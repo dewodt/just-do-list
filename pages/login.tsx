@@ -5,12 +5,18 @@ import { useState } from "react";
 
 export default function Login() {
   const [loginPage, setLoginPage] = useState(true);
-  const [value, setValue] = useState("");
+  const [name, setName] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  function handleChange(event:string){
-    setValue(event)
+  function handleChangeName(event: React.ChangeEvent<HTMLInputElement>) {
+    setName(event.target.value);
+  }
+  function handleChangeUsername(event: React.ChangeEvent<HTMLInputElement>) {
+    setUsername(event.target.value);
+  }
+  function handleChangePassword(event: React.ChangeEvent<HTMLInputElement>) {
+    setPassword(event.target.value);
   }
 
   return (
@@ -57,24 +63,30 @@ export default function Login() {
                 <input
                   type="text"
                   placeholder="Name"
+                  value={name}
+                  onChange={handleChangeName}
                   className="indent-5 text-black text-absolute text-left-5 text-xs py-2 rounded-[6px] bg-white placeholder:text-gray-600"
-                ></input>
-              )}
+                  ></input>
+                  )}
               <input
                 type="text"
                 placeholder="Username"
+                value={username}  
+                onChange={handleChangeUsername}
                 className="indent-5 text-black text-absolute text-left-5 text-xs py-2 rounded-[6px] bg-white placeholder:text-gray-600"
-              ></input>
+                ></input>
               <input
                 type="password"
                 placeholder="Password"
+                value={password}
+                onChange={handleChangePassword}
                 className="indent-5 text-black text-absolute text-left-5 text-xs py-2 rounded-[6px] bg-white placeholder:text-gray-600"
-              ></input>
+                ></input>
             </div>
           </form>
           <div className="text-center">
             <button
-              disabled={false}
+              disabled={(name.length > 0) || (username.length > 0) || (password.length > 0 )? false : true}
               className="bg-[#54A1EA] hover:bg-[#1E4F82] text-white font-[500] text-s py-[0.4rem] rounded-[10px] disabled:bg-[#a3edf7] w-[12vw]"
             >
               {loginPage ? "Log In" : "Sign Up"}
