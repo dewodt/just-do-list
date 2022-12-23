@@ -13,13 +13,16 @@ html,
 body {
   max-width: 100vw;
   overflow-x: hidden;
+  font-family: 'Inter', sans-serif;
 }
 
 body {
   color: rbg(--foreground-rgb);
-  /* background: radial-gradient(65.56% 65.56% at 50.73% 50%, rgba(91, 91, 91, 0.479167) 0%, rgba(36, 35, 35, 0.99) 100%); */
   background: rgba(40, 40, 40, 0.99);
+  background: radial-gradient(65.56% 65.56% at 50.73% 50%, rgba(91, 91, 91, 0.479167) 0%, rgba(36, 35, 35, 0.99) 100%);
 }
+
+
 
 a {
   color: inherit;
