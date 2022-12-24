@@ -7,7 +7,7 @@ export default function NavbarMenu() {
         <div className="flex gap-4 m-2 mx-4">
           <div className="relative m-auto w-[3rem] h-[3rem]">
             <Image
-              src={"/4x6.jpg"}
+              src={"/sample.jpg"}
               layout="fill"
               alt="gambar"
               className="rounded-full  max-w-full h-auto align-middle border-none"
