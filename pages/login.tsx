@@ -9,16 +9,6 @@ export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  function handleChangeName(event: React.ChangeEvent<HTMLInputElement>) {
-    setName(event.target.value);
-  }
-  function handleChangeUsername(event: React.ChangeEvent<HTMLInputElement>) {
-    setUsername(event.target.value);
-  }
-  function handleChangePassword(event: React.ChangeEvent<HTMLInputElement>) {
-    setPassword(event.target.value);
-  }
-
   return (
     <>
       <span
@@ -29,7 +19,7 @@ export default function Login() {
         id="circle"
         className="inline-block bg-[#ffffff] absolute right-0 bottom-0"
       ></span>
-      <div className="flex w-[50vw] ">
+      <div className="flex w-[50vw] gap-20">
         <Logo />
         <div className="flex flex-col gap-8 m-auto w-[15vw]">
           <div className="font-bold text-[2.1rem] text-center font-['Montserrat']">
@@ -60,33 +50,44 @@ export default function Login() {
           <form>
             <div className="flex flex-col gap-5 ">
               {!loginPage && (
+                <div className="py-2 rounded-[10px] bg-white flex flex-col ">
+                  <input
+                    type="text"
+                    placeholder="Name"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    className="text-black text-xs bg-transparent outline-none ml-6 mr-6 placeholder:text-gray-600"
+                  ></input>
+                </div>
+                
+              )}
+              <div className="py-2 rounded-[10px] bg-white flex flex-col ">
                 <input
                   type="text"
-                  placeholder="Name"
-                  value={name}
-                  onChange={handleChangeName}
-                  className="indent-5 text-black text-absolute text-left-5 text-xs py-2 rounded-[6px] bg-white placeholder:text-gray-600"
-                  ></input>
-                  )}
-              <input
-                type="text"
-                placeholder="Username"
-                value={username}  
-                onChange={handleChangeUsername}
-                className="indent-5 text-black text-absolute text-left-5 text-xs py-2 rounded-[6px] bg-white placeholder:text-gray-600"
+                  placeholder="Username"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  className="text-black text-xs bg-transparent outline-none ml-6 mr-6 placeholder:text-gray-600"
                 ></input>
-              <input
-                type="password"
-                placeholder="Password"
-                value={password}
-                onChange={handleChangePassword}
-                className="indent-5 text-black text-absolute text-left-5 text-xs py-2 rounded-[6px] bg-white placeholder:text-gray-600"
+              </div>
+              <div className="py-2 rounded-[10px] bg-white flex flex-col ">
+                <input
+                  type="password"
+                  placeholder="Password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="text-black text-xs bg-transparent outline-none ml-6 mr-6 placeholder:text-gray-600"
                 ></input>
+              </div>
             </div>
           </form>
           <div className="text-center">
             <button
-              disabled={(name.length > 0) || (username.length > 0) || (password.length > 0 )? false : true}
+              disabled={
+                loginPage
+                  ? !username || !password
+                  : !username || !password || !name
+              }
               className="bg-[#54A1EA] hover:bg-[#1E4F82] text-white font-[500] text-s py-[0.4rem] rounded-[10px] disabled:bg-[#a3edf7] w-[12vw]"
             >
               {loginPage ? "Log In" : "Sign Up"}
