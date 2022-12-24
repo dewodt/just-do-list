@@ -5,6 +5,8 @@ import styles from "../styles/Home.module.css";
 import Login from "./login";
 import Dashboard from "./dashboard";
 import Layout from "../components/layout";
+import NavbarTitle from "../components/navbar-title";
+import NavbarMenu from "../components/navbar-menu";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -17,11 +19,15 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/logo-app.png" />
       </Head>
-      <Dashboard/>
-      <Layout>
-        {/* <Login /> */}
-        {/* <Home/> */}
-      </Layout>
+      <NavbarTitle />
+      <div className="flex h-[90vh]">
+        <NavbarMenu />
+        <Layout>
+          {/* <Login /> */}
+          <Dashboard />
+          {/* <Home/> */}
+        </Layout>
+      </div>
     </>
   );
 }

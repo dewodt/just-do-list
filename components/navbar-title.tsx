@@ -2,9 +2,9 @@ import Image from "next/image";
 
 export default function NavbarTitle() {
   return (
-    <div className="flex justify-center gap-24  bg-[#3E3E3E]">
+    <div className="flex justify-center gap-24 bg-[#3E3E3E] border-b-[1px] border-[#959595]">
       <div className="flex gap-3 ml-8 my-1">
-        <div className="relative m-auto w-[4rem] h-[4rem]">
+        <div className="relative m-auto w-[3rem] h-[3rem]">
           <Image
             src={"/logo-app.png"}
             layout="fill"

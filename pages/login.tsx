@@ -14,11 +14,11 @@ export default function Login() {
       <span
         id="circle"
         className="inline-block bg-[#77E0FC] rotate-[180deg] absolute left-0 top-0"
-      ></span>
+      />
       <span
         id="circle"
         className="inline-block bg-[#ffffff] absolute right-0 bottom-0"
-      ></span>
+      />
       <div className="flex w-[50vw] gap-20">
         <Logo />
         <div className="flex flex-col gap-8 m-auto w-[15vw]">
