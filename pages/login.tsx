@@ -32,7 +32,15 @@ export default function Login() {
                   loginPage && "text-[#3182CE] border-b-[#3182CE]"
                 }`}
               >
-                <Link href="/" onClick={() => setLoginPage(true)}>
+                <Link
+                  href="/"
+                  onClick={() => {
+                    setLoginPage(true);
+                    setName("");
+                    setUsername("");
+                    setPassword("");
+                  }}
+                >
                   Log In
                 </Link>
               </div>
@@ -41,7 +49,15 @@ export default function Login() {
                   !loginPage && "text-[#3182CE] border-b-[#3182CE]"
                 }`}
               >
-                <Link href="/" onClick={() => setLoginPage(false)}>
+                <Link
+                  href="/"
+                  onClick={() => {
+                    setLoginPage(false);
+                    setName("");
+                    setUsername("");
+                    setPassword("");
+                  }}
+                >
                   Sign Up
                 </Link>
               </div>
@@ -59,7 +75,6 @@ export default function Login() {
                     className="text-black text-xs bg-transparent outline-none ml-6 mr-6 placeholder:text-gray-600"
                   ></input>
                 </div>
-                
               )}
               <div className="py-2 rounded-[10px] bg-white flex flex-col ">
                 <input
