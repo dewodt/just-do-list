@@ -3,7 +3,7 @@ import Image from "next/image";
 export default function NavbarTitle() {
   return (
       <div className="flex justify-center gap-24 bg-[#3E3E3E] border-b-[1px] border-[#959595]">
-        <div className="flex gap-3 ml-8 my-1">
+        <div className="flex gap-3 ml-8 my-1">{/*Nyobain merge */}
           <div className="relative m-auto w-[2.75rem] h-[2.75rem]">
             <Image
               src={"/logo-app.png"}
