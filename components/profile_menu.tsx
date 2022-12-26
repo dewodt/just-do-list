@@ -6,7 +6,7 @@ export default function ProfileMenu() {
   return (
     <>
       <div
-        className="mx-7 mt-6 p-0 bg-[#464449] hover:bg-[#4D4B52] rounded-[15px] "
+        className="mx-7 mt-6 bg-[#464449] hover:bg-[#4D4B52] rounded-[15px] "
         role="button"
         onClick={() => {
           dropDownProfile
