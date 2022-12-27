@@ -20,7 +20,7 @@ export default function Home() {
         <link rel="icon" href="/logo-app.png" />
       </Head>
       <NavbarTitle />
-      <div className="flex h-[90vh]">
+      <div className="flex h-[92.5vh]">
         <NavbarMenu />
         <Layout>
           {/* <Login /> */}
