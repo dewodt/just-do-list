@@ -1,16 +1,6 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export default function Projects() {
-  const [dropDownProjects, setDropDownProjects] = useState(false);
-
-  const [lists, setLists] = useState<string[]>([]);
-  const [inputValue, setInputValue] = useState("New List");
-
-  const addList = (newList: string) => {
-    setLists([...lists, newList]);
-    setInputValue("New List");
-  };
-
   const listIcon = () => {
     return (
       <svg
@@ -23,18 +13,85 @@ export default function Projects() {
     );
   };
 
-  return (
-    <div className="flex flex-col flex-1  overflow-y-scroll">
-      <div
-        
-        className=" bg-[#464449] hover:bg-[#4D4B52] bg-opacity-50  gap-1 my-2 mx-10 indent-4 rounded-[0.8rem] text-[0.87rem] overflow-auto"
+  const checkIcon = () => {
+    return (
+      <svg
+        className="fill-white opacity-80 w-[0.8rem] h-[0.8rem] m-auto"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 512 512"
       >
-        <div className=" rounded-[0.3rem] hover:bg-[#4D4B52] flex cursor-pointer h-[2rem] my-1" role="button"
-        onClick={() => {
-          dropDownProjects
-            ? setDropDownProjects(false)
-            : setDropDownProjects(true);
-        }}>
+        <path d="M256 512c141.4 0 256-114.6 256-256S397.4 0 256 0S0 114.6 0 256S114.6 512 256 512zM369 209L241 337c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L335 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z" />
+      </svg>
+    );
+  };
+
+  const initialFolder: { id: string; title: string }[] = [];
+  const [dropDownProjects, setDropDownProjects] = useState(false);
+  const [lists, setLists] = useState(initialFolder);
+  const [title, setTitle] = useState("New Project");
+  type MyObject = {
+    title: string;
+    id: string;
+  };
+  const [edit, setEdit] = useState<MyObject>({});
+  const projectTitle = useRef(null);
+  const [rename, setRename] = useState(false);
+  const uniqueId = Date.now();
+
+  const addList = () => {
+    setLists([
+      ...lists,
+      {
+        id: uniqueId.toString(),
+        title: "New Project",
+      },
+    ]);
+    <input
+      className="w-[8vw]"
+      value={title}
+      type="text"
+      onChange={(event) => {
+        setTitle(event.target.value);
+        // console.log(title);
+      }}
+    />;
+  };
+
+  function change(project: { title: string; id: string }) {
+    setEdit(project);
+    const updateList = {
+      id: project.id,
+      title: title,
+    };
+    const updateIndex = lists.findIndex(function (list: {
+      title: string;
+      id: string;
+    }) {
+      return list.id === edit.id;
+    });
+    const copylist = [...lists];
+
+    copylist[updateIndex] = updateList;
+    setLists(copylist);
+
+    rename ? setRename(false) : setRename(true);
+  }
+
+  return (
+    <div id="no-scrollbar" className="flex flex-col flex-1  overflow-y-scroll">
+      <div
+        id="no-scrollbar"
+        className=" bg-[#464449] hover:bg-[#4D4B52] bg-opacity-50 gap-1 my-2 mx-10 indent-4 rounded-[0.8rem] text-[0.87rem] overflow-auto"
+      >
+        <div
+          className=" rounded-[0.3rem] hover:bg-[#4D4B52] flex cursor-pointer h-[2rem] my-1"
+          role="button"
+          onClick={() => {
+            dropDownProjects
+              ? setDropDownProjects(false)
+              : setDropDownProjects(true);
+          }}
+        >
           <div className="ml-4 py-1.5 ">
             {dropDownProjects ? (
               <svg
@@ -63,19 +120,13 @@ export default function Projects() {
             //  {/*Ini gabisa mgentot */}
             className="mb-2"
           >
-            <input
-              value={inputValue}
-              onChange={(event) => setInputValue(event.target.value)}
-            />
             <div
               role="button"
               className="mx-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white rounded-[0.3rem] flex cursor-pointer"
-              onClick={() => {
-                addList(inputValue);
-              }}
+              onClick={addList}
             >
               <div className="flex-1 m-auto ml-4 text-[0.67rem]">
-                Add New Project
+                Add New
               </div>
               <div className="mr-4 py-1.5 ">
                 <svg
@@ -90,11 +141,36 @@ export default function Projects() {
             {/* New List when clicking */}
             {lists.map((list) => (
               <>
-                <li className="ml-4 mr-2 flex py-0.5 text-xs text-gray-400 dark:text-gray-200 dark:hover:bg-gray-600 rounded-[3px] ">
-                  <div className="ml-4 py-1.5">{listIcon()}</div>
-                  <div className="my-auto">
-                    <a href="/">{list}</a>
+                <li
+                  key={list.id}
+                  className="ml-4 mr-2 flex py-0.5 text-xs text-gray-400 dark:text-gray-200 dark:hover:bg-gray-600 rounded-[3px] "
+                >
+                  <div className="ml-3 py-1.5">{listIcon()}</div>
+                  <div className="my-auto flex-1">
+                    <div>
+                      {rename ? (
+                        <input
+                          className="w-[8vw]"
+                          value={title}
+                          type="text"
+                          onChange={(event) => {
+                            setTitle(event.target.value);
+                            // console.log(title);
+                          }}
+                        />
+                      ) : (
+                        <div>{list.title}</div>
+                      )}
+                    </div>
                   </div>
+                  <button
+                    className="mr-5 ml-2 py-1"
+                    onClick={() => {
+                      change(list);
+                    }}
+                  >
+                    {checkIcon()}
+                  </button>
                 </li>
               </>
             ))}
