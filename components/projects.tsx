@@ -29,20 +29,31 @@ export default function Projects() {
   const [dropDownProjects, setDropDownProjects] = useState(false);
   const [lists, setLists] = useState(initialFolder);
   const [title, setTitle] = useState("New Project");
+
   type MyObject = {
     title: string;
     id: string;
   };
-  const [edit, setEdit] = useState<MyObject>({});
+
+  const [edit, setEdit] = useState<MyObject>({title: "", id:""});
   const projectTitle = useRef(null);
-  const [rename, setRename] = useState(false);
-  const uniqueId = Date.now();
+  const [rename, setRename] = useState(true);
+  function uniqueId() {
+    let id = "";
+
+    for (let i = 0; i < 20; i++) {
+      const characterCode = Math.floor(Math.random() * 128);
+      id += String.fromCharCode(characterCode);
+    }
+
+    return id;
+  }
 
   const addList = () => {
     setLists([
       ...lists,
       {
-        id: uniqueId.toString(),
+        id: uniqueId(),
         title: "New Project",
       },
     ]);
@@ -72,13 +83,15 @@ export default function Projects() {
     const copylist = [...lists];
 
     copylist[updateIndex] = updateList;
+    console.log(copylist);
     setLists(copylist);
+
 
     rename ? setRename(false) : setRename(true);
   }
 
   return (
-    <div id="no-scrollbar" className="flex flex-col flex-1  overflow-y-scroll">
+    <div id="no-scrollbar" className="flex flex-col flex-1 mb-1 overflow-y-scroll">
       <div
         id="no-scrollbar"
         className=" bg-[#464449] hover:bg-[#4D4B52] bg-opacity-50 gap-1 my-2 mx-10 indent-4 rounded-[0.8rem] text-[0.87rem] overflow-auto"
@@ -125,9 +138,7 @@ export default function Projects() {
               className="mx-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white rounded-[0.3rem] flex cursor-pointer"
               onClick={addList}
             >
-              <div className="flex-1 m-auto ml-4 text-[0.67rem]">
-                Add New
-              </div>
+              <div className="flex-1 m-auto ml-4 text-[0.67rem]">Add New</div>
               <div className="mr-4 py-1.5 ">
                 <svg
                   className="fill-white opacity-80 w-[1rem] h-[1rem] m-auto"

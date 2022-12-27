@@ -1,14 +1,21 @@
 export default function Tasks() {
   return (
     <div className="flex flex-col mb-2 mx-10 indent-4 text-[0.87rem] gap-1">
-      {/* label Title Task */}
-      <label className="text-[0.7rem] font-semibold">TASKS</label>
-      {/* Component 1 : Today */}
-      <div
-        // id="today"
-        // onClick={() => setTasks(id)}
-        className="hover:bg-[#54A1EA] rounded-[0.5rem] flex mt-1 cursor-pointer"
-      >
+      {/* Component 1 : Tasks */}
+      <div className="hover:bg-[#54A1EA] rounded-[0.5rem] flex cursor-pointer">
+        <div className="ml-4 py-1.5">
+          <svg
+            className="fill-white opacity-80 w-[1rem] m-auto"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 512 512"
+          >
+            <path d="M256 512c141.4 0 256-114.6 256-256S397.4 0 256 0S0 114.6 0 256S114.6 512 256 512zM369 209L241 337c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L335 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z" />
+          </svg>
+        </div>
+        <div className="flex-1 m-auto text-[0.67rem]">Tasks</div>
+      </div>
+      {/* Component 2 : Today */}
+      <div className="hover:bg-[#54A1EA] rounded-[0.5rem] flex mt-1 cursor-pointer">
         <div className="ml-4 py-1.5 ">
           <svg
             className="fill-white opacity-80 w-[1rem] m-auto"
@@ -20,7 +27,7 @@ export default function Tasks() {
         </div>
         <div className="flex-1 m-auto text-[0.67rem]">Today</div>
       </div>
-      {/* Component 2 : Important */}
+      {/* Component 3 : Important */}
       <div className="hover:bg-[#54A1EA] rounded-[0.5rem] flex cursor-pointer">
         <div className="ml-4 py-1.5">
           <svg
@@ -33,7 +40,7 @@ export default function Tasks() {
         </div>
         <div className="flex-1 m-auto text-[0.67rem]">Important</div>
       </div>
-      {/* Component 3 : Planned */}
+      {/* Component 4 : Planned */}
       <div className="hover:bg-[#54A1EA] rounded-[0.5rem] flex cursor-pointer">
         <div className="ml-4 py-1.5">
           <svg
@@ -46,7 +53,7 @@ export default function Tasks() {
         </div>
         <div className="flex-1 m-auto text-[0.67rem]">Planned</div>
       </div>
-      {/* Component 4 : Notes */}
+      {/* Component 5 : Notes */}
       <div className="hover:bg-[#54A1EA] rounded-[0.5rem] flex">
         <div className="ml-4 py-1.5">
           <svg

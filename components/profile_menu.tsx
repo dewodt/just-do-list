@@ -44,7 +44,6 @@ export default function ProfileMenu() {
           </div>
         </div>
         {/* Droplist */}
-        {dropDownProfile && (
           <div
             //  {/*Ini gabisa mgentot */}
             className={`${
@@ -64,11 +63,19 @@ export default function ProfileMenu() {
                 href="/"
                 className="block px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
               >
-                Sign Out
+                Settings
+              </a>
+            </div>
+            <div className="py-1.5 text-xs text-gray-400 dark:text-gray-200 dark:hover:bg-gray-600 rounded-[8px]">
+              <a
+                href="/"
+                className="block px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+              >
+                Log Out
               </a>
             </div>
           </div>
-        )}
+        
       </div>
       {/*DropDownProfile menu*/}
     </>

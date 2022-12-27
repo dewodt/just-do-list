@@ -22,7 +22,7 @@ export default function Login() {
       <div className="flex w-[50vw] gap-20">
         <Logo />
         <div className="flex flex-col gap-8 m-auto w-[15vw]">
-          <div className="font-bold text-[2.1rem] text-center font-['Montserrat']">
+          <div className="font-bold text-[2rem] text-center font-['Montserrat']">
             Just Do List!
           </div>
           <div className="flex text-center justify-center ">
@@ -97,16 +97,18 @@ export default function Login() {
             </div>
           </form>
           <div className="text-center">
-            <button
-              disabled={
-                loginPage
-                  ? !username || !password
-                  : !username || !password || !name
-              }
-              className="bg-[#54A1EA] hover:bg-[#1E4F82] text-white font-[500] text-s py-[0.4rem] rounded-[10px] disabled:bg-[#a3edf7] w-[12vw]"
-            >
-              {loginPage ? "Log In" : "Sign Up"}
-            </button>
+            <Link href="/dashboard">
+              <button
+                disabled={
+                  loginPage
+                    ? !username || !password
+                    : !username || !password || !name
+                }
+                className="bg-[#54A1EA] hover:bg-[#1E4F82] text-white font-[500] text-s py-[0.4rem] rounded-[10px] disabled:bg-[#a3edf7] w-[12vw]"
+              >
+                {loginPage ? "Log In" : "Sign Up"}
+              </button>
+            </Link>
           </div>
         </div>
       </div>
