@@ -25,73 +25,59 @@ export default function Projects() {
     );
   };
 
-  const initialFolder: { id: string; title: string }[] = [];
-  const [dropDownProjects, setDropDownProjects] = useState(false);
-  const [lists, setLists] = useState(initialFolder);
-  const [title, setTitle] = useState("New Project");
+  const uniqid = require("uniqid");
 
+  // const initialFolder: { id: string; title: string }[] = [];
+  const [dropDownProjects, setDropDownProjects] = useState(false);
+  // const [lists, setLists] = useState(initialFolder);
+  
+  
+  interface Folder {
+    id: string;
+    title: string;
+  }
   type MyObject = {
     title: string;
     id: string;
   };
+  
+  const [lists, setLists] = useState<MyObject[]>([]);
+  const [title, setTitle] = useState("New Project");
+  const [edit, setEdit] = useState<MyObject>({ title: "", id: "" });
+  const [showInput, setShowInput] = useState(false);
 
-  const [edit, setEdit] = useState<MyObject>({title: "", id:""});
-  const projectTitle = useRef(null);
-  const [rename, setRename] = useState(false);
-  function uniqueId() {
-    let id = "";
 
-    for (let i = 0; i < 20; i++) {
-      const characterCode = Math.floor(Math.random() * 128);
-      id += String.fromCharCode(characterCode);
+  const addProjects = () => {
+    if (showInput) {
+      setLists([
+        ...lists,
+        {
+          id: uniqid("project_"),
+          title: title,
+        },
+      ]);
+      setShowInput(false);
+    } else {
+      setShowInput(true);
+      setTitle("New Project")
     }
-
-    return id;
-  }
-
-  const addList = () => {
-    setLists([
-      ...lists,
-      {
-        id: uniqueId(),
-        title: "New Project",
-      },
-    ]);
-    <input
-      className="w-[8vw]"
-      value={title}
-      type="text"
-      onChange={(event) => {
-        setTitle(event.target.value);
-        // console.log(title);
-      }}
-    />;
   };
 
-  function change(project: { title: string; id: string }) {
-    console.log(project.id)
-    setEdit(project);
-    const updateList = {
-      id: project.id,
-      title: title,
-    };
-    const updateIndex = lists.findIndex(function (list: {
-      title: string;
-      id: string;
-    }) {
-      return list.id === edit.id;
-    });
-    const copylist = [...lists];
+  function handleSave(index: number) {
+    lists[index].title = title;
+    setLists([...lists]);
+    setEdit({id:'',title:''})
+  }
 
-    copylist[updateIndex] = updateList;
-    setLists(copylist);
-
-
-    rename ? setRename(false) : setRename(true);
+  function handleEdit(project: { title: string; id: string }) {
+    setEdit(project)
   }
 
   return (
-    <div id="no-scrollbar" className="flex flex-col flex-1 mb-1 overflow-y-scroll">
+    <div
+      id="no-scrollbar"
+      className="flex flex-col flex-1 mb-1 overflow-y-scroll"
+    >
       <div
         id="no-scrollbar"
         className=" bg-[#464449] hover:bg-[#4D4B52] bg-opacity-50 gap-1 my-2 mx-10 indent-4 rounded-[0.8rem] text-[0.87rem] overflow-auto"
@@ -133,59 +119,89 @@ export default function Projects() {
             //  {/*Ini gabisa mgentot */}
             className="mb-2"
           >
-            <div
-              role="button"
-              className="mx-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white rounded-[0.3rem] flex cursor-pointer"
-              onClick={addList}
-            >
-              <div className="flex-1 m-auto ml-4 text-[0.67rem]">Add New</div>
-              <div className="mr-4 py-1.5 ">
-                <svg
-                  className="fill-white opacity-80 w-[1rem] h-[1rem] m-auto"
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 448 512"
+            <div className="mx-2 dark:hover:text-white rounded-[0.3rem] flex mb-2">
+              {showInput ? (
+                <div className="flex gap-2 mx-4 flex-1">
+                  <input
+                    type="text"
+                    onChange={(event) => {
+                      setTitle(event.target.value);
+                    }}
+                    className="text-black w-[8vw] flex-1 outline-none rounded-[3px] bg-white"
+                  />
+                  <div className="m-auto" role="button" onClick={addProjects}>
+                    <svg
+                      className="fill-white opacity-80 w-[1rem] h-[0.87rem] m-auto"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 512 512"
+                    >
+                      <path d="M256 512c141.4 0 256-114.6 256-256S397.4 0 256 0S0 114.6 0 256S114.6 512 256 512zM369 209L241 337c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L335 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z" />
+                    </svg>
+                  </div>
+                </div>
+              ) : (
+                <div
+                  className="flex flex-1 dark:hover:bg-gray-600 rounded-[3px]"
+                  role="button"
+                  onClick={addProjects}
                 >
-                  <path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z" />
-                </svg>
-              </div>
+                  <div className="flex-1 m-auto ml-4 text-[0.67rem]">
+                    Add New
+                  </div>
+                  <div className="mr-4 py-1.5 ">
+                    <svg
+                      className="fill-white opacity-80 w-[1rem] h-[1rem] m-auto"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 448 512"
+                    >
+                      <path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z" />
+                    </svg>
+                  </div>
+                </div>
+              )}
             </div>
             {/* New List when clicking */}
-            {lists.map((list) => (
-              <>
-                <li
-                  key={list.id}
-                  className="ml-4 mr-2 flex py-0.5 text-xs text-gray-400 dark:text-gray-200 dark:hover:bg-gray-600 rounded-[3px] "
-                >
-                  <div className="ml-3 py-1.5">{listIcon()}</div>
-                  <div className="my-auto flex-1">
-                    <div>
-                      {rename ? (
+            {lists.map((list, index) =>
+              edit === list ? (
+                <>
+                  <li className="ml-4 mr-2 flex py-0.5 text-xs text-gray-400 dark:text-gray-200 dark:hover:bg-gray-600 rounded-[3px] ">
+                    <div className="ml-3 py-1.5">{listIcon()}</div>
+                    <div className="my-auto flex-1" key={index}>
+                      <div>
                         <input
-                          className="w-[8vw]"
-                          value={title}
                           type="text"
+                          defaultValue={list.title}
                           onChange={(event) => {
                             setTitle(event.target.value);
-                            // console.log(title);
                           }}
                         />
-                      ) : (
-                        <div>{list.title}</div>
-                      )}
+                      </div>
                     </div>
-                  </div>
-                  <button
-                    className="mr-5 ml-2 py-1"
-                    onClick={() => {
-                      change(list);
-                      console.log(list.id)
-                    }}
-                  >
-                    {checkIcon()}
-                  </button>
-                </li>
-              </>
-            ))}
+                    <button
+                      className="mr-5 ml-2 py-1"
+                      onClick={() => handleSave(index)}
+                    >
+                      {checkIcon()}
+                    </button>
+                  </li>
+                </>
+              ) : (
+                <>
+                  <li className="ml-4 mr-2 flex py-0.5 text-xs text-gray-400 dark:text-gray-200 dark:hover:bg-gray-600 rounded-[3px] ">
+                    <div className="ml-3 py-1.5">{listIcon()}</div>
+                    <div className="my-auto flex-1" key={index}>
+                      <div>{list.title} </div>
+                    </div>
+                    <button
+                      className="mr-5 ml-2 py-1"
+                      onClick={() => handleEdit(list)}
+                    >
+                      {checkIcon()}
+                    </button>
+                  </li>
+                </>
+              )
+            )}
           </div>
         )}
       </div>
