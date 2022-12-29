@@ -24,53 +24,75 @@ export default function Projects() {
       </svg>
     );
   };
+  const crossIcon = () => {
+    return (
+      <svg
+        className="fill-white opacity-80 w-[0.8rem] h-[0.8rem] m-auto"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 512 512"
+      >
+        <path d="M256 512c141.4 0 256-114.6 256-256S397.4 0 256 0S0 114.6 0 256S114.6 512 256 512zM175 175c9.4-9.4 24.6-9.4 33.9 0l47 47 47-47c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9l-47 47 47 47c9.4 9.4 9.4 24.6 0 33.9s-24.6 9.4-33.9 0l-47-47-47 47c-9.4 9.4-24.6 9.4-33.9 0s-9.4-24.6 0-33.9l47-47-47-47c-9.4-9.4-9.4-24.6 0-33.9z" />
+      </svg>
+    );
+  };
+  const renameIcon = () => {
+    return (
+      <svg
+        className="fill-white opacity-80 w-[0.8rem] h-[0.8rem] m-auto"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 512 512"
+      >
+        <path d="M471.6 21.7c-21.9-21.9-57.3-21.9-79.2 0L362.3 51.7l97.9 97.9 30.1-30.1c21.9-21.9 21.9-57.3 0-79.2L471.6 21.7zm-299.2 220c-6.1 6.1-10.8 13.6-13.5 21.9l-29.6 88.8c-2.9 8.6-.6 18.1 5.8 24.6s15.9 8.7 24.6 5.8l88.8-29.6c8.2-2.8 15.7-7.4 21.9-13.5L437.7 172.3 339.7 74.3 172.4 241.7zM96 64C43 64 0 107 0 160V416c0 53 43 96 96 96H352c53 0 96-43 96-96V320c0-17.7-14.3-32-32-32s-32 14.3-32 32v96c0 17.7-14.3 32-32 32H96c-17.7 0-32-14.3-32-32V160c0-17.7 14.3-32 32-32h96c17.7 0 32-14.3 32-32s-14.3-32-32-32H96z" />
+      </svg>
+    );
+  };
 
-  const uniqid = require("uniqid");
-
-  // const initialFolder: { id: string; title: string }[] = [];
-  const [dropDownProjects, setDropDownProjects] = useState(false);
-  // const [lists, setLists] = useState(initialFolder);
-  
-  
-  interface Folder {
-    id: string;
-    title: string;
-  }
   type MyObject = {
     title: string;
     id: string;
   };
-  
+
+  const uniqid = require("uniqid"); //Ini buat generate id dari npm
+  const [dropDownProjects, setDropDownProjects] = useState(false);
   const [lists, setLists] = useState<MyObject[]>([]);
-  const [title, setTitle] = useState("New Project");
+  const [title, setTitle] = useState("");
   const [edit, setEdit] = useState<MyObject>({ title: "", id: "" });
   const [showInput, setShowInput] = useState(false);
 
-
   const addProjects = () => {
     if (showInput) {
-      setLists([
-        ...lists,
-        {
-          id: uniqid("project_"),
-          title: title,
-        },
-      ]);
+      if (title === "") {
+      } else {
+        setLists([
+          ...lists,
+          {
+            id: uniqid("project_"),
+            title: title,
+          },
+        ]);
+      }
       setShowInput(false);
     } else {
       setShowInput(true);
-      setTitle("New Project")
+      setTitle("");
     }
   };
 
   function handleSave(index: number) {
-    lists[index].title = title;
+    if (title == "") {
+      lists[index].title = "New Project";
+    } else {
+      lists[index].title = title;
+    }
     setLists([...lists]);
-    setEdit({id:'',title:''})
+    setEdit({ id: "", title: "" });
+    setTitle(lists[index].title);
   }
 
   function handleEdit(project: { title: string; id: string }) {
-    setEdit(project)
+    setEdit(project);
+    setShowInput(false);
+    setTitle(project.title);
   }
 
   return (
@@ -115,10 +137,7 @@ export default function Projects() {
           </div>
         </div>
         {dropDownProjects && (
-          <div
-            //  {/*Ini gabisa mgentot */}
-            className="mb-2"
-          >
+          <div className="mb-2">
             <div className="mx-2 dark:hover:text-white rounded-[0.3rem] flex mb-2">
               {showInput ? (
                 <div className="flex gap-2 mx-4 flex-1">
@@ -130,13 +149,7 @@ export default function Projects() {
                     className="text-black w-[8vw] flex-1 outline-none rounded-[3px] bg-white"
                   />
                   <div className="m-auto" role="button" onClick={addProjects}>
-                    <svg
-                      className="fill-white opacity-80 w-[1rem] h-[0.87rem] m-auto"
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 512 512"
-                    >
-                      <path d="M256 512c141.4 0 256-114.6 256-256S397.4 0 256 0S0 114.6 0 256S114.6 512 256 512zM369 209L241 337c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L335 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z" />
-                    </svg>
+                    {title === "" ? crossIcon() : checkIcon()}
                   </div>
                 </div>
               ) : (
@@ -162,7 +175,7 @@ export default function Projects() {
             </div>
             {/* New List when clicking */}
             {lists.map((list, index) =>
-              edit === list ? (
+              edit === list && showInput === false ? (
                 <>
                   <li className="ml-4 mr-2 flex py-0.5 text-xs text-gray-400 dark:text-gray-200 dark:hover:bg-gray-600 rounded-[3px] ">
                     <div className="ml-3 py-1.5">{listIcon()}</div>
@@ -196,7 +209,7 @@ export default function Projects() {
                       className="mr-5 ml-2 py-1"
                       onClick={() => handleEdit(list)}
                     >
-                      {checkIcon()}
+                      {renameIcon()}
                     </button>
                   </li>
                 </>
