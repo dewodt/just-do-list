@@ -3,9 +3,7 @@ import Image from "next/image";
 import { Inter } from "@next/font/google";
 import styles from "../styles/Home.module.css";
 import Login from "./login";
-import Dashboard from "./dashboard";
 import Layout from "../components/layout";
-import NavbarTitle from "../components/navbar-title";
 import NavbarMenu from "../components/navbar-menu";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -19,14 +17,10 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/logo-app.png" />
       </Head>
-      <NavbarTitle />
-      <div className="flex h-[92.5vh]">
-        <NavbarMenu />
-        <Layout>
-          {/* <Login /> */}
-          <Dashboard />
-          {/* <Home/> */}
-        </Layout>
+      <div className="flex flex-auto h-screen max-h-full">
+        <div className="m-auto">
+          <Login />
+        </div>
       </div>
     </>
   );

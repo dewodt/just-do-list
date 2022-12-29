@@ -1,7 +1,16 @@
+import Header from "./header";
+import NavbarMenu from "./navbar-menu";
+
 export default function Layout(props: any) {
   return (
-    <div className="flex flex-auto max-h-full">
-      <div className="m-auto">{props.children} </div>
-    </div>
+    <>
+      <Header />
+      <div className="flex h-[90.6vh]">
+        <NavbarMenu />
+        <div className={`flex flex-auto max-h-full`}>
+          <div className="m-auto">{props.children} </div>
+        </div>
+      </div>
+    </>
   );
 }
