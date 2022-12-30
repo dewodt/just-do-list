@@ -1,6 +1,7 @@
 import { useState } from "react";
 
 export default function SubTask() {
+    // Bagian Icon
   const circleCheckIcon = () => {
     return (
       <svg
@@ -73,6 +74,7 @@ export default function SubTask() {
     );
   };
 
+    // Bagian variabel program
   const [stepDone, setStepDone] = useState(false);
   const [addStepInputShow, setAddStepInputShow] = useState(false);
   const [dueDatePreview, setDueDatePreview] = useState(false);

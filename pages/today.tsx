@@ -118,7 +118,7 @@ export default function Today() {
               className="flex flex-col flex-1 my-4 gap-3 overflow-y-scroll"
               id="no-scrollbar"
             >
-              <div className="bg-[#424242] hover:opacity-80 flex p-[0.5vw] cursor-pointer" onClick={()=>{subTaskPreview?setSubTaskPreview(false):setSubTaskPreview(true)}}>
+              <div className="bg-[#424242] hover:opacity-80 flex p-[0.5vw] cursor-pointer">
                 <div className="flex flex-1 mx-3 gap-4">
                   {taskDone ? (
                     <div
@@ -139,7 +139,7 @@ export default function Today() {
                       {circleIcon("#54A1EA")}
                     </div>
                   )}
-                  <div className="flex-1">list1</div>
+                  <div className="flex-1" onClick={()=>{subTaskPreview?setSubTaskPreview(false):setSubTaskPreview(true)}}>list1</div>
                   {important ? (
                     <div
                       className="m-auto"
