@@ -27,23 +27,31 @@ export default function Home() {
     setPassword("");
   }
 
+  function handleLogin() {
+
+  }
+
+  function handleSignUp() {
+
+  }
+
   return (
     <>
       <PageHead title="Login / Signup" />
-      <div className="flex flex-col justify-center py-[8vh] w-[100vw] min-h-[100vh] items-center sm:flex-row border-red border-solid border-[2px]">
+      <div className="flex flex-col justify-center py-[8vh] w-[100vw] min-h-[100vh] items-center sm:flex-row">
         <Image className="w-[50vw] sm:w-[35vw] lg:w-[25vw] xl:w-[20vw] sm:mr-[4vw]" src={Logo} alt="Logo Just Do List" />
-        <div className="flex flex-col gap-y-8 w-[60vw] sm:w-[35vw] md:w-[30vw] lg:w-[25vw] xl:w-[20vw]">
+        <div className="flex flex-col gap-y-4 lg:gap-y-8 w-[60vw] sm:w-[35vw] md:w-[30vw] lg:w-[25vw] xl:w-[20vw]">
           <p className="font-bold text-[2rem] text-center font-['Montserrat']">Just Do List!</p>
           <nav className="flex text-center font-[550] text-[1.17rem] justify-center">
-            <div className={`w-[50%] pb-2 border-b-[2px] hover:text-[#3182CE] ${loginPage && "text-[#3182CE] border-b-[#3182CE]"}`}>
-              <Link href="/" onClick={handleLoginTab}>Log In</Link>
+            <div className={`w-[50%] pb-2 border-b-[2px] ${loginPage && "text-[#3182CE] border-b-[#3182CE]"}`}>
+              <Link className="hover:text-[#3182CE]" href="/" onClick={handleLoginTab}>Log In</Link>
             </div>
-            <div className={`w-[50%] pb-2 border-b-[2px] hover:text-[#3182CE] ${!loginPage && "text-[#3182CE] border-b-[#3182CE]"}`}>
-              <Link href="/" onClick={handleSignupTab}>Sign Up</Link>
+            <div className={`w-[50%] pb-2 border-b-[2px] ${!loginPage && "text-[#3182CE] border-b-[#3182CE]"}`}>
+              <Link className="hover:text-[#3182CE]" href="/" onClick={handleSignupTab}>Sign Up</Link>
             </div>
           </nav>
           <form>
-            <div className="flex flex-col gap-y-5">
+            <div className="flex flex-col gap-y-4 lg:gap-y-5">
               {!loginPage && (
                   <input
                     type="text"
@@ -77,6 +85,7 @@ export default function Home() {
                   : !username || !password || !name
               }
               className="w-[100%] rounded-[10px] hover:bg-[#1E4F82] text-white font-[500] py-[0.4rem] bg-[#54A1EA] disabled:bg-[#a3edf7]"
+              onClick={loginPage ? handleLogin : handleSignUp}
             >
               {loginPage ? "Log In" : "Sign Up"}
             </button>
@@ -86,3 +95,6 @@ export default function Home() {
     </>
   );
 }
+
+
+
