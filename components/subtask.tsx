@@ -1,8 +1,10 @@
+import { useState } from "react";
+
 export default function SubTask() {
   const circleCheckIcon = () => {
     return (
       <svg
-        className="fill-white opacity-80 w-[0.92rem]"
+        className="fill-white opacity-80 w-[0.92rem] hover:fill-[#54A1EA]"
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 512 512"
       >
@@ -11,10 +13,10 @@ export default function SubTask() {
     );
   };
 
-  const circleIcon = () => {
+  const circleIcon = (colorHover: string) => {
     return (
       <svg
-        className="fill-white opacity-80 w-[0.92rem]"
+        className={`fill-white opacity-80 w-[0.92rem] hover:fill-[${colorHover}]`}
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 512 512"
       >
@@ -26,7 +28,7 @@ export default function SubTask() {
   const plusIcon = () => {
     return (
       <svg
-        className="fill-white opacity-80 w-[1rem] h-[1rem] m-auto"
+        className="fill-white opacity-80 w-[0.92rem] h-[0.92rem] m-auto cursor-pointer"
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 448 512"
       >
@@ -47,38 +49,110 @@ export default function SubTask() {
     );
   };
 
+  const trashIcon = () => {
+    return (
+      <svg
+        className="fill-white opacity-80 w-[1rem] h-[1rem] m-auto hover:opacity-100"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 448 512"
+      >
+        <path d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z" />
+      </svg>
+    );
+  };
+
+  const checkIcon = () => {
+    return (
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        className="fill-white opacity-80 w-[1rem] "
+        viewBox="0 0 512 512"
+      >
+        <path d="M470.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L192 338.7 425.4 105.4c12.5-12.5 32.8-12.5 45.3 0z" />
+      </svg>
+    );
+  };
+
+  const [stepDone, setStepDone] = useState(false);
+  const [addStepInputShow, setAddStepInputShow] = useState(false);
+  const [dueDatePreview, setDueDatePreview] = useState(false);
+
   return (
-    <div className="w-[23.475vw] bg-[#323232]">
-      <div className="flex flex-col flex-1 m-[2.6525vw] gap-4">
-        <div className="bg-[#424242]">
+    <div className="flex flex-col w-[23.4375vw] bg-[#323232] ">
+      <div className="flex flex-col flex-1 mx-[2.6vw] mt-[2.6vw] gap-4">
+        <div className="bg-[#424242]  overflow-y-scroll">
           <div className="flex flex-col m-[1.4vw] gap-2">
             <div className="text-lg font-semibold">Task 1</div>
-            <div className="flex flex-col gap-2">
-              <div className="flex gap-4">
-                <div className="m-auto">{circleCheckIcon()}</div>
-                <div className="flex-1 mr-2 border-b-2">subtask</div>
-              </div>
-              <div className="flex gap-4">
-                <div className="m-auto">{circleCheckIcon()}</div>
-                <div className="flex-1 mr-2 border-b-2">subtask</div>
-              </div>
-              <div className="flex gap-4">
-                <div className="m-auto">{circleCheckIcon()}</div>
-                <div className="flex-1 mr-2 border-b-2">subtask</div>
+            <div className="flex flex-col gap-2 ">
+              <div className="flex gap-3">
+                {stepDone ? (
+                  <div
+                    className="m-auto"
+                    onClick={() => {
+                      setStepDone(false);
+                    }}
+                  >
+                    {circleCheckIcon()}
+                  </div>
+                ) : (
+                  <div
+                    className="m-auto"
+                    onClick={() => {
+                      setStepDone(true);
+                    }}
+                  >
+                    {circleIcon("#54A1EA")}
+                  </div>
+                )}
+                <div className="flex-1 border-b-2 break-all">Step1</div>
+                <div className="m-auto cursor-pointer">{trashIcon()}</div>
               </div>
             </div>
 
-            <div className="mt-1 flex gap-2 font-semibold">
-              <div className="m-auto">{plusIcon()}</div>
-              <div className="flex-1">New Sub Task</div>
+            <div
+              className="mt-1 flex gap-3 hover:bg-[##323232]"
+              onClick={() => {
+                !addStepInputShow && setAddStepInputShow(true);
+              }}
+            >
+              <div className="m-auto">
+                {addStepInputShow ? circleIcon("none") : plusIcon()}
+              </div>
+
+              <input
+                className="flex-1 outline-none w-[3vw] bg-transparent font-medium placeholder:text-white placeholder:opacity-70"
+                placeholder="Add New Step"
+              />
+              {addStepInputShow && (
+                <div
+                  className="m-auto cursor-pointer"
+                  onClick={() => {
+                    setAddStepInputShow(false);
+                  }}
+                >
+                  {checkIcon()}
+                </div>
+              )}
             </div>
           </div>
         </div>
-        <div className="bg-[#424242] ">
+        <div className="bg-[#424242] hover:bg-zinc-600" onClick={()=>{dueDatePreview?setDueDatePreview(false):setDueDatePreview(true)}}>
           <div className="flex p-[0.78vw] gap-4 ">
             <div className="m-auto">{calenderIcon()}</div>
-            <div className="flex-1">Add due date </div>
+            <div className="flex-1 cursor-pointer">Add due date </div>
           </div>
+        </div>
+        <div className={`${dueDatePreview?'flex':'hidden'} flex-col text-sm mx-[2vw] bg-[#424242] `}>
+          <div className="flex flex-col text-center">
+            <div className="hover:bg-zinc-600 cursor-pointer p-2">Today</div>
+            <div className="hover:bg-zinc-600 cursor-pointer p-2">Tomorrow</div>
+            <div className="hover:bg-zinc-600 cursor-pointer p-2">Set Due Date</div>
+          </div>
+        </div>
+      </div>
+      <div className="flex justify-center mb-[1.2vw]">
+        <div className="flex gap-[2vw]">
+          <div className="m-auto">Created day</div>
         </div>
       </div>
     </div>

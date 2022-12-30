@@ -4,7 +4,8 @@ import React, { useEffect, useState } from "react";
 import SubTask from "../components/subtask";
 
 export default function Today() {
-  const starIcon = () => {
+  // Khusus bagian icon
+  const starLineIcon = () => {
     return (
       <svg
         className="fill-white  w-[1rem] m-auto opacity-80 hover:fill-[#54A1EA]"
@@ -15,10 +16,21 @@ export default function Today() {
       </svg>
     );
   };
+  const starFullIcon = () => {
+    return (
+      <svg
+        className="fill-white  w-[1rem] m-auto opacity-80 hover:fill-[#54A1EA]"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 576 512"
+      >
+        <path d="M316.9 18C311.6 7 300.4 0 288.1 0s-23.4 7-28.8 18L195 150.3 51.4 171.5c-12 1.8-22 10.2-25.7 21.7s-.7 24.2 7.9 32.7L137.8 329 113.2 474.7c-2 12 3 24.2 12.9 31.3s23 8 33.8 2.3l128.3-68.5 128.3 68.5c10.8 5.7 23.9 4.9 33.8-2.3s14.9-19.3 12.9-31.3L438.5 329 542.7 225.9c8.6-8.5 11.7-21.2 7.9-32.7s-13.7-19.9-25.7-21.7L381.2 150.3 316.9 18z" />
+      </svg>
+    );
+  };
   const plusIcon = () => {
     return (
       <svg
-        className="fill-white opacity-80 w-[1rem] h-[1rem] m-auto"
+        className="fill-white opacity-80 w-[1rem] h-[1rem] m-auto cursor-pointer hover:opacity-100"
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 448 512"
       >
@@ -30,7 +42,7 @@ export default function Today() {
     return (
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        className="fill-white opacity-80 w-[1rem]"
+        className="fill-white opacity-80 w-[1rem] hover:opacity-100"
         viewBox="0 0 512 512"
       >
         <path d="M470.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L192 338.7 425.4 105.4c12.5-12.5 32.8-12.5 45.3 0z" />
@@ -41,7 +53,7 @@ export default function Today() {
   const circleCheckIcon = () => {
     return (
       <svg
-        className="fill-white opacity-80 w-[1rem]"
+        className="fill-white opacity-80 w-[1rem] hover:fill-[#54A1EA]"
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 512 512"
       >
@@ -50,10 +62,10 @@ export default function Today() {
     );
   };
 
-  const circleIcon = () => {
+  const circleIcon = (colorHover: string) => {
     return (
       <svg
-        className="fill-white opacity-80 w-[1rem]"
+        className={`fill-white opacity-80 w-[1rem] hover:fill-[${colorHover}]`}
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 512 512"
       >
@@ -62,8 +74,25 @@ export default function Today() {
     );
   };
 
+  const trashIcon = () => {
+    return (
+      <svg
+        className="fill-white opacity-80 w-[1rem] h-[1rem] m-auto hover:opacity-100"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 448 512"
+      >
+        <path d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z" />
+      </svg>
+    );
+  };
+  
+  // Khusus bagian variabel kerja
   const [dateToday, setDateToday] = useState(new Date());
-  const [addStatus, setaddStatus] = useState(false);
+  const [addTaskInputShow, setAddTaskInputShow] = useState(false);
+  const [taskDone, setTaskDone] = useState(false);
+  const [important, setImportant] = useState(false);
+  const [subTaskPreview, setSubTaskPreview] = useState(false);
+
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -75,7 +104,7 @@ export default function Today() {
     <>
       <Layout>
         <div className="flex flex-1">
-          <div className="flex flex-col flex-1 m-[2.4vw] gap-1">
+          <div className="flex flex-col flex-1 m-[2.3vw] gap-1">
             <div className="font-semibold text-2xl">Today</div>
             <div className="font-semibold">
               {dateToday.toLocaleDateString("en-GB", {
@@ -85,38 +114,80 @@ export default function Today() {
                 year: "numeric",
               })}
             </div>
-            <div className="flex flex-col flex-1 my-4 gap-3">
-              <div className="bg-[#424242] flex p-[0.7vw]">
+            <div
+              className="flex flex-col flex-1 my-4 gap-3 overflow-y-scroll"
+              id="no-scrollbar"
+            >
+              <div className="bg-[#424242] hover:opacity-80 flex p-[0.5vw] cursor-pointer" onClick={()=>{subTaskPreview?setSubTaskPreview(false):setSubTaskPreview(true)}}>
                 <div className="flex flex-1 mx-3 gap-4">
-                  <div className="m-auto">{circleIcon()}</div>
+                  {taskDone ? (
+                    <div
+                      className="m-auto"
+                      onClick={() => {
+                        setTaskDone(false);
+                      }}
+                    >
+                      {circleCheckIcon()}
+                    </div>
+                  ) : (
+                    <div
+                      className="m-auto"
+                      onClick={() => {
+                        setTaskDone(true);
+                      }}
+                    >
+                      {circleIcon("#54A1EA")}
+                    </div>
+                  )}
                   <div className="flex-1">list1</div>
-                  <div className="m-auto">{starIcon()}</div>
+                  {important ? (
+                    <div
+                      className="m-auto"
+                      onClick={() => {
+                        setImportant(false);
+                      }}
+                    >
+                      {starLineIcon()}
+                    </div>
+                  ) : (
+                    <div
+                      className="m-auto"
+                      onClick={() => {
+                        setImportant(true);
+                      }}
+                    >
+                      {starFullIcon()}
+                    </div>
+                  )}
+                  <div
+                      className="m-auto"
+                         >
+                      {trashIcon()}
+                    </div>
                 </div>
               </div>
             </div>
-            
+
             <div>
               <div
-                className="bg-[#424242] flex p-[0.7vw]"
+                className="bg-[#424242] opacity-100 flex p-[0.6vw] hover:opacity-80"
                 onClick={() => {
-                  addStatus && setaddStatus(false);
+                  !addTaskInputShow && setAddTaskInputShow(true);
                 }}
               >
                 <div className="flex flex-1 mx-3 gap-4">
-                  {addStatus ? (
-                    <div className="m-auto">{plusIcon()}</div>
-                  ) : (
-                    <div className="m-auto">{circleIcon()}</div>
-                  )}
+                  <div className="m-auto">
+                    {addTaskInputShow ? circleIcon("none") : plusIcon()}
+                  </div>
                   <input
-                    className="flex-1 outline-none bg-transparent placeholder:text-white placeholder:opacity-70"
-                    placeholder="New Task"
+                    className="flex-1 outline-none font-medium bg-transparent placeholder:text-white placeholder:opacity-70"
+                    placeholder="Add New Task"
                   />
-                  {!addStatus && (
+                  {addTaskInputShow && (
                     <div
                       className="m-auto cursor-pointer"
                       onClick={() => {
-                        setaddStatus(true);
+                        setAddTaskInputShow(false);
                       }}
                     >
                       {checkIcon()}
@@ -127,7 +198,8 @@ export default function Today() {
             </div>
           </div>
         </div>
-        <SubTask />
+        {subTaskPreview&&
+          <SubTask />}
       </Layout>
     </>
   );
