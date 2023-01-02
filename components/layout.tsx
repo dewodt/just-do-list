@@ -8,7 +8,7 @@ export default function Layout(props: any) {
       <div className="flex h-[90.6vh]">
         <NavbarMenu />
         <div className={`flex flex-auto max-h-full`}>
-          <div className="m-auto">{props.children} </div>
+          {props.children}
         </div>
       </div>
     </>
