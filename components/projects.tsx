@@ -115,7 +115,7 @@ const Projects: React.FC = () => {
       })
     );
   }
-  
+  // Update
   return (
     <div
       id="no-scrollbar"
