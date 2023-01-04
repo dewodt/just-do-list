@@ -91,7 +91,7 @@ export default function Today() {
   const [addTaskInputShow, setAddTaskInputShow] = useState(false);
   const [taskDone, setTaskDone] = useState(false);
   const [important, setImportant] = useState(false);
-  const [subTaskPreview, setSubTaskPreview] = useState(false);
+  const [subTaskPreview, setSubTaskPreview] = useState(true);
 
 
   useEffect(() => {

@@ -6,7 +6,7 @@ import Link from "next/link";
 
 export default function NavbarMenu() {
   return (
-    <div className="flex flex-col bg-[#3D3C40] w-[20vw] border-r-[1px] border-[#959595] gap-2 rounded-[3px]">
+    <div className="flex flex-col bg-[#3D3C40] w-[19vw] border-r-[1px] border-[#959595] gap-2 rounded-[3px]">
       <ProfileMenu />
       <span className="inline-block border-[0.6px] opacity-80 bg-white mx-auto w-[15vw] my-1" />
       <Fitur />
