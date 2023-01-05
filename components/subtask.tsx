@@ -89,7 +89,7 @@ export default function SubTask() {
   const [dueDatePreview, setDueDatePreview] = useState(false);
 
   return (
-    <div className="  flex flex-col w-[70vw] absolute right-0 lg:relative h-[94vh] md:h-[90.5vh] z-10 sm:w-[45vw] lg:w-[24.4375vw] bg-[#323232]">
+    <div className="flex flex-col w-[70vw] absolute right-0 lg:relative h-[94vh] md:h-[90.5vh] z-10 sm:w-[45vw] lg:w-[24.4375vw] bg-[#323232]">
       <div className="flex flex-col flex-1 p-[2.421vh] gap-3">
         <div className="bg-[#424242] overflow-y-scroll" id="no-scrollbar">
           <div className="flex flex-col m-[3vh] gap-2">

@@ -5,6 +5,17 @@ import SubTask from "../components/subtask";
 
 export default function Today() {
   // Khusus bagian icon
+  const todayIcon = () => {
+    return (
+      <svg
+        className="fill-white w-[2.2vh] sm:w-[3.2vh] m-auto opacity-80 "
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 512 512"
+      >
+        <path d="M256 512C114.6 512 0 397.4 0 256S114.6 0 256 0S512 114.6 512 256s-114.6 256-256 256zM232 120V256c0 8 4 15.5 10.7 20l96 64c11 7.4 25.9 4.4 33.3-6.7s4.4-25.9-6.7-33.3L280 243.2V120c0-13.3-10.7-24-24-24s-24 10.7-24 24z" />
+      </svg>
+    );
+  };
   const starLineIcon = () => {
     return (
       <svg
@@ -92,6 +103,7 @@ export default function Today() {
   const [taskDone, setTaskDone] = useState(false);
   const [important, setImportant] = useState(false);
   const [subTaskPreview, setSubTaskPreview] = useState(true);
+  const [dropDownFinished, setDropDownFinished] = useState(false);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -104,7 +116,12 @@ export default function Today() {
       <Layout>
         <div className="flex flex-1">
           <div className="flex flex-col flex-1 py-[2vh] lg:p-[3.8vh] px-[3.4vh] gap-1">
-            <p className="font-semibold text-[2.5vh] sm:text-[3.8vh]">Today</p>
+            <div className="flex  items-center gap-x-3">
+              <span>{todayIcon()}</span>
+              <p className="font-semibold text-[2.5vh] sm:text-[3.8vh]">
+                Today{" "}
+              </p>
+            </div>
             <p className="font-medium text-[1.8vh] sm:text-[2.4vh]">
               {dateToday.toLocaleDateString("en-GB", {
                 weekday: "long",
@@ -269,6 +286,35 @@ export default function Today() {
                   )}
                   <button>{trashIcon()}</button>
                 </div>
+              </div>
+              <div
+                onClick={() => {
+                  dropDownFinished
+                    ? setDropDownFinished(false)
+                    : setDropDownFinished(true);
+                }}
+                className="flex items-center gap-1 bg-[#424242] hover:opacity-80 w-fit pl-[0.6vw] pr-[1vw] py-[0.3vh] cursor-pointer mb-[1.47vh]"
+              >
+                <span>
+                  <svg
+                    className={`w-4 h-4 sm:w-5 sm:h-5 ${
+                      !dropDownFinished && "-rotate-90"
+                    }`}
+                    aria-hidden="true"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                      clip-rule="evenodd"
+                    ></path>
+                  </svg>
+                </span>
+                <p className="text-[1.6vh] font-medium sm:text-[2.25vh]">
+                  Finished
+                </p>
               </div>
             </div>
 
