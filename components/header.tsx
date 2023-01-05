@@ -2,9 +2,9 @@ import Image from "next/image";
 
 export default function Header() {
   return (
-    <header className="flex items-center justify-between bg-[#3E3E3E] border-b-[1px] border-[#959595] h-[8vh] md:h-[9.5vh] w-full">
+    <header className="flex items-center justify-between bg-[#3E3E3E] border-b-[1px] border-[#959595] h-[6vh] md:h-[9.5vh] w-full">
       <div className="flex w-[19vw] justify-center items-center">
-        <div className="flex relative w-[8vh] h-[8vh] items-center ml-1">
+        <div className="flex relative w-[6vh] sm:w-[8vh] items-center ml-1">
           <Image
             src={"/logo-app.png"}
             width="2000"
@@ -24,7 +24,7 @@ export default function Header() {
         <div className="py-[0.1vh] md:py-[0.4vh]  px-[5vw] rounded-full bg-white opacity-70 flex w-full">
           <input
             placeholder="Search ..."
-            className="w-[20vh] sm:w-[40vw] text-black text-[1.9vh] sm:text-[2vh] m-auto text-center bg-transparent outline-none placeholder:text-gray-600"
+            className="w-[20vh] sm:w-[40vw] text-black text-[1.3vh] sm:text-[2vh] m-auto text-center bg-transparent outline-none placeholder:text-gray-600"
           ></input>
           <div
             className="w-[3vh] sm:flex hidden relative right-6"

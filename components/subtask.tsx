@@ -5,7 +5,7 @@ export default function SubTask() {
   const plusIcon = () => {
     return (
       <svg
-        className="fill-white opacity-80 w-[2vh] h-[2vh] m-auto cursor-pointer hover:opacity-100"
+        className="fill-white opacity-80 w-[1.5vh] sm:w-[2vh] h-[1.5vh] sm:h-[2vh] m-auto cursor-pointer hover:opacity-100"
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 448 512"
       >
@@ -17,7 +17,7 @@ export default function SubTask() {
     return (
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        className="fill-white opacity-80 w-[2vh] hover:opacity-100"
+        className="fill-white opacity-80 w-[1.5vh] sm:w-[2vh] hover:opacity-100"
         viewBox="0 0 512 512"
       >
         <path d="M470.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L192 338.7 425.4 105.4c12.5-12.5 32.8-12.5 45.3 0z" />
@@ -28,7 +28,7 @@ export default function SubTask() {
   const circleCheckIcon = () => {
     return (
       <svg
-        className="fill-white opacity-80 w-[2vh] hover:fill-[#54A1EA]"
+        className="fill-white opacity-80 w-[1.5vh] sm:w-[2vh] hover:fill-[#54A1EA]"
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 512 512"
       >
@@ -40,7 +40,7 @@ export default function SubTask() {
   const circleIcon = (colorHover: string) => {
     return (
       <svg
-        className={`fill-white opacity-80 w-[2vh] hover:fill-[${colorHover}]`}
+        className={`fill-white opacity-80 w-[1.5vh] sm:w-[2vh] hover:fill-[${colorHover}]`}
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 512 512"
       >
@@ -52,7 +52,7 @@ export default function SubTask() {
   const trashIcon = () => {
     return (
       <svg
-        className="fill-white opacity-80 w-[2vh] h-[2vh] m-auto hover:opacity-100"
+        className="fill-white opacity-80 w-[1.5vh] sm:w-[2vh] h-[1.5vh] sm:h-[2vh] m-auto hover:opacity-100"
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 448 512"
       >
@@ -64,7 +64,7 @@ export default function SubTask() {
   const calenderIcon = () => {
     return (
       <svg
-        className="fill-white opacity-80 w-[2vh] h-[2vh] m-auto"
+        className="fill-white opacity-80 w-[1.5vh] sm:w-[2vh] h-[1.5vh] sm:h-[2vh] m-auto"
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 448 512"
       >
@@ -76,7 +76,7 @@ export default function SubTask() {
     return (
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        className="fill-white opacity-80 w-[3vh] h-[3vh] m-auto"
+        className="fill-white opacity-80 w-[2vh] sm:w-[3vh] h-[2vh] sm:h-[3vh] m-auto"
         viewBox="0 0 320 512"
       >
         <path d="M310.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L160 210.7 54.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L114.7 256 9.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 301.3 265.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L205.3 256 310.6 150.6z" />
@@ -89,12 +89,12 @@ export default function SubTask() {
   const [dueDatePreview, setDueDatePreview] = useState(false);
 
   return (
-    <div className="  flex flex-col w-[70vw] absolute right-0 lg:relative h-[92vh] md:h-[90.5vh] z-10 sm:w-[45vw] lg:w-[24.4375vw] bg-[#323232]">
+    <div className="  flex flex-col w-[70vw] absolute right-0 lg:relative h-[94vh] md:h-[90.5vh] z-10 sm:w-[45vw] lg:w-[24.4375vw] bg-[#323232]">
       <div className="flex flex-col flex-1 p-[2.421vh] gap-3">
         <div className="bg-[#424242] overflow-y-scroll" id="no-scrollbar">
           <div className="flex flex-col m-[3vh] gap-2">
             <div className="flex items-center justify-between">
-              <p className="text-[2.9vh] font-semibold">Task 1</p>
+              <p className="text-[2vh] sm:text-[2.9vh] font-semibold">Task 1</p>
               <div>{crossIcon()}</div>
             </div>
             <div className="flex flex-col max-h-[53vh] lg:max-h-[51vh] gap-2.5 overflow-y-scroll" id="no-scrollbar">
@@ -118,7 +118,7 @@ export default function SubTask() {
                     {circleIcon("#54A1EA")}
                   </div>
                 )}
-                <p className="flex-1 text-[2.2vh] border-b-2 break-all">
+                <p className="flex-1 text-[1.4vh] sm:text-[2.2vh] border-b-2 break-all">
                   Bangun tidur kuterus mandi tidak lupa menggosok gigi
                 </p>
                 <div className="m-auto cursor-pointer">{trashIcon()}</div>
@@ -143,7 +143,7 @@ export default function SubTask() {
                     {circleIcon("#54A1EA")}
                   </div>
                 )}
-                <p className="flex-1 text-[2.2vh] border-b-2 break-all">
+                <p className="flex-1 text-[1.4vh] sm:text-[2.2vh] border-b-2 break-all">
                   Bangun tidur kuterus mandi tidak lupa menggosok gigi
                 </p>
                 <div className="m-auto cursor-pointer">{trashIcon()}</div>
@@ -168,7 +168,7 @@ export default function SubTask() {
                     {circleIcon("#54A1EA")}
                   </div>
                 )}
-                <p className="flex-1 text-[2.2vh] border-b-2 break-all">
+                <p className="flex-1 text-[1.4vh] sm:text-[2.2vh] border-b-2 break-all">
                   Bangun tidur kuterus mandi tidak lupa menggosok gigi
                 </p>
                 <div className="m-auto cursor-pointer">{trashIcon()}</div>
@@ -193,7 +193,7 @@ export default function SubTask() {
                     {circleIcon("#54A1EA")}
                   </div>
                 )}
-                <p className="flex-1 text-[2.2vh] border-b-2 break-all">
+                <p className="flex-1 text-[1.4vh] sm:text-[2.2vh] border-b-2 break-all">
                   Bangun tidur kuterus mandi tidak lupa menggosok gigi
                 </p>
                 <div className="m-auto cursor-pointer">{trashIcon()}</div>
@@ -218,7 +218,7 @@ export default function SubTask() {
                     {circleIcon("#54A1EA")}
                   </div>
                 )}
-                <p className="flex-1 text-[2.2vh] border-b-2 break-all">
+                <p className="flex-1 text-[1.4vh] sm:text-[2.2vh] border-b-2 break-all">
                   Bangun tidur kuterus mandi tidak lupa menggosok gigi
                 </p>
                 <div className="m-auto cursor-pointer">{trashIcon()}</div>
@@ -243,7 +243,7 @@ export default function SubTask() {
                     {circleIcon("#54A1EA")}
                   </div>
                 )}
-                <p className="flex-1 text-[2.2vh] border-b-2 break-all">
+                <p className="flex-1 text-[1.4vh] sm:text-[2.2vh] border-b-2 break-all">
                   Bangun tidur kuterus mandi tidak lupa menggosok gigi
                 </p>
                 <div className="m-auto cursor-pointer">{trashIcon()}</div>
@@ -268,7 +268,7 @@ export default function SubTask() {
                     {circleIcon("#54A1EA")}
                   </div>
                 )}
-                <p className="flex-1 text-[2.2vh] border-b-2 break-all">
+                <p className="flex-1 text-[1.4vh] sm:text-[2.2vh] border-b-2 break-all">
                   Bangun tidur kuterus mandi tidak lupa menggosok gigi
                 </p>
                 <div className="m-auto cursor-pointer">{trashIcon()}</div>
@@ -293,7 +293,7 @@ export default function SubTask() {
                     {circleIcon("#54A1EA")}
                   </div>
                 )}
-                <p className="flex-1 text-[2.2vh] border-b-2 break-all">
+                <p className="flex-1 text-[1.4vh] sm:text-[2.2vh] border-b-2 break-all">
                   Bangun tidur kuterus mandi tidak lupa menggosok gigi
                 </p>
                 <div className="m-auto cursor-pointer">{trashIcon()}</div>
@@ -318,7 +318,7 @@ export default function SubTask() {
                     {circleIcon("#54A1EA")}
                   </div>
                 )}
-                <p className="flex-1 text-[2.2vh] border-b-2 break-all">
+                <p className="flex-1 text-[1.4vh] sm:text-[2.2vh] border-b-2 break-all">
                   Bangun tidur kuterus mandi tidak lupa menggosok gigi
                 </p>
                 <div className="m-auto cursor-pointer">{trashIcon()}</div>
@@ -336,7 +336,7 @@ export default function SubTask() {
               </div>
 
               <input
-                className="flex-1 outline-none w-[3vw] bg-transparent font-medium text-[2.2vh] placeholder:text-white placeholder:opacity-70"
+                className="flex-1 outline-none w-[3vw] bg-transparent font-medium text-[1.4vh] sm:text-[2.2vh] placeholder:text-white placeholder:opacity-70"
                 placeholder="Add New Step"
               />
               {addStepInputShow && (
@@ -360,7 +360,7 @@ export default function SubTask() {
         >
           <div className="flex p-[1vw] gap-4">
             <div className="m-auto">{calenderIcon()}</div>
-            <div className="flex-1 cursor-pointer text-[2.2vh]">
+            <div className="flex-1 cursor-pointer text-[1.4vh] sm:text-[2.2vh]">
               Add due date
             </div>
           </div>
@@ -371,16 +371,16 @@ export default function SubTask() {
           } flex-col text-sm mx-[2vw] bg-[#424242] `}
         >
           <div className="flex flex-col text-center">
-            <div className="hover:bg-zinc-600 cursor-pointer p-2">Today</div>
-            <div className="hover:bg-zinc-600 cursor-pointer p-2">Tomorrow</div>
-            <div className="hover:bg-zinc-600 cursor-pointer p-2">
+            <div className="hover:bg-zinc-600 cursor-pointer p-2 text-[1.4vh] sm:text-[2.2vh] z-20">Today</div>
+            <div className="hover:bg-zinc-600 cursor-pointer p-2 text-[1.4vh] sm:text-[2.2vh] z-20">Tomorrow</div>
+            <div className="hover:bg-zinc-600 cursor-pointer p-2 text-[1.4vh] sm:text-[2.2vh] z-20">
               Set Due Date
             </div>
           </div>
         </div>
       </div>
       <div className="flex justify-center items-center mb-[3vh]">
-        <p className="text-[2.2vh] font-medium">Created day</p>
+        <p className="text-[1.4vh] sm:text-[2.2vh] font-medium">Created day</p>
       </div>
     </div>
   );
