@@ -91,13 +91,213 @@ export default function SubTask() {
   return (
     <div className="  flex flex-col w-[70vw] absolute right-0 lg:relative h-[92vh] md:h-[90.5vh] z-10 sm:w-[45vw] lg:w-[24.4375vw] bg-[#323232]">
       <div className="flex flex-col flex-1 p-[2.421vh] gap-3">
-        <div className="bg-[#424242] overflow-y-scroll">
+        <div className="bg-[#424242] overflow-y-scroll" id="no-scrollbar">
           <div className="flex flex-col m-[3vh] gap-2">
             <div className="flex items-center justify-between">
               <p className="text-[2.9vh] font-semibold">Task 1</p>
               <div>{crossIcon()}</div>
             </div>
-            <div className="flex flex-col gap-2.5 ">
+            <div className="flex flex-col max-h-[53vh] lg:max-h-[51vh] gap-2.5 overflow-y-scroll" id="no-scrollbar">
+              <div className="flex gap-3">
+                {stepDone ? (
+                  <div
+                    className="m-auto"
+                    onClick={() => {
+                      setStepDone(false);
+                    }}
+                  >
+                    {circleCheckIcon()}
+                  </div>
+                ) : (
+                  <div
+                    className="m-auto"
+                    onClick={() => {
+                      setStepDone(true);
+                    }}
+                  >
+                    {circleIcon("#54A1EA")}
+                  </div>
+                )}
+                <p className="flex-1 text-[2.2vh] border-b-2 break-all">
+                  Bangun tidur kuterus mandi tidak lupa menggosok gigi
+                </p>
+                <div className="m-auto cursor-pointer">{trashIcon()}</div>
+              </div>
+              <div className="flex gap-3">
+                {stepDone ? (
+                  <div
+                    className="m-auto"
+                    onClick={() => {
+                      setStepDone(false);
+                    }}
+                  >
+                    {circleCheckIcon()}
+                  </div>
+                ) : (
+                  <div
+                    className="m-auto"
+                    onClick={() => {
+                      setStepDone(true);
+                    }}
+                  >
+                    {circleIcon("#54A1EA")}
+                  </div>
+                )}
+                <p className="flex-1 text-[2.2vh] border-b-2 break-all">
+                  Bangun tidur kuterus mandi tidak lupa menggosok gigi
+                </p>
+                <div className="m-auto cursor-pointer">{trashIcon()}</div>
+              </div>
+              <div className="flex gap-3">
+                {stepDone ? (
+                  <div
+                    className="m-auto"
+                    onClick={() => {
+                      setStepDone(false);
+                    }}
+                  >
+                    {circleCheckIcon()}
+                  </div>
+                ) : (
+                  <div
+                    className="m-auto"
+                    onClick={() => {
+                      setStepDone(true);
+                    }}
+                  >
+                    {circleIcon("#54A1EA")}
+                  </div>
+                )}
+                <p className="flex-1 text-[2.2vh] border-b-2 break-all">
+                  Bangun tidur kuterus mandi tidak lupa menggosok gigi
+                </p>
+                <div className="m-auto cursor-pointer">{trashIcon()}</div>
+              </div>
+              <div className="flex gap-3">
+                {stepDone ? (
+                  <div
+                    className="m-auto"
+                    onClick={() => {
+                      setStepDone(false);
+                    }}
+                  >
+                    {circleCheckIcon()}
+                  </div>
+                ) : (
+                  <div
+                    className="m-auto"
+                    onClick={() => {
+                      setStepDone(true);
+                    }}
+                  >
+                    {circleIcon("#54A1EA")}
+                  </div>
+                )}
+                <p className="flex-1 text-[2.2vh] border-b-2 break-all">
+                  Bangun tidur kuterus mandi tidak lupa menggosok gigi
+                </p>
+                <div className="m-auto cursor-pointer">{trashIcon()}</div>
+              </div>
+              <div className="flex gap-3">
+                {stepDone ? (
+                  <div
+                    className="m-auto"
+                    onClick={() => {
+                      setStepDone(false);
+                    }}
+                  >
+                    {circleCheckIcon()}
+                  </div>
+                ) : (
+                  <div
+                    className="m-auto"
+                    onClick={() => {
+                      setStepDone(true);
+                    }}
+                  >
+                    {circleIcon("#54A1EA")}
+                  </div>
+                )}
+                <p className="flex-1 text-[2.2vh] border-b-2 break-all">
+                  Bangun tidur kuterus mandi tidak lupa menggosok gigi
+                </p>
+                <div className="m-auto cursor-pointer">{trashIcon()}</div>
+              </div>
+              <div className="flex gap-3">
+                {stepDone ? (
+                  <div
+                    className="m-auto"
+                    onClick={() => {
+                      setStepDone(false);
+                    }}
+                  >
+                    {circleCheckIcon()}
+                  </div>
+                ) : (
+                  <div
+                    className="m-auto"
+                    onClick={() => {
+                      setStepDone(true);
+                    }}
+                  >
+                    {circleIcon("#54A1EA")}
+                  </div>
+                )}
+                <p className="flex-1 text-[2.2vh] border-b-2 break-all">
+                  Bangun tidur kuterus mandi tidak lupa menggosok gigi
+                </p>
+                <div className="m-auto cursor-pointer">{trashIcon()}</div>
+              </div>
+              <div className="flex gap-3">
+                {stepDone ? (
+                  <div
+                    className="m-auto"
+                    onClick={() => {
+                      setStepDone(false);
+                    }}
+                  >
+                    {circleCheckIcon()}
+                  </div>
+                ) : (
+                  <div
+                    className="m-auto"
+                    onClick={() => {
+                      setStepDone(true);
+                    }}
+                  >
+                    {circleIcon("#54A1EA")}
+                  </div>
+                )}
+                <p className="flex-1 text-[2.2vh] border-b-2 break-all">
+                  Bangun tidur kuterus mandi tidak lupa menggosok gigi
+                </p>
+                <div className="m-auto cursor-pointer">{trashIcon()}</div>
+              </div>
+              <div className="flex gap-3">
+                {stepDone ? (
+                  <div
+                    className="m-auto"
+                    onClick={() => {
+                      setStepDone(false);
+                    }}
+                  >
+                    {circleCheckIcon()}
+                  </div>
+                ) : (
+                  <div
+                    className="m-auto"
+                    onClick={() => {
+                      setStepDone(true);
+                    }}
+                  >
+                    {circleIcon("#54A1EA")}
+                  </div>
+                )}
+                <p className="flex-1 text-[2.2vh] border-b-2 break-all">
+                  Bangun tidur kuterus mandi tidak lupa menggosok gigi
+                </p>
+                <div className="m-auto cursor-pointer">{trashIcon()}</div>
+              </div>
               <div className="flex gap-3">
                 {stepDone ? (
                   <div
@@ -153,7 +353,7 @@ export default function SubTask() {
           </div>
         </div>
         <div
-          className="bg-[#424242] px-2.5 hover:bg-zinc-600"
+          className="bg-[#424242] px-2.5 py-2 hover:bg-zinc-600"
           onClick={() => {
             dueDatePreview ? setDueDatePreview(false) : setDueDatePreview(true);
           }}
@@ -161,7 +361,7 @@ export default function SubTask() {
           <div className="flex p-[1vw] gap-4">
             <div className="m-auto">{calenderIcon()}</div>
             <div className="flex-1 cursor-pointer text-[2.2vh]">
-              Add due date{" "}
+              Add due date
             </div>
           </div>
         </div>
