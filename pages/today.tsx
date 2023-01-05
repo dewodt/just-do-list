@@ -8,7 +8,7 @@ export default function Today() {
   const starLineIcon = () => {
     return (
       <svg
-        className="fill-white  w-[1rem] m-auto opacity-80 hover:fill-[#54A1EA]"
+        className="fill-white w-[2.45vh] m-auto opacity-80 hover:fill-[#54A1EA]"
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 576 512"
       >
@@ -19,7 +19,7 @@ export default function Today() {
   const starFullIcon = () => {
     return (
       <svg
-        className="fill-white  w-[1rem] m-auto opacity-80 hover:fill-[#54A1EA]"
+        className="fill-white  w-[2.45vh] m-auto opacity-80 hover:fill-[#54A1EA]"
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 576 512"
       >
@@ -30,7 +30,7 @@ export default function Today() {
   const plusIcon = () => {
     return (
       <svg
-        className="fill-white opacity-80 w-[1rem] h-[1rem] m-auto cursor-pointer hover:opacity-100"
+        className="fill-white opacity-80 w-[2.45vh] h-[2.45vh] m-auto cursor-pointer hover:opacity-100"
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 448 512"
       >
@@ -42,7 +42,7 @@ export default function Today() {
     return (
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        className="fill-white opacity-80 w-[1rem] hover:opacity-100"
+        className="fill-white opacity-80 w-[2.45vh] hover:opacity-100"
         viewBox="0 0 512 512"
       >
         <path d="M470.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L192 338.7 425.4 105.4c12.5-12.5 32.8-12.5 45.3 0z" />
@@ -53,7 +53,7 @@ export default function Today() {
   const circleCheckIcon = () => {
     return (
       <svg
-        className="fill-white opacity-80 w-[1rem] hover:fill-[#54A1EA]"
+        className="fill-white opacity-80 w-[2.45vh] hover:fill-[#54A1EA]"
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 512 512"
       >
@@ -65,7 +65,7 @@ export default function Today() {
   const circleIcon = (colorHover: string) => {
     return (
       <svg
-        className={`fill-white opacity-80 w-[1rem] hover:fill-[${colorHover}]`}
+        className={`fill-white opacity-80 w-[2.45vh] hover:fill-[${colorHover}]`}
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 512 512"
       >
@@ -77,7 +77,7 @@ export default function Today() {
   const trashIcon = () => {
     return (
       <svg
-        className="fill-white opacity-80 w-[1rem] h-[1rem] m-auto hover:opacity-100"
+        className="fill-white opacity-80 w-[2.45vh] h-[2.45vh] m-auto hover:opacity-100"
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 448 512"
       >
@@ -85,14 +85,13 @@ export default function Today() {
       </svg>
     );
   };
-  
+
   // Khusus bagian variabel kerja
   const [dateToday, setDateToday] = useState(new Date());
   const [addTaskInputShow, setAddTaskInputShow] = useState(false);
   const [taskDone, setTaskDone] = useState(false);
   const [important, setImportant] = useState(false);
   const [subTaskPreview, setSubTaskPreview] = useState(true);
-
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -104,45 +103,53 @@ export default function Today() {
     <>
       <Layout>
         <div className="flex flex-1">
-          <div className="flex flex-col flex-1 m-[2.3vw] gap-1">
-            <div className="font-semibold text-2xl">Today</div>
-            <div className="font-semibold">
+          <div className="flex flex-col flex-1 py-[2vh] lg:p-[3.8vh] px-[3.4vh] gap-1">
+            <p className="font-semibold text-[3.8vh]">Today</p>
+            <p className="font-medium text-[2.4vh]">
               {dateToday.toLocaleDateString("en-GB", {
                 weekday: "long",
                 day: "numeric",
                 month: "long",
                 year: "numeric",
               })}
-            </div>
+            </p>
             <div
-              className="flex flex-col flex-1 my-4 gap-3 overflow-y-scroll"
+              className="flex flex-1 flex-col my-3 overflow-y-scroll"
               id="no-scrollbar"
             >
-              <div className="bg-[#424242] hover:opacity-80 flex p-[0.5vw] cursor-pointer">
-                <div className="flex flex-1 mx-3 gap-4">
+              <div className="flex bg-[#424242] hover:opacity-80 p-[1.4vh] cursor-pointer mb-[1.47vh] ">
+                <div className="flex flex-1 items-center justify-center mx-[1vw] gap-3">
                   {taskDone ? (
-                    <div
-                      className="m-auto"
+                    <span
                       onClick={() => {
                         setTaskDone(false);
                       }}
                     >
                       {circleCheckIcon()}
-                    </div>
+                    </span>
                   ) : (
-                    <div
-                      className="m-auto"
+                    <span
                       onClick={() => {
                         setTaskDone(true);
                       }}
                     >
                       {circleIcon("#54A1EA")}
-                    </div>
+                    </span>
                   )}
-                  <div className="flex-1" onClick={()=>{subTaskPreview?setSubTaskPreview(false):setSubTaskPreview(true)}}>list1</div>
+                  <p
+                    className="flex break-all flex-1 text-[2.25vh] text-justify"
+                    onClick={() => {
+                      subTaskPreview
+                        ? setSubTaskPreview(false)
+                        : setSubTaskPreview(true);
+                    }}
+                  >
+                    list1asdasdasdahoaisjdjaosjdjasuin hassj hdkja dkjhas djkha
+                    kjshd si dias
+                    ddainduniocauosndoiuzonisunioufousiyfbiurfysbiuodyuiboybiuuoiassybuidybuiasyduiyuiyasbuidbyasuidyb
+                  </p>
                   {important ? (
                     <div
-                      className="m-auto"
                       onClick={() => {
                         setImportant(false);
                       }}
@@ -150,56 +157,48 @@ export default function Today() {
                       {starLineIcon()}
                     </div>
                   ) : (
-                    <div
-                      className="m-auto"
+                    <button
                       onClick={() => {
                         setImportant(true);
                       }}
                     >
                       {starFullIcon()}
-                    </div>
+                    </button>
                   )}
-                  <div
-                      className="m-auto"
-                         >
-                      {trashIcon()}
-                    </div>
+                  <button>{trashIcon()}</button>
                 </div>
               </div>
             </div>
 
-            <div>
-              <div
-                className="bg-[#424242] opacity-100 flex p-[0.6vw] hover:opacity-80"
-                onClick={() => {
-                  !addTaskInputShow && setAddTaskInputShow(true);
-                }}
-              >
-                <div className="flex flex-1 mx-3 gap-4">
-                  <div className="m-auto">
-                    {addTaskInputShow ? circleIcon("none") : plusIcon()}
-                  </div>
-                  <input
-                    className="flex-1 outline-none font-medium bg-transparent placeholder:text-white placeholder:opacity-70"
-                    placeholder="Add New Task"
-                  />
-                  {addTaskInputShow && (
-                    <div
-                      className="m-auto cursor-pointer"
-                      onClick={() => {
-                        setAddTaskInputShow(false);
-                      }}
-                    >
-                      {checkIcon()}
-                    </div>
-                  )}
+            <div
+              className="bg-[#424242] opacity-100 flex p-[1.5vh] hover:opacity-80"
+              onClick={() => {
+                !addTaskInputShow && setAddTaskInputShow(true);
+              }}
+            >
+              <div className="flex flex-1 px-[1.5vw] gap-4 ">
+                <div className="m-auto">
+                  {addTaskInputShow ? circleIcon("none") : plusIcon()}
                 </div>
+                <input
+                  className="flex-1 outline-none w-[8vw] font-medium text-[2.2vh] bg-transparent placeholder:text-white placeholder:opacity-70"
+                  placeholder="Add New Task"
+                />
+                {addTaskInputShow && (
+                  <div
+                    className="m-auto cursor-pointer"
+                    onClick={() => {
+                      setAddTaskInputShow(false);
+                    }}
+                  >
+                    {checkIcon()}
+                  </div>
+                )}
               </div>
             </div>
           </div>
+          {subTaskPreview && <SubTask />}
         </div>
-        {subTaskPreview&&
-          <SubTask />}
       </Layout>
     </>
   );

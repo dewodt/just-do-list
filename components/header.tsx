@@ -2,9 +2,9 @@ import Image from "next/image";
 
 export default function Header() {
   return (
-    <header className="flex items-center justify-between bg-[#3E3E3E] border-b-[1px] border-[#959595] h-[9.5vh] w-full">
-      <div className="flex gap-x-5 w-[19vw] justify-center items-center">
-        <div className="flex relative w-[8vh] h-[8vh] items-center">
+    <header className="flex items-center justify-between bg-[#3E3E3E] border-b-[1px] border-[#959595] h-[8vh] md:h-[9.5vh] w-full">
+      <div className="flex w-[19vw] justify-center items-center">
+        <div className="flex relative w-[8vh] h-[8vh] items-center ml-1">
           <Image
             src={"/logo-app.png"}
             width="2000"
@@ -14,14 +14,14 @@ export default function Header() {
           ></Image>
         </div>
         <div className=" hidden lg:flex lg:flex-col justify-center">
-          <p className="font-bold text-[2.7vh] font-['Montserrat'] inline-block">
+          <p className="font-bold text-[2.6vh] font-['Montserrat'] whitespace-nowrap">
             Just Do List!
           </p>
-          <p className="text-[1.6vh] text-[#908787]">for desktop users only</p>
+          <p className="text-[1.2vh] text-[#908787]">for desktop users only</p>
         </div>
       </div>
       <div className="flex flex-1 justify-center items-center px-5 md:px-10">
-        <div className="py-[0.4vh] px-[5vw] rounded-full bg-white flex w-full">
+        <div className="py-[0.1vh] md:py-[0.4vh]  px-[5vw] rounded-full bg-white opacity-70 flex w-full">
           <input
             placeholder="Search ..."
             className="w-[20vh] sm:w-[40vw] text-black text-[1.9vh] sm:text-[2vh] m-auto text-center bg-transparent outline-none placeholder:text-gray-600"

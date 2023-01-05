@@ -1,11 +1,34 @@
 import { useState } from "react";
 
 export default function SubTask() {
-    // Bagian Icon
+  // Khusus bagian icon
+  const plusIcon = () => {
+    return (
+      <svg
+        className="fill-white opacity-80 w-[2vh] h-[2vh] m-auto cursor-pointer hover:opacity-100"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 448 512"
+      >
+        <path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z" />
+      </svg>
+    );
+  };
+  const checkIcon = () => {
+    return (
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        className="fill-white opacity-80 w-[2vh] hover:opacity-100"
+        viewBox="0 0 512 512"
+      >
+        <path d="M470.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L192 338.7 425.4 105.4c12.5-12.5 32.8-12.5 45.3 0z" />
+      </svg>
+    );
+  };
+
   const circleCheckIcon = () => {
     return (
       <svg
-        className="fill-white opacity-80 w-[0.92rem] hover:fill-[#54A1EA]"
+        className="fill-white opacity-80 w-[2vh] hover:fill-[#54A1EA]"
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 512 512"
       >
@@ -17,7 +40,7 @@ export default function SubTask() {
   const circleIcon = (colorHover: string) => {
     return (
       <svg
-        className={`fill-white opacity-80 w-[0.92rem] hover:fill-[${colorHover}]`}
+        className={`fill-white opacity-80 w-[2vh] hover:fill-[${colorHover}]`}
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 512 512"
       >
@@ -26,34 +49,10 @@ export default function SubTask() {
     );
   };
 
-  const plusIcon = () => {
-    return (
-      <svg
-        className="fill-white opacity-80 w-[0.92rem] h-[0.92rem] m-auto cursor-pointer"
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 448 512"
-      >
-        <path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z" />
-      </svg>
-    );
-  };
-
-  const calenderIcon = () => {
-    return (
-      <svg
-        className="fill-white opacity-80 w-[1rem] h-[1rem] m-auto"
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 448 512"
-      >
-        <path d="M152 64H296V24C296 10.75 306.7 0 320 0C333.3 0 344 10.75 344 24V64H384C419.3 64 448 92.65 448 128V448C448 483.3 419.3 512 384 512H64C28.65 512 0 483.3 0 448V128C0 92.65 28.65 64 64 64H104V24C104 10.75 114.7 0 128 0C141.3 0 152 10.75 152 24V64zM48 448C48 456.8 55.16 464 64 464H384C392.8 464 400 456.8 400 448V192H48V448z" />
-      </svg>
-    );
-  };
-
   const trashIcon = () => {
     return (
       <svg
-        className="fill-white opacity-80 w-[1rem] h-[1rem] m-auto hover:opacity-100"
+        className="fill-white opacity-80 w-[2vh] h-[2vh] m-auto hover:opacity-100"
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 448 512"
       >
@@ -62,30 +61,43 @@ export default function SubTask() {
     );
   };
 
-  const checkIcon = () => {
+  const calenderIcon = () => {
     return (
       <svg
+        className="fill-white opacity-80 w-[2vh] h-[2vh] m-auto"
         xmlns="http://www.w3.org/2000/svg"
-        className="fill-white opacity-80 w-[1rem] "
-        viewBox="0 0 512 512"
+        viewBox="0 0 448 512"
       >
-        <path d="M470.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L192 338.7 425.4 105.4c12.5-12.5 32.8-12.5 45.3 0z" />
+        <path d="M152 64H296V24C296 10.75 306.7 0 320 0C333.3 0 344 10.75 344 24V64H384C419.3 64 448 92.65 448 128V448C448 483.3 419.3 512 384 512H64C28.65 512 0 483.3 0 448V128C0 92.65 28.65 64 64 64H104V24C104 10.75 114.7 0 128 0C141.3 0 152 10.75 152 24V64zM48 448C48 456.8 55.16 464 64 464H384C392.8 464 400 456.8 400 448V192H48V448z" />
       </svg>
     );
   };
-
-    // Bagian variabel program
+  const crossIcon = () => {
+    return (
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        className="fill-white opacity-80 w-[3vh] h-[3vh] m-auto"
+        viewBox="0 0 320 512"
+      >
+        <path d="M310.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L160 210.7 54.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L114.7 256 9.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 301.3 265.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L205.3 256 310.6 150.6z" />
+      </svg>
+    );
+  };
+  // Bagian variabel program
   const [stepDone, setStepDone] = useState(false);
   const [addStepInputShow, setAddStepInputShow] = useState(false);
   const [dueDatePreview, setDueDatePreview] = useState(false);
 
   return (
-    <div className="flex flex-col w-[23.4375vw] bg-[#323232] ">
-      <div className="flex flex-col flex-1 mx-[2.6vw] mt-[2.6vw] gap-4">
-        <div className="bg-[#424242]  overflow-y-scroll">
-          <div className="flex flex-col m-[1.4vw] gap-2">
-            <div className="text-lg font-semibold">Task 1</div>
-            <div className="flex flex-col gap-2 ">
+    <div className="  flex flex-col w-[70vw] absolute right-0 lg:relative h-[92vh] md:h-[90.5vh] z-10 sm:w-[45vw] lg:w-[24.4375vw] bg-[#323232]">
+      <div className="flex flex-col flex-1 p-[2.421vh] gap-3">
+        <div className="bg-[#424242] overflow-y-scroll">
+          <div className="flex flex-col m-[3vh] gap-2">
+            <div className="flex items-center justify-between">
+              <p className="text-[2.9vh] font-semibold">Task 1</p>
+              <div>{crossIcon()}</div>
+            </div>
+            <div className="flex flex-col gap-2.5 ">
               <div className="flex gap-3">
                 {stepDone ? (
                   <div
@@ -106,7 +118,9 @@ export default function SubTask() {
                     {circleIcon("#54A1EA")}
                   </div>
                 )}
-                <div className="flex-1 border-b-2 break-all">Step1</div>
+                <p className="flex-1 text-[2.2vh] border-b-2 break-all">
+                  Bangun tidur kuterus mandi tidak lupa menggosok gigi
+                </p>
                 <div className="m-auto cursor-pointer">{trashIcon()}</div>
               </div>
             </div>
@@ -122,7 +136,7 @@ export default function SubTask() {
               </div>
 
               <input
-                className="flex-1 outline-none w-[3vw] bg-transparent font-medium placeholder:text-white placeholder:opacity-70"
+                className="flex-1 outline-none w-[3vw] bg-transparent font-medium text-[2.2vh] placeholder:text-white placeholder:opacity-70"
                 placeholder="Add New Step"
               />
               {addStepInputShow && (
@@ -138,24 +152,35 @@ export default function SubTask() {
             </div>
           </div>
         </div>
-        <div className="bg-[#424242] hover:bg-zinc-600" onClick={()=>{dueDatePreview?setDueDatePreview(false):setDueDatePreview(true)}}>
-          <div className="flex p-[0.78vw] gap-4 ">
+        <div
+          className="bg-[#424242] px-2.5 hover:bg-zinc-600"
+          onClick={() => {
+            dueDatePreview ? setDueDatePreview(false) : setDueDatePreview(true);
+          }}
+        >
+          <div className="flex p-[1vw] gap-4">
             <div className="m-auto">{calenderIcon()}</div>
-            <div className="flex-1 cursor-pointer">Add due date </div>
+            <div className="flex-1 cursor-pointer text-[2.2vh]">
+              Add due date{" "}
+            </div>
           </div>
         </div>
-        <div className={`${dueDatePreview?'flex':'hidden'} flex-col text-sm mx-[2vw] bg-[#424242] `}>
+        <div
+          className={`${
+            dueDatePreview ? "flex" : "hidden"
+          } flex-col text-sm mx-[2vw] bg-[#424242] `}
+        >
           <div className="flex flex-col text-center">
             <div className="hover:bg-zinc-600 cursor-pointer p-2">Today</div>
             <div className="hover:bg-zinc-600 cursor-pointer p-2">Tomorrow</div>
-            <div className="hover:bg-zinc-600 cursor-pointer p-2">Set Due Date</div>
+            <div className="hover:bg-zinc-600 cursor-pointer p-2">
+              Set Due Date
+            </div>
           </div>
         </div>
       </div>
-      <div className="flex justify-center mb-[1.2vw]">
-        <div className="flex gap-[2vw]">
-          <div className="m-auto">Created day</div>
-        </div>
+      <div className="flex justify-center items-center mb-[3vh]">
+        <p className="text-[2.2vh] font-medium">Created day</p>
       </div>
     </div>
   );
