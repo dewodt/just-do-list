@@ -22,14 +22,14 @@ export default function Notes() {
       <Layout>
         <div className="flex flex-1">
           <div className="flex flex-col flex-1 pt-[2vh] lg:px-[3.8vh] lg:pt-[3.8vh] px-[3.4vh] ">
-            <div className="flex  items-center gap-x-3">
+            <div className="flex  items-center gap-x-2">
               <span>{notesIcon()}</span>
               <p className="font-semibold text-[2.5vh] sm:text-[3.8vh]">
                 Notes{" "}
               </p>
             </div>
             <div
-              className="flex flex-wrap justify-center mt-8  overflow-y-scroll gap-x-[11.71vw] gap-y-[2.97vh] sm:gap-x-[4.31vw] sm:gap-y-[6vh]"
+              className="flex flex-wrap justify-center mt-8 overflow-y-scroll gap-x-[8.71vw] gap-y-[2.97vh] xl:gap-x-[4.31vw] sm:gap-y-[6vh]"
               id="no-scrollbar"
             >
               <div
@@ -39,7 +39,7 @@ export default function Notes() {
                     ? setSubNotesPreview(false)
                     : setSubNotesPreview(true);
                 }}
-                className="flex bg-[#424242] rounded-[20px] h-[20.83vh] w-[30.411vw] sm:w-[20.83vw] sm:h-[30.411vh] hover:opacity-80 px-[2vw] py-[1.8vh] cursor-pointer "
+                className="flex bg-[#424242] rounded-[10px] sm:rounded-[20px] h-[20.83vh] w-[30.411vw] sm:w-[20.83vw] sm:h-[30.411vh] hover:opacity-80 px-[2vw] py-[1.8vh] cursor-pointer "
               >
                 <div className="flex flex-col flex-1 justify-center my-[0.3vh] mx-[1.8vw] sm:my-[1.1vh] sm:mx-[1vw]">
                   <p className="font-semibold text-[2vh] sm:text-[2.9vh] lg:mb-[2vh] mb-[0.5vh] lg:mt-1">
@@ -60,7 +60,7 @@ export default function Notes() {
                     ? setSubNotesPreview(false)
                     : setSubNotesPreview(true);
                 }}
-                className="flex bg-[#424242] rounded-[20px] h-[20.83vh] w-[30.411vw] sm:w-[20.83vw] sm:h-[30.411vh] hover:opacity-80 px-[2vw] py-[1.8vh] cursor-pointer "
+                className="flex bg-[#424242] rounded-[10px] sm:rounded-[20px] h-[20.83vh] w-[30.411vw] sm:w-[20.83vw] sm:h-[30.411vh] hover:opacity-80 px-[2vw] py-[1.8vh] cursor-pointer "
               >
                 <div className="flex flex-col flex-1 justify-center my-[0.3vh] mx-[1.8vw] sm:my-[1.1vh] sm:mx-[1vw]">
                   <p className="font-semibold text-[2vh] sm:text-[2.9vh] lg:mb-[2vh] mb-[0.5vh] lg:mt-1">
@@ -81,7 +81,7 @@ export default function Notes() {
                     ? setSubNotesPreview(false)
                     : setSubNotesPreview(true);
                 }}
-                className="flex bg-[#424242] rounded-[20px] h-[20.83vh] w-[30.411vw] sm:w-[20.83vw] sm:h-[30.411vh] hover:opacity-80 px-[2vw] py-[1.8vh] cursor-pointer "
+                className="flex bg-[#424242] rounded-[10px] sm:rounded-[20px] h-[20.83vh] w-[30.411vw] sm:w-[20.83vw] sm:h-[30.411vh] hover:opacity-80 px-[2vw] py-[1.8vh] cursor-pointer "
               >
                 <div className="flex flex-col flex-1 justify-center my-[0.3vh] mx-[1.8vw] sm:my-[1.1vh] sm:mx-[1vw]">
                   <p className="font-semibold text-[2vh] sm:text-[2.9vh] lg:mb-[2vh] mb-[0.5vh] lg:mt-1">
@@ -97,7 +97,7 @@ export default function Notes() {
               </div>
             </div>
           </div>
-          <div className="flex items-center justify-center bg-blue-400 absolute sm:bottom-[6vh] sm:right-[4vw] bottom-[4vh] right-[10vw] rounded-full w-[4.5vh] sm:w-[7vh] h-[4.5vh] sm:h-[7vh]">
+          <span role="button" onClick={()=>{setSubNotesPreview(true)}} className="flex items-center justify-center bg-blue-400 hover:scale-[1.15] duration-300 ease-in-out absolute sm:bottom-[6vh] sm:right-[4vw] bottom-[4vh] right-[10vw] rounded-full w-[4.5vh] sm:w-[7vh] h-[4.5vh] sm:h-[7vh]">
             <svg
               className="fill-white opacity-80 w-[3.5vh] sm:w-[5vh] h-[3.5vh] sm:h-[5vh] m-auto hover:opacity-100"
               xmlns="http://www.w3.org/2000/svg"
@@ -105,7 +105,7 @@ export default function Notes() {
             >
               <path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z" />
             </svg>
-          </div>
+          </span>
         </div>
         {subNotesPreview && <SubNotes />}
       </Layout>

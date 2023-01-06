@@ -52,7 +52,7 @@ export default function SubTask() {
   const trashIcon = () => {
     return (
       <svg
-        className="fill-white opacity-80 w-[1.5vh] sm:w-[2vh] h-[1.5vh] sm:h-[2vh] m-auto hover:opacity-100"
+        className="fill-white opacity-80 w-[1.5vh] sm:w-[2vh] h-[1.5vh] sm:h-[2vh] m-auto hover:fill-[#54A1EA]"
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 448 512"
       >
@@ -97,7 +97,10 @@ export default function SubTask() {
               <p className="text-[2vh] sm:text-[2.9vh] font-semibold">Task 1</p>
               <div>{crossIcon()}</div>
             </div>
-            <div className="flex flex-col max-h-[53vh] lg:max-h-[51vh] gap-2.5 overflow-y-scroll" id="no-scrollbar">
+            <div
+              className="flex flex-col max-h-[53vh] lg:max-h-[51vh] gap-2.5 overflow-y-scroll"
+              id="no-scrollbar"
+            >
               <div className="flex gap-3">
                 {stepDone ? (
                   <div
@@ -353,29 +356,33 @@ export default function SubTask() {
           </div>
         </div>
         <div
-          className="bg-[#424242] px-2.5 py-2 hover:bg-zinc-600"
+          className="bg-[#424242] px-2.5 py-2 relative flex justify-center hover:bg-[#4b4b4b]"
           onClick={() => {
             dueDatePreview ? setDueDatePreview(false) : setDueDatePreview(true);
           }}
         >
-          <div className="flex p-[1vw] gap-4">
-            <div className="m-auto">{calenderIcon()}</div>
-            <div className="flex-1 cursor-pointer text-[1.4vh] sm:text-[2.2vh]">
-              Add due date
+          <div
+            className={`${
+              dueDatePreview ? "flex" : "hidden"
+            } flex-col flex-1 text-sm absolute z-20 -top-[130px] sm:-top-[125px] md:-top-[225px] lg:-top-[145px] xl:-top-[165px] min-w-[40vw] lg:min-w-[12vw] sm:min-w-[30vw] mx-[2vw] bg-[#313131]`}
+          >
+            <div className="flex flex-col text-center">
+              <div className="hover:bg-[#4b4b4b] cursor-pointer px-[1.8vh] sm:px-[2.6vh] py-[1.3vh] md:py-[2vh] text-[1.4vh] sm:text-[2.2vh] ">
+                Today
+              </div>
+              <div className="hover:bg-[#4b4b4b] cursor-pointer px-[1.8vh] sm:px-[2.6vh] py-[1.3vh] md:py-[2vh] text-[1.4vh] sm:text-[2.2vh] ">
+                Tomorrow
+              </div>
+              <div className="hover:bg-[#4b4b4b] cursor-pointer px-[1.8vh] sm:px-[2.6vh] py-[1.3vh] md:py-[2vh] text-[1.4vh] sm:text-[2.2vh] ">
+                Set Due Date
+              </div>
             </div>
           </div>
-        </div>
-        <div
-          className={`${
-            dueDatePreview ? "flex" : "hidden"
-          } flex-col text-sm mx-[2vw] bg-[#424242] `}
-        >
-          <div className="flex flex-col text-center">
-            <div className="hover:bg-zinc-600 cursor-pointer p-2 text-[1.4vh] sm:text-[2.2vh] z-20">Today</div>
-            <div className="hover:bg-zinc-600 cursor-pointer p-2 text-[1.4vh] sm:text-[2.2vh] z-20">Tomorrow</div>
-            <div className="hover:bg-zinc-600 cursor-pointer p-2 text-[1.4vh] sm:text-[2.2vh] z-20">
-              Set Due Date
-            </div>
+          <div className="flex p-[0.5vh] sm:p-[1vh] gap-4 mr-auto">
+            <div className="m-auto">{calenderIcon()}</div>
+            <p className="flex-1 cursor-pointer text-[1.4vh] sm:text-[2.2vh]">
+              Add due date
+            </p>
           </div>
         </div>
       </div>

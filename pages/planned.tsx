@@ -42,7 +42,7 @@ export default function Planned() {
   const plusIcon = () => {
     return (
       <svg
-        className="fill-white opacity-80 w-[1.8vh] sm:w-[2.45vh] h-[1.8vh] sm:h-[2.45vh] m-auto cursor-pointer hover:opacity-100"
+        className="fill-white opacity-80 w-[1.8vh] sm:w-[2.45vh] h-[1.8vh] sm:h-[2.45vh] m-auto cursor-pointer"
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 448 512"
       >
@@ -89,7 +89,7 @@ export default function Planned() {
   const trashIcon = () => {
     return (
       <svg
-        className="fill-white opacity-80 w-[1.8vh] sm:w-[2.45vh] h-[1.8vh] sm:h-[2.45vh] m-auto hover:opacity-100"
+        className="fill-white opacity-80 w-[1.8vh] sm:w-[2.45vh] h-[1.8vh] sm:h-[2.45vh] m-auto hover:fill-[#54A1EA]"
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 448 512"
       >
