@@ -5,7 +5,7 @@ export default function Fitur() {
     <div className="flex flex-col mb-2 mx-10 indent-4 text-[0.87rem] gap-1">
       {/* Component 1 : Tasks */}
       <Link href="/tasks">
-        <div className={`bg-[${useRouter().pathname === '/tasks' && '#54A1EA'}] hover:bg-[#4493dd] rounded-[0.5rem] flex cursor-pointer`} role="button">
+        <div className={`bg-[${useRouter().pathname === '/tasks' && '#54A1EA'}] hover:bg-[#4493dd] hover:scale-[1.05] duration-300 ease-in-out rounded-[0.5rem] flex cursor-pointer`} role="button">
           <div className="ml-4 py-1.5">
             <svg
               className="fill-white opacity-80 w-[1rem] m-auto"
@@ -20,7 +20,7 @@ export default function Fitur() {
       </Link>
       {/* Component 2 : Today */}
       <Link href="/today">
-      <div className={`bg-[${useRouter().pathname === '/today' && '#54A1EA'}] hover:bg-[#4493dd] rounded-[0.5rem] flex cursor-pointer`} role="button">
+      <div className={`bg-[${useRouter().pathname === '/today' && '#54A1EA'}] hover:bg-[#4493dd] hover:scale-[1.05] duration-300 ease-in-out rounded-[0.5rem] flex cursor-pointer`} role="button">
 
           <div className="ml-4 py-1.5 ">
             <svg
@@ -36,7 +36,7 @@ export default function Fitur() {
       </Link>
       {/* Component 3 : Important */}
       <Link href="/important">
-        <div className={`bg-[${useRouter().pathname === '/important' && '#54A1EA'}] hover:bg-[#4493dd] rounded-[0.5rem] flex cursor-pointer`} role="button">
+        <div className={`bg-[${useRouter().pathname === '/important' && '#54A1EA'}] hover:bg-[#4493dd] hover:scale-[1.05] duration-300 ease-in-out rounded-[0.5rem] flex cursor-pointer`} role="button">
 
           <div className="ml-4 py-1.5">
             <svg
@@ -52,7 +52,7 @@ export default function Fitur() {
       </Link>
       {/* Component 4 : Planned */}
       <Link href="/planned">
-        <div className={`bg-[${useRouter().pathname === '/planned' && '#54A1EA'}] hover:bg-[#4493dd] rounded-[0.5rem] flex cursor-pointer`} role="button">
+        <div className={`bg-[${useRouter().pathname === '/planned' && '#54A1EA'}] hover:bg-[#4493dd] hover:scale-[1.05] duration-300 ease-in-out rounded-[0.5rem] flex cursor-pointer`} role="button">
 
           <div className="ml-4 py-1.5">
             <svg
@@ -68,7 +68,7 @@ export default function Fitur() {
       </Link>
       {/* Component 5 : Notes */}
       <Link href="/notes">
-      <div className={`bg-[${useRouter().pathname === '/notes' && '#54A1EA'}] hover:bg-[#4493dd] rounded-[0.5rem] flex cursor-pointer`} role="button">
+      <div className={`bg-[${useRouter().pathname === '/notes' && '#54A1EA'}] hover:bg-[#4493dd] hover:scale-[1.05] duration-300 ease-in-out rounded-[0.5rem] flex cursor-pointer`} role="button">
 
           <div className="ml-4 py-1.5">
             <svg
