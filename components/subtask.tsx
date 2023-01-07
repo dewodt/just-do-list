@@ -13,6 +13,7 @@ export default function SubTask() {
       </svg>
     );
   };
+
   const checkIcon = () => {
     return (
       <svg
@@ -72,6 +73,7 @@ export default function SubTask() {
       </svg>
     );
   };
+
   const crossIcon = () => {
     return (
       <svg
@@ -83,6 +85,7 @@ export default function SubTask() {
       </svg>
     );
   };
+  
   // Bagian variabel program
   const [stepDone, setStepDone] = useState(false);
   const [addStepInputShow, setAddStepInputShow] = useState(false);

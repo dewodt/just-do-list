@@ -16,6 +16,7 @@ export default function Tasks() {
       </svg>
     );
   };
+
   const starLineIcon = () => {
     return (
       <svg
@@ -27,6 +28,7 @@ export default function Tasks() {
       </svg>
     );
   };
+
   const starFullIcon = () => {
     return (
       <svg
@@ -38,10 +40,11 @@ export default function Tasks() {
       </svg>
     );
   };
-  const plusIcon = () => {
+
+  const plusIcon = (rotate: string) => {
     return (
       <svg
-        className="fill-white opacity-80 w-[1.8vh] sm:w-[2.45vh] h-[1.8vh] sm:h-[2.45vh] m-auto cursor-pointer "
+        className={`${rotate} fill-white opacity-80 w-[1.8vh] sm:w-[2.45vh] h-[1.8vh] sm:h-[2.45vh] m-auto cursor-pointer`}
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 448 512"
       >
@@ -49,6 +52,7 @@ export default function Tasks() {
       </svg>
     );
   };
+
   const checkIcon = () => {
     return (
       <svg
@@ -97,13 +101,89 @@ export default function Tasks() {
     );
   };
 
+  const renameIcon = () => {
+    return (
+      <svg
+        className="fill-white opacity-80 w-[1.8vh] sm:w-[2.45vh] h-[1.8vh] sm:h-[2.45vh] m-auto hover:fill-[#54A1EA]"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 512 512"
+      >
+        <path d="M471.6 21.7c-21.9-21.9-57.3-21.9-79.2 0L362.3 51.7l97.9 97.9 30.1-30.1c21.9-21.9 21.9-57.3 0-79.2L471.6 21.7zm-299.2 220c-6.1 6.1-10.8 13.6-13.5 21.9l-29.6 88.8c-2.9 8.6-.6 18.1 5.8 24.6s15.9 8.7 24.6 5.8l88.8-29.6c8.2-2.8 15.7-7.4 21.9-13.5L437.7 172.3 339.7 74.3 172.4 241.7zM96 64C43 64 0 107 0 160V416c0 53 43 96 96 96H352c53 0 96-43 96-96V320c0-17.7-14.3-32-32-32s-32 14.3-32 32v96c0 17.7-14.3 32-32 32H96c-17.7 0-32-14.3-32-32V160c0-17.7 14.3-32 32-32h96c17.7 0 32-14.3 32-32s-14.3-32-32-32H96z" />
+      </svg>
+    );
+  };
+  const saveIcon = () => {
+    return (
+      <svg
+        className="fill-white opacity-80 w-[1.8vh] sm:w-[2.45vh] h-[1.8vh] sm:h-[2.45vh] m-auto hover:fill-[#54A1EA]"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 448 512"
+      >
+        <path d="M64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V173.3c0-17-6.7-33.3-18.7-45.3L352 50.7C340 38.7 323.7 32 306.7 32H64zm0 96c0-17.7 14.3-32 32-32H288c17.7 0 32 14.3 32 32v64c0 17.7-14.3 32-32 32H96c-17.7 0-32-14.3-32-32V128zM224 416c-35.3 0-64-28.7-64-64s28.7-64 64-64s64 28.7 64 64s-28.7 64-64 64z" />
+      </svg>
+    );
+  };
+  type ObjectTask = {
+    title: string;
+    id: string;
+  };
+
   // Khusus bagian variabel kerja
+  const uniqid = require("uniqid"); //Ini buat generate id dari npm
   const [addTaskInputShow, setAddTaskInputShow] = useState(false);
   const [taskDone, setTaskDone] = useState(false);
   const [important, setImportant] = useState(false);
-  const [subTaskPreview, setSubTaskPreview] = useState(true);
+  const [subTaskPreview, setSubTaskPreview] = useState(false);
   const [dropDownFinished, setDropDownFinished] = useState(false);
+  const [taskTitle, setTaskTitle] = useState("");
+  const [tasks, setTasks] = useState<ObjectTask[]>([]);
+  const [taskEdit, setEditTask] = useState<ObjectTask>({ title: "", id: "" });
 
+  function addTask() {
+    if (addTaskInputShow) {
+      if (taskTitle === "") {
+      } else {
+        setTasks([
+          ...tasks,
+          {
+            id: uniqid("task_"),
+            title: taskTitle,
+          },
+        ]);
+        setTaskTitle("");
+      }
+      setAddTaskInputShow(false);
+    } else {
+      setAddTaskInputShow(true);
+      setTaskTitle("");
+    }
+  }
+
+  function handleDelete(idTask: string) {
+    setTasks(
+      tasks.filter(function (task) {
+        return task.id != idTask;
+      })
+    );
+  }
+
+  function handleEdit(task: { title: string; id: string }) {
+    setEditTask(task);
+    setAddTaskInputShow(false);
+    setTaskTitle(task.title);
+  }
+
+  function handleSave(i: number) {
+    if (taskTitle == "") {
+      tasks[i].title = "New Task";
+    } else {
+      tasks[i].title = taskTitle;
+    }
+    setTasks([...tasks]);
+    setEditTask({ id: "", title: "" });
+    setTaskTitle("");
+    setAddTaskInputShow(false)
+  }
   return (
     <>
       <Layout>
@@ -120,163 +200,111 @@ export default function Tasks() {
               className="flex flex-1 flex-col my-3 overflow-y-scroll"
               id="no-scrollbar"
             >
-              <div className="flex bg-[#424242] hover:opacity-80 p-[1.4vh] cursor-pointer mb-[1.47vh] ">
-                <div className="flex flex-1 items-center justify-center mx-[1vw] gap-3">
-                  {taskDone ? (
-                    <span
-                      onClick={() => {
-                        setTaskDone(false);
-                      }}
-                    >
-                      {circleCheckIcon()}
-                    </span>
-                  ) : (
-                    <span
-                      onClick={() => {
-                        setTaskDone(true);
-                      }}
-                    >
-                      {circleIcon("#54A1EA")}
-                    </span>
-                  )}
-                  <p
-                    className="flex break-all flex-1 text-[1.5vh] sm:text-[2.25vh] text-justify"
-                    onClick={() => {
-                      subTaskPreview
-                        ? setSubTaskPreview(false)
-                        : setSubTaskPreview(true);
-                    }}
-                  >
-                    list1asdasdasdahoaisjdjaosjdjasuin hassj hdkja dkjhas djkha
-                    kjshd si dias
-                    ddainduniocauosndoiuzonisunioufousiyfbiurfysbiuodyuiboybiuuoiassybuidybuiasyduiyuiyasbuidbyasuidyb
-                  </p>
-                  {important ? (
-                    <div
-                      onClick={() => {
-                        setImportant(false);
-                      }}
-                    >
-                      {starLineIcon()}
-                    </div>
-                  ) : (
-                    <button
-                      onClick={() => {
-                        setImportant(true);
-                      }}
-                    >
-                      {starFullIcon()}
-                    </button>
-                  )}
-                  <button>{trashIcon()}</button>
+              {tasks.map((task, index) => (
+                <div
+                  key={task.id}
+                  className="flex bg-[#424242] hover:opacity-80 duration-200 p-[1.4vh] cursor-pointer mb-[1.47vh] "
+                >
+                  <div className="flex flex-1 items-center justify-center mx-[1vw] gap-3">
+                    {taskDone ? (
+                      <span
+                        onClick={() => {
+                          setTaskDone(false);
+                        }}
+                      >
+                        {circleCheckIcon()}
+                      </span>
+                    ) : (
+                      <span
+                        onClick={() => {
+                          setTaskDone(true);
+                        }}
+                      >
+                        {circleIcon("#54A1EA")}
+                      </span>
+                    )}
+                    {/* Ternary */}
+                    {taskEdit === task ? (
+                      <>
+                        <input
+                          type="text"
+                          className="w-full outline-none bg-[#3d3d3d] bg-opacity-50 gap-x-40"
+                          placeholder="New Task"
+                          defaultValue={task.title}
+                          onChange={(event) => {
+                            setTaskTitle(event.target.value);
+                          }}
+                        />
+                        <button
+                          onClick={() => {
+                            handleSave(index);
+                          }}
+                        >
+                          {saveIcon()}
+                        </button>
+                      </>
+                    ) : (
+                      <>
+                        <p
+                          className="flex break-all flex-1 text-[1.5vh] sm:text-[2.25vh] text-justify"
+                          onClick={() => {
+                            subTaskPreview
+                              ? setSubTaskPreview(false)
+                              : setSubTaskPreview(true);
+                          }}
+                        >
+                          {task.title}
+                        </p>
+                        {important ? (
+                          <button
+                            onClick={() => {
+                              setImportant(false);
+                            }}
+                          >
+                            {starLineIcon()}
+                          </button>
+                        ) : (
+                          <button
+                            onClick={() => {
+                              setImportant(true);
+                            }}
+                          >
+                            {starFullIcon()}
+                          </button>
+                        )}
+                        <button
+                          onClick={() => {
+                            handleEdit(task);
+                          }}
+                        >
+                          {renameIcon()}
+                        </button>
+                        <button
+                          onClick={() => {
+                            handleDelete(task.id);
+                          }}
+                        >
+                          {trashIcon()}
+                        </button>
+                      </>
+                    )}
+                  </div>
                 </div>
-              </div>
-              <div className="flex bg-[#424242] hover:opacity-80 p-[1.4vh] cursor-pointer mb-[1.47vh] ">
-                <div className="flex flex-1 items-center justify-center mx-[1vw] gap-3">
-                  {taskDone ? (
-                    <span
-                      onClick={() => {
-                        setTaskDone(false);
-                      }}
-                    >
-                      {circleCheckIcon()}
-                    </span>
-                  ) : (
-                    <span
-                      onClick={() => {
-                        setTaskDone(true);
-                      }}
-                    >
-                      {circleIcon("#54A1EA")}
-                    </span>
-                  )}
-                  <p
-                    className="flex break-all flex-1 text-[1.5vh] sm:text-[2.25vh] text-justify"
-                    onClick={() => {
-                      subTaskPreview
-                        ? setSubTaskPreview(false)
-                        : setSubTaskPreview(true);
-                    }}
-                  >
-                    list1asdasdasdahoaisjdjaosjdjasuin hassj hdkja dkjhas djkha
-                    kjshd si dias
-                    ddainduniocauosndoiuzonisunioufousiyfbiurfysbiuodyuiboybiuuoiassybuidybuiasyduiyuiyasbuidbyasuidyb
-                  </p>
-                  {important ? (
-                    <div
-                      onClick={() => {
-                        setImportant(false);
-                      }}
-                    >
-                      {starLineIcon()}
-                    </div>
-                  ) : (
-                    <button
-                      onClick={() => {
-                        setImportant(true);
-                      }}
-                    >
-                      {starFullIcon()}
-                    </button>
-                  )}
-                  <button>{trashIcon()}</button>
-                </div>
-              </div>
-              <div className="flex bg-[#424242] hover:opacity-80 p-[1.4vh] cursor-pointer mb-[1.47vh] ">
-                <div className="flex flex-1 items-center justify-center mx-[1vw] gap-3">
-                  {taskDone ? (
-                    <span
-                      onClick={() => {
-                        setTaskDone(false);
-                      }}
-                    >
-                      {circleCheckIcon()}
-                    </span>
-                  ) : (
-                    <span
-                      onClick={() => {
-                        setTaskDone(true);
-                      }}
-                    >
-                      {circleIcon("#54A1EA")}
-                    </span>
-                  )}
-                  <p
-                    className="flex break-all flex-1 text-[1.5vh] sm:text-[2.25vh] text-justify"
-                    onClick={() => {
-                      subTaskPreview
-                        ? setSubTaskPreview(false)
-                        : setSubTaskPreview(true);
-                    }}
-                  >
-                    list1asdasdasdahoaisjdjaosjdjasuin hassj hdkja dkjhas djkha
-                    kjshd si dias
-                    ddainduniocauosndoiuzonisunioufousiyfbiurfysbiuodyuiboybiuuoiassybuidybuiasyduiyuiyasbuidbyasuidyb
-                  </p>
-                  {important ? (
-                    <div
-                      onClick={() => {
-                        setImportant(false);
-                      }}
-                    >
-                      {starLineIcon()}
-                    </div>
-                  ) : (
-                    <button
-                      onClick={() => {
-                        setImportant(true);
-                      }}
-                    >
-                      {starFullIcon()}
-                    </button>
-                  )}
-                  <button>{trashIcon()}</button>
-                </div>
-              </div>
-              <div onClick = {()=>{dropDownFinished?setDropDownFinished(false):setDropDownFinished(true)}} className="flex items-center gap-1 bg-[#424242] hover:opacity-80 w-fit pl-[0.6vw] pr-[1vw] py-[0.3vh] cursor-pointer mb-[1.47vh]">
-                <span >
+              ))}
+
+              {/* <div
+                onClick={() => {
+                  dropDownFinished
+                    ? setDropDownFinished(false)
+                    : setDropDownFinished(true);
+                }}
+                className="flex items-center gap-1 bg-[#424242] hover:opacity-80 w-fit pl-[0.6vw] pr-[1vw] py-[0.3vh] cursor-pointer mb-[1.47vh]"
+              >
+                <span>
                   <svg
-                    className={`w-4 h-4 sm:w-5 sm:h-5 ${!dropDownFinished && "-rotate-90"}`}
+                    className={`w-4 h-4 sm:w-5 sm:h-5 ${
+                      !dropDownFinished && "-rotate-90"
+                    }`}
                     aria-hidden="true"
                     fill="currentColor"
                     viewBox="0 0 20 20"
@@ -289,34 +317,50 @@ export default function Tasks() {
                     ></path>
                   </svg>
                 </span>
-                <p className="text-[1.6vh] font-medium sm:text-[2.3vh]">Finished</p>
-              </div>
+                <p className="text-[1.6vh] font-medium sm:text-[2.3vh]">
+                  Finished
+                </p>
+              </div> */}
             </div>
 
             <div
-              className="bg-[#424242] opacity-100 flex p-[1.5vh] hover:opacity-80"
+              className={`${(taskEdit.id!=="" && taskEdit.title!=="") && "cursor-not-allowed"} bg-[#424242] opacity-100 flex p-[1.5vh] hover:opacity-80 `}
               onClick={() => {
                 !addTaskInputShow && setAddTaskInputShow(true);
               }}
             >
               <div className="flex flex-1 px-[1.5vw] gap-4 ">
                 <div className="m-auto">
-                  {addTaskInputShow ? circleIcon("none") : plusIcon()}
+                  {addTaskInputShow &&
+                  taskEdit.id === "" &&
+                  taskEdit.title === ""
+                    ? circleIcon("none")
+                    : plusIcon(`rotate-0 cursor-${(taskEdit.id!=="" && taskEdit.title!=="")?"not-allowed":"default"}`)}
                 </div>
                 <input
-                  className="flex-1 outline-none w-[8vw] font-medium text-[1.5vh] sm:text-[2.2vh] bg-transparent placeholder:text-white placeholder:opacity-70"
+                  className={`${(taskEdit.id!=="" && taskEdit.title!=="" )&&"caret-transparent cursor-not-allowed"} flex-1 outline-none w-[8vw] font-medium text-[1.5vh] sm:text-[2.2vh] bg-transparent placeholder:text-white placeholder:opacity-70`}
                   placeholder="Add New Task"
+                  value={
+                    taskEdit.id === "" && taskEdit.title === "" ? taskTitle : ""
+                  }
+                  onChange={(event) => {
+                    setTaskTitle(event.target.value);
+                  }}
                 />
-                {addTaskInputShow && (
-                  <div
-                    className="m-auto cursor-pointer"
-                    onClick={() => {
-                      setAddTaskInputShow(false);
-                    }}
-                  >
-                    {checkIcon()}
-                  </div>
-                )}
+                {addTaskInputShow &&
+                  taskEdit.id === "" &&
+                  taskEdit.title === "" && (
+                    <div
+                      className="m-auto cursor-pointer"
+                      onClick={() => {
+                        addTask();
+                      }}
+                    >
+                      {taskTitle === ""
+                        ? plusIcon("rotate-45 hover:opacity-100")
+                        : checkIcon()}
+                    </div>
+                  )}
               </div>
             </div>
           </div>
