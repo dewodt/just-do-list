@@ -247,6 +247,7 @@ export default function Tasks() {
   }
 
   // * to handle change step preview popup
+  //? add logic to overcome when clicked by a div that clicks to open the step it will be closed, while if not it will still be opened but the parameters sent are different 
   function handleSubTaskPreview(task: {
     title: string;
     id: string;
@@ -255,7 +256,8 @@ export default function Tasks() {
   }) {
     setTaskPreview(task);
     setAddTaskInputShow(false);
-    setStepPreview(true);
+    setTaskTitle("")
+    stepPreview ? setStepPreview(false) :  setStepPreview(true);
   }
 
 // ! I've tidied the lines, don't use automation from prettier to make tidier
@@ -459,7 +461,7 @@ export default function Tasks() {
               )}
             </div>
 
-      {/* // ! ADD LIST SECTION  */}
+      {/* // ! ADD NEW TASK SECTION  */}
             <div
               className={`${(taskEdit.id !== "" && taskEdit.title !== "") && "cursor-not-allowed"} bg-[#424242] opacity-100 flex p-[1.5vh] hover:opacity-80 `}
               onClick={() => {!addTaskInputShow && setAddTaskInputShow(true);}}
@@ -483,6 +485,7 @@ export default function Tasks() {
                 {addTaskInputShow &&
                   taskEdit.id === "" &&
                   taskEdit.title === "" && (
+                    // TODO ? it's better when the user presses input then setEdit is filled with blank
                     <div
                       className="m-auto cursor-pointer"
                       onClick={() => {addTask();}}
