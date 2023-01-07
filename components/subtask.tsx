@@ -1,7 +1,12 @@
 import { useState } from "react";
 
-export default function SubTask() {
+interface SubtaskInterface{
+  title:string
+}
+
+export default function SubTask(props:SubtaskInterface) {
   // Khusus bagian icon
+  
   const plusIcon = () => {
     return (
       <svg
@@ -97,7 +102,7 @@ export default function SubTask() {
         <div className="bg-[#424242] overflow-y-scroll" id="no-scrollbar">
           <div className="flex flex-col m-[3vh] gap-2">
             <div className="flex items-center justify-between">
-              <p className="text-[2vh] sm:text-[2.9vh] font-semibold">Task 1</p>
+              <p className="text-[2vh] sm:text-[2.9vh] font-semibold">{props.title}</p>
               <div>{crossIcon()}</div>
             </div>
             <div

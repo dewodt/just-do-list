@@ -126,19 +126,25 @@ export default function Tasks() {
   type ObjectTask = {
     title: string;
     id: string;
+    done: boolean;
+    important: boolean;
   };
 
   // Khusus bagian variabel kerja
   const uniqid = require("uniqid"); //Ini buat generate id dari npm
-  const [addTaskInputShow, setAddTaskInputShow] = useState(false);
-  const [taskDone, setTaskDone] = useState(false);
-  const [important, setImportant] = useState(false);
-  const [subTaskPreview, setSubTaskPreview] = useState(false);
-  const [dropDownFinished, setDropDownFinished] = useState(false);
-  const [taskTitle, setTaskTitle] = useState("");
-  const [tasks, setTasks] = useState<ObjectTask[]>([]);
-  const [taskEdit, setEditTask] = useState<ObjectTask>({ title: "", id: "" });
+  const [addTaskInputShow, setAddTaskInputShow] = useState(false);  //buat popup input 
+  const [subTaskPreview, setSubTaskPreview] = useState(false);      //open subtask
+  const [dropDownFinished, setDropDownFinished] = useState(false);  //buat dropdown finished
+  const [taskTitle, setTaskTitle] = useState("");                   //isinya adalah status value input
+  const [tasks, setTasks] = useState<ObjectTask[]>([]);             //Isinya adalah kumpulan data task
+  const [taskEdit, setEditTask] = useState<ObjectTask>({            //isinya adalah task yang lagi di rename/diedit
+    title: "",
+    id: "",
+    done: false,
+    important: false,
+  });
 
+  // Buat nambahin task baru
   function addTask() {
     if (addTaskInputShow) {
       if (taskTitle === "") {
@@ -148,6 +154,8 @@ export default function Tasks() {
           {
             id: uniqid("task_"),
             title: taskTitle,
+            done: false,
+            important: false,
           },
         ]);
         setTaskTitle("");
@@ -159,6 +167,7 @@ export default function Tasks() {
     }
   }
 
+  // Buat hapus task tertentu
   function handleDelete(idTask: string) {
     setTasks(
       tasks.filter(function (task) {
@@ -167,12 +176,19 @@ export default function Tasks() {
     );
   }
 
-  function handleEdit(task: { title: string; id: string }) {
+  // Buat set mana task yang lagi diedit
+  function handleEdit(task: {
+    title: string;
+    id: string;
+    done: boolean;
+    important: boolean;
+  }) {
     setEditTask(task);
     setAddTaskInputShow(false);
     setTaskTitle(task.title);
   }
 
+  // Buat save abis diedit
   function handleSave(i: number) {
     if (taskTitle == "") {
       tasks[i].title = "New Task";
@@ -180,10 +196,39 @@ export default function Tasks() {
       tasks[i].title = taskTitle;
     }
     setTasks([...tasks]);
-    setEditTask({ id: "", title: "" });
+    setEditTask({ id: "", title: "", done: false, important: false });
     setTaskTitle("");
-    setAddTaskInputShow(false)
+    setAddTaskInputShow(false);
   }
+
+  // Buat ganti status done 
+  function handleDone(i: number) {
+    tasks[i].done ? (tasks[i].done = false) : (tasks[i].done = true);
+    setTasks([...tasks]);
+  }
+  
+  // Buat ganti status important
+  function handleImportant(i: number) {
+    tasks[i].important
+      ? (tasks[i].important = false)
+      : (tasks[i].important = true);
+    setTasks([...tasks]);
+  }
+
+  function handleSubTaskPreview(task: {
+    title: string;
+    id: string;
+    done: boolean;
+    important: boolean;
+  }) {
+    setEditTask(task);
+    setAddTaskInputShow(false);
+    setTaskTitle(task.title);
+    subTaskPreview
+    ? setSubTaskPreview(false)
+    : setSubTaskPreview(true);
+  }
+ 
   return (
     <>
       <Layout>
@@ -200,105 +245,110 @@ export default function Tasks() {
               className="flex flex-1 flex-col my-3 overflow-y-scroll"
               id="no-scrollbar"
             >
-              {tasks.map((task, index) => (
-                <div
-                  key={task.id}
-                  className="flex bg-[#424242] hover:opacity-80 duration-200 p-[1.4vh] cursor-pointer mb-[1.47vh] "
-                >
-                  <div className="flex flex-1 items-center justify-center mx-[1vw] gap-3">
-                    {taskDone ? (
-                      <span
-                        onClick={() => {
-                          setTaskDone(false);
-                        }}
-                      >
-                        {circleCheckIcon()}
-                      </span>
-                    ) : (
-                      <span
-                        onClick={() => {
-                          setTaskDone(true);
-                        }}
-                      >
-                        {circleIcon("#54A1EA")}
-                      </span>
-                    )}
-                    {/* Ternary */}
-                    {taskEdit === task ? (
-                      <>
-                        <input
-                          type="text"
-                          className="w-full outline-none bg-[#3d3d3d] bg-opacity-50 gap-x-40"
-                          placeholder="New Task"
-                          defaultValue={task.title}
-                          onChange={(event) => {
-                            setTaskTitle(event.target.value);
-                          }}
-                        />
-                        <button
-                          onClick={() => {
-                            handleSave(index);
-                          }}
-                        >
-                          {saveIcon()}
-                        </button>
-                      </>
-                    ) : (
-                      <>
-                        <p
-                          className="flex break-all flex-1 text-[1.5vh] sm:text-[2.25vh] text-justify"
-                          onClick={() => {
-                            subTaskPreview
-                              ? setSubTaskPreview(false)
-                              : setSubTaskPreview(true);
-                          }}
-                        >
-                          {task.title}
-                        </p>
-                        {important ? (
-                          <button
+              {tasks.map(
+                (task, index) =>
+                  !task.done && (
+                    <div
+                      key={task.id}
+                      className="flex bg-[#424242] hover:opacity-80 duration-200 p-[1.4vh] cursor-pointer mb-[1.47vh] "
+                    >
+                      <div className="flex flex-1 items-center justify-center mx-[1vw] gap-3">
+                        {task.done ? (
+                          <span
                             onClick={() => {
-                              setImportant(false);
+                              handleDone(index);
                             }}
                           >
-                            {starLineIcon()}
-                          </button>
+                            {circleCheckIcon()}
+                          </span>
                         ) : (
-                          <button
+                          <span
                             onClick={() => {
-                              setImportant(true);
+                              handleDone(index);
                             }}
                           >
-                            {starFullIcon()}
-                          </button>
+                            {circleIcon("#54A1EA")}
+                          </span>
                         )}
-                        <button
-                          onClick={() => {
-                            handleEdit(task);
-                          }}
-                        >
-                          {renameIcon()}
-                        </button>
-                        <button
-                          onClick={() => {
-                            handleDelete(task.id);
-                          }}
-                        >
-                          {trashIcon()}
-                        </button>
-                      </>
-                    )}
-                  </div>
-                </div>
-              ))}
-
-              {/* <div
+                        {/* Ternary */}
+                        {taskEdit === task && !subTaskPreview ? (
+                          <>
+                            <input
+                              type="text"
+                              className="outline-none bg-[#3d3d3d] bg-opacity-50 flex break-all flex-1 text-[1.5vh] sm:text-[2.25vh] text-justify"
+                              placeholder="New Task"
+                              defaultValue={task.title}
+                              onChange={(event) => {
+                                setTaskTitle(event.target.value);
+                              }}
+                            />
+                            <button
+                              onClick={() => {
+                                handleSave(index);
+                              }}
+                            >
+                              {saveIcon()}
+                            </button>
+                          </>
+                        ) : (
+                          <>
+                            <p
+                              className="flex break-all flex-1 text-[1.5vh] sm:text-[2.25vh] text-justify"
+                              onClick={() => {
+                                handleSubTaskPreview(task)
+                              }}
+                            >
+                              {task.done ? <s>{task.title} </s> : task.title}
+                            </p>
+                            {!task.important ? (
+                              <button
+                                onClick={() => {
+                                  handleImportant(index);
+                                }}
+                              >
+                                {starLineIcon()}
+                              </button>
+                            ) : (
+                              <button
+                                onClick={() => {
+                                  handleImportant(index);
+                                }}
+                              >
+                                {starFullIcon()}
+                              </button>
+                            )}
+                            <button
+                              onClick={() => {
+                                handleEdit(task);
+                              }}
+                            >
+                              {renameIcon()}
+                            </button>
+                            <button
+                              onClick={() => {
+                                handleDelete(task.id);
+                              }}
+                            >
+                              {trashIcon()}
+                            </button>
+                          </>
+                        )}
+                      </div>
+                    </div>
+                  )
+              )}
+            {for (const obj of tasks){
+              for (const key in obj){
+                if(obj[key])
+              }
+            }}
+              <div
                 onClick={() => {
                   dropDownFinished
                     ? setDropDownFinished(false)
                     : setDropDownFinished(true);
                 }}
-                className="flex items-center gap-1 bg-[#424242] hover:opacity-80 w-fit pl-[0.6vw] pr-[1vw] py-[0.3vh] cursor-pointer mb-[1.47vh]"
+                className="flex items-center gap-1 bg-[#424242] hover:opacity-80 w-fit pl-[0.6vw] pr-[1vw] py-[0.3vh] cursor-pointer my-[1.7vh]"
               >
                 <span>
                   <svg
@@ -320,11 +370,111 @@ export default function Tasks() {
                 <p className="text-[1.6vh] font-medium sm:text-[2.3vh]">
                   Finished
                 </p>
-              </div> */}
+              </div>
+              {tasks.map(
+                (task, index) =>
+                  task.done && (
+                    <div
+                      key={task.id}
+                      className={`${
+                        dropDownFinished ? "flex" : "hidden"
+                      } bg-[#424242] hover:opacity-80 duration-200 p-[1.4vh] cursor-pointer mb-[1.47vh] `}
+                    >
+                      <div className="flex flex-1 items-center justify-center mx-[1vw] gap-3">
+                        {task.done ? (
+                          <span
+                            onClick={() => {
+                              handleDone(index);
+                            }}
+                          >
+                            {circleCheckIcon()}
+                          </span>
+                        ) : (
+                          <span
+                            onClick={() => {
+                              handleDone(index);
+                            }}
+                          >
+                            {circleIcon("#54A1EA")}
+                          </span>
+                        )}
+                        {/* Ternary */}
+                        {taskEdit === task ? (
+                          <>
+                            <input
+                              type="text"
+                              className="outline-none bg-[#3d3d3d] bg-opacity-50 flex break-all flex-1 text-[1.5vh] sm:text-[2.25vh] text-justify"
+                              placeholder="New Task"
+                              defaultValue={task.title}
+                              onChange={(event) => {
+                                setTaskTitle(event.target.value);
+                              }}
+                            />
+                            <button
+                              onClick={() => {
+                                handleSave(index);
+                              }}
+                            >
+                              {saveIcon()}
+                            </button>
+                            
+                          </>
+                        ) : (
+                          <>
+                            <p
+                              className="flex break-all flex-1 text-[1.5vh] sm:text-[2.25vh] text-justify"
+                              onClick={() => {
+                                handleSubTaskPreview(task)
+                              }}
+                            >
+                              {task.done ? <s>{task.title} </s> : task.title}
+                            </p>
+                            {!task.important ? (
+                              <button
+                                onClick={() => {
+                                  handleImportant(index);
+                                }}
+                              >
+                                {starLineIcon()}
+                              </button>
+                            ) : (
+                              <button
+                                onClick={() => {
+                                  handleImportant(index);
+                                }}
+                              >
+                                {starFullIcon()}
+                              </button>
+                            )}
+                            <button
+                              onClick={() => {
+                                handleEdit(task);
+                              }}
+                            >
+                              {renameIcon()}
+                            </button>
+                            <button
+                              onClick={() => {
+                                handleDelete(task.id);
+                              }}
+                            >
+                              {trashIcon()}
+                            </button>
+                          </>
+                        )}
+                      </div>
+                    </div>
+                    
+                  )
+              )}
             </div>
 
             <div
-              className={`${(taskEdit.id!=="" && taskEdit.title!=="") && "cursor-not-allowed"} bg-[#424242] opacity-100 flex p-[1.5vh] hover:opacity-80 `}
+              className={`${
+                taskEdit.id !== "" &&
+                taskEdit.title !== "" &&
+                "cursor-not-allowed"
+              } bg-[#424242] opacity-100 flex p-[1.5vh] hover:opacity-80 `}
               onClick={() => {
                 !addTaskInputShow && setAddTaskInputShow(true);
               }}
@@ -335,10 +485,20 @@ export default function Tasks() {
                   taskEdit.id === "" &&
                   taskEdit.title === ""
                     ? circleIcon("none")
-                    : plusIcon(`rotate-0 cursor-${(taskEdit.id!=="" && taskEdit.title!=="")?"not-allowed":"default"}`)}
+                    : plusIcon(
+                        `rotate-0 cursor-${
+                          taskEdit.id !== "" && taskEdit.title !== ""
+                            ? "not-allowed"
+                            : "default"
+                        }`
+                      )}
                 </div>
                 <input
-                  className={`${(taskEdit.id!=="" && taskEdit.title!=="" )&&"caret-transparent cursor-not-allowed"} flex-1 outline-none w-[8vw] font-medium text-[1.5vh] sm:text-[2.2vh] bg-transparent placeholder:text-white placeholder:opacity-70`}
+                  className={`${
+                    taskEdit.id !== "" &&
+                    taskEdit.title !== "" &&
+                    "caret-transparent cursor-not-allowed"
+                  } flex-1 outline-none w-[8vw] font-medium text-[1.5vh] sm:text-[2.2vh] bg-transparent placeholder:text-white placeholder:opacity-70`}
                   placeholder="Add New Task"
                   value={
                     taskEdit.id === "" && taskEdit.title === "" ? taskTitle : ""
@@ -364,7 +524,8 @@ export default function Tasks() {
               </div>
             </div>
           </div>
-          {subTaskPreview && <SubTask />}
+          {subTaskPreview && <SubTask title={taskEdit.title}/>}
+
         </div>
       </Layout>
     </>
