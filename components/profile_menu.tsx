@@ -1,8 +1,18 @@
 import Image from "next/image";
 import { useState } from "react";
+import Link from "next/link";
+import axios from "axios";
 
 export default function ProfileMenu() {
   const [dropDownProfile, setDropDownProfile] = useState(false);
+
+  function handleLogout() {
+    axios.post("http://localhost:3000/api/logout")
+      .then(() => {
+        window.location.href = "http://localhost:3000/";
+      });
+  }
+
   return (
     <>
       <div
@@ -59,20 +69,21 @@ export default function ProfileMenu() {
               </a>
             </div> */}
             <div className="py-1.5 text-xs text-gray-400 dark:text-gray-200 dark:hover:bg-gray-600 rounded-[8px]">
-              <a
+              <Link
                 href="/"
                 className="block px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
               >
                 Settings
-              </a>
+              </Link>
             </div>
             <div className="py-1.5 text-xs text-gray-400 dark:text-gray-200 dark:hover:bg-gray-600 rounded-[8px]">
-              <a
+              <Link
                 href="/"
                 className="block px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                onClick={handleLogout}
               >
                 Log Out
-              </a>
+              </Link>
             </div>
           </div>
         
