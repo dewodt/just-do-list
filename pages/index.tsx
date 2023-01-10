@@ -3,7 +3,8 @@ import PageHead from "../components/pagehead";
 import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
-import Logo from "public/logo-app.png"
+import Logo from "public/logo-app.png";
+import axios from 'axios';
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -12,12 +13,15 @@ export default function Home() {
   const [name, setName] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [popUp, setPopUp] = useState("")
+  const [popUpSuccess, setPopUpSuccess] = useState()
 
   function handleLoginTab() {
     setLoginPage(true);
     setName("");
     setUsername("");
     setPassword("");
+    setPopUp("")
   }
 
   function handleSignupTab() {
@@ -25,14 +29,39 @@ export default function Home() {
     setName("");
     setUsername("");
     setPassword("");
+    setPopUp("");
   }
 
   function handleLogin() {
-
+    axios.post("http://localhost:3000/api/login", {
+      username: username,
+      password: password,
+    })
+      .then(res => {
+        setPopUp(res.data.msg);
+        setPopUpSuccess(res.data.success)
+        if (res.data.success) {
+          window.location.href = "http://localhost:3000/tasks"
+        }
+      })
   }
 
   function handleSignUp() {
-
+    axios.post("http://localhost:3000/api/signup", {
+      name: name,
+      username: username,
+      password: password,
+    })
+      .then(res => {
+        setPopUp(res.data.msg);
+        setPopUpSuccess(res.data.success);
+        if (res.data.success) {
+          setName("")
+          setUsername("")
+          setPassword("")
+          setLoginPage(true);
+        }
+      })
   }
 
   return (
@@ -77,7 +106,7 @@ export default function Home() {
               />
             </div>
           </form>
-          <Link href="/tasks">
+          <Link href="">
             <button
               disabled={
                 loginPage
@@ -90,11 +119,9 @@ export default function Home() {
               {loginPage ? "Log In" : "Sign Up"}
             </button>
           </Link>
+          <p className={`${popUpSuccess ? "text-green-600" : "text-red-600"} text-sm font-bold text-center sm:text-base`}>{popUp}</p>
         </div>
       </div>
     </>
   );
 }
-
-
-
