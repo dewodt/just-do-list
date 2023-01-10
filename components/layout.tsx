@@ -5,10 +5,10 @@ export default function Layout(props: any) {
   return (
     <>
       <Header />
-      <div className="flex h-[90.6vh]">
-        <NavbarMenu />
+      <div className="flex h-[94vh] md:h-[90.5vh]">
         <div className={`flex flex-auto max-h-full`}>
-          <div className="m-auto">{props.children} </div>
+          <NavbarMenu/>
+          {props.children}
         </div>
       </div>
     </>

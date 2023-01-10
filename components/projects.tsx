@@ -1,7 +1,9 @@
-import { useRef, useState } from "react";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import { useState } from "react";
 
-export default function Projects() {
-  const listIcon = () => {
+const Projects: React.FC = () => {
+  const projectIcon = () => {
     return (
       <svg
         className="fill-white opacity-80 w-[0.6rem] h-[0.6rem] m-auto"
@@ -12,11 +14,22 @@ export default function Projects() {
       </svg>
     );
   };
+  const deleteIcon = () => {
+    return (
+      <svg
+        className="fill-white opacity-80 w-[0.6rem] h-[0.6rem] m-auto hover:fill-zinc-400"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 448 512"
+      >
+        <path d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z" />
+      </svg>
+    );
+  };
 
   const checkIcon = () => {
     return (
       <svg
-        className="fill-white opacity-80 w-[0.8rem] h-[0.8rem] m-auto"
+        className="fill-white opacity-80 w-[0.8rem] h-[0.8rem] m-auto hover:fill-zinc-400"
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 512 512"
       >
@@ -27,7 +40,7 @@ export default function Projects() {
   const crossIcon = () => {
     return (
       <svg
-        className="fill-white opacity-80 w-[0.8rem] h-[0.8rem] m-auto"
+        className="fill-white opacity-80 w-[0.8rem] h-[0.8rem] m-auto hover:fill-zinc-400"
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 512 512"
       >
@@ -38,7 +51,7 @@ export default function Projects() {
   const renameIcon = () => {
     return (
       <svg
-        className="fill-white opacity-80 w-[0.8rem] h-[0.8rem] m-auto"
+        className="fill-white opacity-80 w-[0.8rem] h-[0.8rem] m-auto hover:fill-zinc-400"
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 512 512"
       >
@@ -54,17 +67,17 @@ export default function Projects() {
 
   const uniqid = require("uniqid"); //Ini buat generate id dari npm
   const [dropDownProjects, setDropDownProjects] = useState(false);
-  const [lists, setLists] = useState<MyObject[]>([]);
-  const [title, setTitle] = useState("");
-  const [edit, setEdit] = useState<MyObject>({ title: "", id: "" });
   const [showInput, setShowInput] = useState(false);
+  const [projects, setProjects] = useState<MyObject[]>([]);
+  const [title, setTitle] = useState("");
+  const [editProject, setEdit] = useState<MyObject>({ title: "", id: "" });
 
   const addProjects = () => {
     if (showInput) {
       if (title === "") {
       } else {
-        setLists([
-          ...lists,
+        setProjects([
+          ...projects,
           {
             id: uniqid("project_"),
             title: title,
@@ -80,21 +93,29 @@ export default function Projects() {
 
   function handleSave(index: number) {
     if (title == "") {
-      lists[index].title = "New Project";
+      projects[index].title = "New Project";
     } else {
-      lists[index].title = title;
+      projects[index].title = title;
     }
-    setLists([...lists]);
+    setProjects([...projects]);
     setEdit({ id: "", title: "" });
-    setTitle(lists[index].title);
+    setTitle(projects[index].title);
   }
 
-  function handleEdit(project: { title: string; id: string }) {
+  function handleeditProject(project: { title: string; id: string }) {
     setEdit(project);
     setShowInput(false);
     setTitle(project.title);
   }
 
+  function handleDelete(idproject: string) {
+    setProjects(
+      projects.filter(function (project) {
+        return project.id != idproject;
+      })
+    );
+  }
+  // Update
   return (
     <div
       id="no-scrollbar"
@@ -116,7 +137,7 @@ export default function Projects() {
           <div className="ml-4 py-1.5 ">
             {dropDownProjects ? (
               <svg
-                className="fill-white opacity-80 w-[1rem] h-[1rem] m-auto"
+                className="fill-white opacity-80 w-[1rem] h-[1rem] m-auto "
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 576 512"
               >
@@ -137,16 +158,17 @@ export default function Projects() {
           </div>
         </div>
         {dropDownProjects && (
-          <div className="mb-2">
-            <div className="mx-2 dark:hover:text-white rounded-[0.3rem] flex mb-2">
+          <div className="mb-2 ">
+            <div className="mx-2 dark:hover:text-white rounded-[0.3rem] flex mb-1 dark:hover:bg-gray-600">
               {showInput ? (
-                <div className="flex gap-2 mx-4 flex-1">
+                <div className="flex p-1 gap-2 mx-4 flex-1">
                   <input
                     type="text"
+                    placeholder="Project Name"
                     onChange={(event) => {
                       setTitle(event.target.value);
                     }}
-                    className="text-black w-[8vw] flex-1 outline-none rounded-[3px] bg-white"
+                    className="text-black w-[9vw] flex-1 text-xs outline-none rounded-[3px] bg-white placeholder:indent-3"
                   />
                   <div className="m-auto" role="button" onClick={addProjects}>
                     {title === "" ? crossIcon() : checkIcon()}
@@ -154,63 +176,94 @@ export default function Projects() {
                 </div>
               ) : (
                 <div
-                  className="flex flex-1 dark:hover:bg-gray-600 rounded-[3px]"
+                  className="flex mx-2 gap-2 flex-1  rounded-[3px]"
                   role="button"
                   onClick={addProjects}
                 >
-                  <div className="flex-1 m-auto ml-4 text-[0.67rem]">
-                    Add New
-                  </div>
-                  <div className="mr-4 py-1.5 ">
-                    <svg
-                      className="fill-white opacity-80 w-[1rem] h-[1rem] m-auto"
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 448 512"
-                    >
-                      <path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z" />
-                    </svg>
+                  <div className="flex flex-1 mx-3">
+                    <div className="flex-1 m-auto text-[0.67rem] indent-0">
+                      Add New Project
+                    </div>
+                    <div className="py-1.5">
+                      <svg
+                        className="fill-white opacity-80 w-[1rem] h-[1rem] m-auto hover:fill-zinc-400"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 448 512"
+                      >
+                        <path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z" />
+                      </svg>
+                    </div>
                   </div>
                 </div>
               )}
             </div>
-            {/* New List when clicking */}
-            {lists.map((list, index) =>
-              edit === list && showInput === false ? (
+            {/* New project when clicking */}
+            {projects.map((project, index) =>
+              editProject === project && showInput === false ? (
                 <>
-                  <li className="ml-4 mr-2 flex py-0.5 text-xs text-gray-400 dark:text-gray-200 dark:hover:bg-gray-600 rounded-[3px] ">
-                    <div className="ml-3 py-1.5">{listIcon()}</div>
-                    <div className="my-auto flex-1" key={index}>
-                      <div>
+                  <li
+                    key={project.id}
+                    className="ml-4 mr-2 flex py-1 text-xs text-gray-400 dark:text-gray-200 dark:hover:bg-gray-600 rounded-[3px] "
+                  >
+                    <div className="m-auto flex">
+                      <button disabled={true} className="py-1.5">
+                        {projectIcon()}
+                      </button>
+                      <div className="my-auto flex-1 indent-0 mx-3.5">
                         <input
                           type="text"
-                          defaultValue={list.title}
+                          className="w-[5.15vw] outline-none"
+                          placeholder="Project Name"
+                          defaultValue={project.title}
                           onChange={(event) => {
                             setTitle(event.target.value);
                           }}
                         />
                       </div>
+                      <button
+                        className="py-1"
+                        onClick={() => handleSave(index)}
+                      >
+                        {checkIcon()}
+                      </button>
                     </div>
-                    <button
-                      className="mr-5 ml-2 py-1"
-                      onClick={() => handleSave(index)}
-                    >
-                      {checkIcon()}
-                    </button>
                   </li>
                 </>
               ) : (
                 <>
-                  <li className="ml-4 mr-2 flex py-0.5 text-xs text-gray-400 dark:text-gray-200 dark:hover:bg-gray-600 rounded-[3px] ">
-                    <div className="ml-3 py-1.5">{listIcon()}</div>
-                    <div className="my-auto flex-1" key={index}>
-                      <div>{list.title} </div>
+                  <li className="ml-4 mr-2 flex py-1 text-xs text-gray-400 dark:text-gray-200 dark:hover:bg-gray-600 rounded-[3px] ">
+                    <div className="m-auto flex">
+                      <button disabled={true} className="py-1.5">
+                        {projectIcon()}
+                      </button>
+                      <div className="my-auto flex-1 w-[7vw]" key={index}>
+                        <Link
+                          href={{
+                            pathname: "/projects/[slug]",
+                            query: { slug: project.id },
+                          }}
+                        >
+                          <div
+                            className="mx-4 indent-0 break-all cursor-pointer"
+                            // onClick={() => handleActionClick(project.title)}
+                          >
+                            {project.title}{" "}
+                          </div>
+                        </Link>
+                      </div>
+                      <button
+                        className="text- py-1 mr-2"
+                        onClick={() => handleeditProject(project)}
+                      >
+                        {renameIcon()}
+                      </button>
+                      <button
+                        className="py-1"
+                        onClick={() => handleDelete(project.id)}
+                      >
+                        {deleteIcon()}
+                      </button>
                     </div>
-                    <button
-                      className="mr-5 ml-2 py-1"
-                      onClick={() => handleEdit(list)}
-                    >
-                      {renameIcon()}
-                    </button>
                   </li>
                 </>
               )
@@ -220,4 +273,5 @@ export default function Projects() {
       </div>
     </div>
   );
-}
+};
+export default Projects;
