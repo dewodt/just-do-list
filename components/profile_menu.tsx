@@ -50,14 +50,14 @@ export default function ProfileMenu() {
               dropDownProfile ? "block" : "hidden"
             } z-10 w-fill rounded m-auto mb-2 text-center mx-4`}
           >
-            <div className="py-1.5 text-xs text-gray-400 dark:text-gray-200 dark:hover:bg-gray-600 rounded-[8px]">
+            {/* <div className="py-1.5 text-xs text-gray-400 dark:text-gray-200 dark:hover:bg-gray-600 rounded-[8px]">
               <a
                 href="/"
                 className="block px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
               >
                 Profile
               </a>
-            </div>
+            </div> */}
             <div className="py-1.5 text-xs text-gray-400 dark:text-gray-200 dark:hover:bg-gray-600 rounded-[8px]">
               <a
                 href="/"
