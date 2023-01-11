@@ -12,6 +12,8 @@ export default async function getUserData(username: string) {
   await client.connect();
   const db = client.db(dbname);
   const coll = db.collection(username);
-  const data = await coll.find({}).toArray();
-  await client.close()
+  const [ data ] = await coll.find({}).toArray();
+  const jsonData = JSON.parse(JSON.stringify(data));
+  await client.close();
+  return jsonData;
 }
