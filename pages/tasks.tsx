@@ -236,6 +236,7 @@ export default function Tasks({ data } : any) {
 
   // *  to save changes after editing
   function handleSave(taskId: string) {
+    // Create new array (no mutation)
     const newTasks = tasks.map( (item) => {
       if (item.id === taskId) {
         return {...item, title: taskTitle === "" ? "New Tasks" : taskTitle};
@@ -260,9 +261,26 @@ export default function Tasks({ data } : any) {
   }
 
   // *  to change done status of task
-  function handleDone(i: number) {
-    tasks[i].done ? (tasks[i].done = false) : (tasks[i].done = true);
-    setTasks([...tasks]);
+  function handleDone(taskId: string) {
+    // Create new array (no mutation)
+    const newTasks = tasks.map( (item) => {
+      if (item.id === taskId) {
+        return {...item, done: !item.done};
+      } else {
+        return {...item};
+      }
+    })
+
+    // Update database
+    axios.post("http://localhost:3000/api/edittask", {
+      username: data.username,
+      menu: "tasks",
+      newTasks: newTasks
+    })
+      .then( () => {
+        // Update client side
+        setTasks(newTasks);
+      });
   }
 
   // *  to change important status of task
@@ -320,13 +338,13 @@ export default function Tasks({ data } : any) {
                         {/* // * Handle changes to the checkdone icon */}
                         {task.done ? (
                           <span
-                            onClick={() => {handleDone(index);}}
+                            onClick={() => {handleDone(task.id);}}
                           >
                             {circleCheckIcon()}
                           </span>
                         ) : (
                           <span
-                            onClick={() => {handleDone(index);}}
+                            onClick={() => {handleDone(task.id);}}
                           >
                             {circleIcon("#54A1EA")}
                           </span>
@@ -419,13 +437,13 @@ export default function Tasks({ data } : any) {
                         {/* // * Handle changes to the icon done checklist */}
                         {task.done ? (
                           <span
-                            onClick={() => {handleDone(index);}}
+                            onClick={() => {handleDone(task.id);}}
                           >
                             {circleCheckIcon()}
                           </span>
                         ) : (
                           <span
-                            onClick={() => {handleDone(index);}}
+                            onClick={() => {handleDone(task.id);}}
                           >
                             {circleIcon("#54A1EA")}
                           </span>
