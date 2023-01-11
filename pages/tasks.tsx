@@ -160,7 +160,7 @@ export default function Tasks({ data } : any) {
   const [stepPreview, setStepPreview] = useState(false);            // * open subtask of a task
   const [dropDownFinished, setDropDownFinished] = useState(false);  // * make dropdown finished popup
   const [taskTitle, setTaskTitle] = useState("");                   // * the value input to state and submit on data changes
-  const [tasks, setTasks] = useState<ObjectTask[]>(data.tasks);             // * array of all task
+  const [tasks, setTasks] = useState<ObjectTask[]>(data.tasks);     // * array of all task
   const [taskEdit, setTaskEdit] = useState<ObjectTask>({            // * contains the task that is being renamed or edited
     title: "",
     id: "",
@@ -210,7 +210,7 @@ export default function Tasks({ data } : any) {
     axios.post("http://localhost:3000/api/deletetask", {
       username: data.username, 
       menu: "tasks",
-      task_id: idTaskEdit
+      taskId: idTaskEdit
     })
       .then( () => {
         // Update client side
@@ -235,16 +235,28 @@ export default function Tasks({ data } : any) {
   }
 
   // *  to save changes after editing
-  function handleSave(i: number) {
-    if (taskTitle == "") {
-      tasks[i].title = "New Task";
-    } else {
-      tasks[i].title = taskTitle;
-    }
-    setTasks([...tasks]);
-    setTaskEdit({ id: "", title: "", done: false, important: false });
-    setTaskTitle("");
-    setAddTaskInputShow(false);
+  function handleSave(taskId: string) {
+    const newTasks = tasks.map( (item) => {
+      if (item.id === taskId) {
+        return {...item, title: taskTitle === "" ? "New Tasks" : taskTitle};
+      } else {
+        return {...item};
+      }
+    })
+
+    // Update database
+    axios.post("http://localhost:3000/api/edittask", {
+      username: data.username, 
+      menu: "tasks",
+      newTasks: newTasks
+    })
+      .then( () => {
+        // Update client side
+        setTasks(newTasks);
+        setTaskEdit({ id: "", title: "", done: false, important: false });
+        setTaskTitle("");
+        setAddTaskInputShow(false);
+      });
   }
 
   // *  to change done status of task
@@ -330,7 +342,7 @@ export default function Tasks({ data } : any) {
                               onChange={(event) => {setTaskTitle(event.target.value)}}
                             />
                             <button
-                              onClick={() => {handleSave(index);}}
+                              onClick={() => {handleSave(task.id);}}
                             >
                               {saveIcon()}
                             </button>
@@ -429,7 +441,7 @@ export default function Tasks({ data } : any) {
                               onChange={(event) => {setTaskTitle(event.target.value);}}
                             />
                             <button
-                              onClick={() => {handleSave(index);}}
+                              onClick={() => {handleSave(task.id);}}
                             >
                               {saveIcon()}
                             </button>
