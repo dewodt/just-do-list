@@ -1,4 +1,6 @@
 import { useState } from "react";
+import Calendar from "react-calendar";
+import "react-calendar/dist/Calendar.css";
 
 interface SubtaskInterface {
   title: string;
@@ -68,7 +70,7 @@ export default function SubTask(props: SubtaskInterface) {
     );
   };
 
-  const calenderIcon = () => {
+  const calendarIcon = () => {
     return (
       <svg
         className="fill-white opacity-80 w-[1.5vh] sm:w-[2vh] h-[1.5vh] sm:h-[2vh] m-auto"
@@ -125,6 +127,7 @@ export default function SubTask(props: SubtaskInterface) {
     done: boolean;
   };
   const uniqid = require("uniqid"); //Ini buat generate id dari npm
+  const [calendarStatus, setCalendarStatus] = useState(false);
   const [stepPreview, setStepPreview] = useState(false); //open subtask
   const [stepTitle, setStepTitle] = useState(""); //isinya adalah status value input
   const [steps, setSteps] = useState<ObjectStep[]>([]); //Isinya adalah kumpulan data task
@@ -156,7 +159,7 @@ export default function SubTask(props: SubtaskInterface) {
       setAddStepInputShow(true);
       setStepTitle("");
     }
-    console.log(stepEdit)
+    console.log(stepEdit);
   }
 
   // Buat hapus task tertentu
@@ -194,7 +197,6 @@ export default function SubTask(props: SubtaskInterface) {
     setSteps([...steps]);
   }
 
-
   return (
     <div className="flex flex-col w-[70vw] absolute right-0 lg:relative h-[94vh] md:h-[90.5vh] z-10 sm:w-[45vw] lg:w-[24.4375vw] bg-[#323232]">
       <div className="flex flex-col flex-1 p-[2.421vh] gap-3">
@@ -223,7 +225,7 @@ export default function SubTask(props: SubtaskInterface) {
                       className="m-auto"
                       key={step.id}
                       onClick={() => {
-                        handleDone(index)
+                        handleDone(index);
                       }}
                     >
                       {circleCheckIcon()}
@@ -232,7 +234,7 @@ export default function SubTask(props: SubtaskInterface) {
                     <span
                       className="m-auto"
                       onClick={() => {
-                        handleDone(index)
+                        handleDone(index);
                       }}
                     >
                       {circleIcon("#54A1EA")}
@@ -261,7 +263,11 @@ export default function SubTask(props: SubtaskInterface) {
                   ) : (
                     <>
                       <p className="flex flex-1 text-[1.4vh] sm:text-[2.2vh] border-b-2 break-all">
-                        {step.done?<s className="opacity-50">{step.title}</s>:<>{step.title}</>}
+                        {step.done ? (
+                          <s className="opacity-50">{step.title}</s>
+                        ) : (
+                          <>{step.title}</>
+                        )}
                       </p>
                       <button
                         onClick={() => {
@@ -283,23 +289,35 @@ export default function SubTask(props: SubtaskInterface) {
               ))}
             </div>
 
-{/* // ! ADD STEP SECTION */}
+            {/* // ! ADD STEP SECTION */}
             <div
-              className={`${(stepEdit.id !== "" && stepEdit.title !== "") && "cursor-not-allowed"} mt-1 flex gap-3 hover:bg-[##323232]`}
+              className={`${
+                stepEdit.id !== "" &&
+                stepEdit.title !== "" &&
+                "cursor-not-allowed"
+              } mt-1 flex gap-3 hover:bg-[##323232]`}
               onClick={() => {
                 !addStepInputShow && setAddStepInputShow(true);
               }}
             >
               <div className="m-auto">
-              {addStepInputShow && stepEdit.id === "" && stepEdit.title === "" ? circleIcon("none"):
-                    plusIcon(`rotate-0 cursor-${stepEdit.id !== "" && stepEdit.title !== "" ? "not-allowed" : "default"}`)}
+                {addStepInputShow && stepEdit.id === "" && stepEdit.title === ""
+                  ? circleIcon("none")
+                  : plusIcon(
+                      `rotate-0 cursor-${
+                        stepEdit.id !== "" && stepEdit.title !== ""
+                          ? "not-allowed"
+                          : "default"
+                      }`
+                    )}
               </div>
 
               <input
                 className={`${
                   stepEdit.id !== "" &&
                   stepEdit.title !== "" &&
-                  "caret-transparent cursor-not-allowed"} flex-1 outline-none w-[3vw] bg-transparent font-medium text-[1.4vh] sm:text-[2.2vh] placeholder:text-white placeholder:opacity-70`}
+                  "caret-transparent cursor-not-allowed"
+                } flex-1 outline-none w-[3vw] bg-transparent font-medium text-[1.4vh] sm:text-[2.2vh] placeholder:text-white placeholder:opacity-70`}
                 placeholder="Add New Step"
                 value={
                   stepEdit.id === "" && stepEdit.title === "" ? stepTitle : ""
@@ -309,25 +327,26 @@ export default function SubTask(props: SubtaskInterface) {
                 }}
               />
               {addStepInputShow &&
-                  stepEdit.id === "" &&
-                  stepEdit.title === "" && (
-                <button
-                  className="m-auto cursor-pointer"
-                  onClick={() => {
-                    addStep();
-                  }}
-                >
-                  {stepTitle === "" ? plusIcon("rotate-45 hover:opacity-100") : checkIcon()}
-
-                </button>
-              )}
+                stepEdit.id === "" &&
+                stepEdit.title === "" && (
+                  <button
+                    className="m-auto cursor-pointer"
+                    onClick={() => {
+                      addStep();
+                    }}
+                  >
+                    {stepTitle === ""
+                      ? plusIcon("rotate-45 hover:opacity-100")
+                      : checkIcon()}
+                  </button>
+                )}
             </div>
           </div>
         </div>
         <div
           className="bg-[#424242] px-2.5 py-2 relative flex justify-center hover:bg-[#4b4b4b]"
           onClick={() => {
-            dueDatePreview ? setDueDatePreview(false) : setDueDatePreview(true);
+            !dueDatePreview && setDueDatePreview(true);
           }}
         >
           <div
@@ -336,20 +355,47 @@ export default function SubTask(props: SubtaskInterface) {
             } flex-col flex-1 text-sm absolute z-20 -top-[130px] sm:-top-[125px] md:-top-[225px] lg:-top-[145px] xl:-top-[165px] min-w-[40vw] lg:min-w-[12vw] sm:min-w-[30vw] mx-[2vw] bg-[#313131]`}
           >
             {/* // TODO: set due date */}
-            <div className="flex flex-col text-center">
-              <div className="hover:bg-[#4b4b4b] cursor-pointer px-[1.8vh] sm:px-[2.6vh] py-[1.3vh] md:py-[2vh] text-[1.4vh] sm:text-[2.2vh] ">
-                Today
+            {calendarStatus ? (
+              <>
+                <div className="text-black bg-[#424242] ">
+                  <Calendar />
+                </div>
+                <div className="flex flex-col text-center">
+                  <button
+                    onClick={() => {
+                      setCalendarStatus(false);
+                      setDueDatePreview(false);
+                    }}
+                    className="hover:bg-[#4b4b4b] cursor-pointer px-[1.8vh] sm:px-[2.6vh] py-[1.3vh] md:py-[2vh] text-[1.4vh] sm:text-[2.2vh] "
+                  > 
+                    {plusIcon("rotate-45")}
+                  </button>
+                </div>
+              </>
+            ) : (
+              <div className="flex flex-col text-center">
+                <div className="hover:bg-[#4b4b4b] cursor-pointer px-[1.8vh] sm:px-[2.6vh] py-[1.3vh] md:py-[2vh] text-[1.4vh] sm:text-[2.2vh] ">
+                  Today
+                </div>
+                <div className="hover:bg-[#4b4b4b] cursor-pointer px-[1.8vh] sm:px-[2.6vh] py-[1.3vh] md:py-[2vh] text-[1.4vh] sm:text-[2.2vh] ">
+                  Tomorrow
+                </div>
+                <div
+                  onClick={() => {
+                    setCalendarStatus(true);
+                  }}
+                  className="hover:bg-[#4b4b4b] cursor-pointer px-[1.8vh] sm:px-[2.6vh] py-[1.3vh] md:py-[2vh] text-[1.4vh] sm:text-[2.2vh] "
+                >
+                  Set Due Date
+                </div>
+                <div onClick={()=>{setDueDatePreview(false)}} className="hover:bg-[#4b4b4b] cursor-pointer px-[1.8vh] sm:px-[2.6vh] py-[1.3vh] md:py-[2vh] text-[1.4vh] sm:text-[2.2vh] ">
+                  {plusIcon("rotate-45")}
+                </div>
               </div>
-              <div className="hover:bg-[#4b4b4b] cursor-pointer px-[1.8vh] sm:px-[2.6vh] py-[1.3vh] md:py-[2vh] text-[1.4vh] sm:text-[2.2vh] ">
-                Tomorrow
-              </div>
-              <div className="hover:bg-[#4b4b4b] cursor-pointer px-[1.8vh] sm:px-[2.6vh] py-[1.3vh] md:py-[2vh] text-[1.4vh] sm:text-[2.2vh] ">
-                Set Due Date
-              </div>
-            </div>
+            )}
           </div>
           <div className="flex p-[0.5vh] sm:p-[1vh] gap-4 mr-auto">
-            <div className="m-auto">{calenderIcon()}</div>
+            <div className="m-auto">{calendarIcon()}</div>
             <p className="flex-1 cursor-pointer text-[1.4vh] sm:text-[2.2vh]">
               Add due date
             </p>
