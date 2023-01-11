@@ -156,11 +156,11 @@ export default function Tasks({ data } : any) {
 // ! I've tidied the lines, don't use automation from prettier to make tidier
   // *  VARIABLE INITIALIZATION
   const uniqid = require("uniqid");                                 // * to generate id from npm
-  const [addTaskInputShow, setAddTaskInputShow] = useState(false);  // * to popup input
-  const [stepPreview, setStepPreview] = useState(false);            // * open subtask
+  const [addTaskInputShow, setAddTaskInputShow] = useState(false);  // * to popup input new task
+  const [stepPreview, setStepPreview] = useState(false);            // * open subtask of a task
   const [dropDownFinished, setDropDownFinished] = useState(false);  // * make dropdown finished popup
   const [taskTitle, setTaskTitle] = useState("");                   // * the value input to state and submit on data changes
-  const [tasks, setTasks] = useState<ObjectTask[]>([]);             // TODO : task dataset should be saved to the database
+  const [tasks, setTasks] = useState<ObjectTask[]>(data.tasks);             // * array of all task
   const [taskEdit, setTaskEdit] = useState<ObjectTask>({            // * contains the task that is being renamed or edited
     title: "",
     id: "",
@@ -168,7 +168,7 @@ export default function Tasks({ data } : any) {
     important: false,
   });
 
-  const [stepTaskPreview, setTaskPreview] = useState<ObjectTask>({  // * contains the task that the step wants to display
+  const [stepTaskPreview, setStepTaskPreview] = useState<ObjectTask>({  // * contains the task that the step wants to display
     title: "",
     id: "",
     done: false,
@@ -179,23 +179,29 @@ export default function Tasks({ data } : any) {
 
   // *  to add new task
   function addTask() {
-    if (addTaskInputShow) {
-      (taskTitle !== "") && 
-      setTasks([
-        ...tasks,
-          {
-            id: uniqid("task_"),
-            title: taskTitle,
-            done: false,
-            important: false,
-          },
-        ]);
-      setTaskTitle("");
-      setAddTaskInputShow(false);
-      } else {
-      setAddTaskInputShow(true);
-      setTaskTitle("");
+    const newTask = {
+      id: uniqid("task_"),
+      title: taskTitle,
+      done: false,
+      important: false,
+      createdDate: Date.now(),
+      dueDate: null,
     }
+    
+    if (addTaskInputShow && taskTitle !== "") {
+      // Update database
+      axios.post("http://localhost:3000/api/addtask", {
+          username: data.username, 
+          menu: "tasks",
+          newTask: newTask
+      })
+        .then( () => {
+          // Update client-side
+          setTasks([...tasks, newTask]);
+        });
+    }
+    setTaskTitle("");
+    setAddTaskInputShow(!addTaskInputShow);
   }
 
   // *  to delete certain task
@@ -205,6 +211,7 @@ export default function Tasks({ data } : any) {
         return task.id != idTaskEdit;
       })
     );
+    // 
   }
 
   // *  to set which task is being edited
@@ -254,18 +261,13 @@ export default function Tasks({ data } : any) {
     done: boolean;
     important: boolean;
   }) {
-    setTaskPreview(task);
+    setStepTaskPreview(task);
     setAddTaskInputShow(false);
     setTaskTitle("")
     stepPreview ? setStepPreview(false) :  setStepPreview(true);
   }
 
 // ! I've tidied the lines, don't use automation from prettier to make tidier
-
-  const handleAddTask = () => {
-    axios.post("http://localhost:3000/api/addtask", {})
-      .then()
-  }
 
   return (
     <>
@@ -367,7 +369,7 @@ export default function Tasks({ data } : any) {
               )}
 
       {/* // ! FINISHED SECTION   */}
-        {/* // * The logic is that finished will appear if one of the task.done is true */}
+        {/* // * The logic is that finished will appear if one of the task done is true */}
               {tasks.some((task) => {
                 return task.done === true;
               }) && (
@@ -471,7 +473,7 @@ export default function Tasks({ data } : any) {
               className={`${(taskEdit.id !== "" && taskEdit.title !== "") && "cursor-not-allowed"} bg-[#424242] opacity-100 flex p-[1.5vh] hover:opacity-80 `}
               onClick={() => {!addTaskInputShow && setAddTaskInputShow(true);}}
             >
-              <div className="flex flex-1 px-[1.5vw] gap-4 ">
+              <div className="flex flex-1 px-[1.5vw] gap-4">
                 <div className="m-auto">
                   {addTaskInputShow && taskEdit.id === "" && taskEdit.title === "" ? circleIcon("none")
                     :
