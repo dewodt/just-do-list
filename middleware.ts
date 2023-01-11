@@ -7,16 +7,18 @@ export default async function middleware(
   const [ cookies ] = req.cookies.getAll();
   const reqUrl = req.url;
   if (!cookies) {
-    if (reqUrl !== "http://localhost:3000/") {
+    if (reqUrl === "http://localhost:3000/") {
+      // If there's no cookie, login.
       return NextResponse.rewrite("http://localhost:3000/");
+    } else {
+      // If there's no cookie and wrong page, 404.
+      return NextResponse.rewrite("http://localhost:3000/404");
     }
   } else {
-    const pages = ["tasks", "today", "important", "planned", "notes", "about", ];
-    if (pages.some(word => reqUrl.includes(word))) {
-      return NextResponse.rewrite(reqUrl);
-    } else {
-      return NextResponse.rewrite("http://localhost:3000/tasks/");
-    }
+    if (reqUrl === "http://localhost:3000/") {
+      // There's cookie and go to login page, redirect to tasks
+      return NextResponse.redirect("http://localhost:3000/tasks");
+    } // else can go to any page available
   }
 }
 
