@@ -1,7 +1,11 @@
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import Layout from "../components/layout";
 
+// ! I've tidied the lines, don't use automation from prettier to make tidier
+
 export default function Notes() {
+  // *  * ICON
+
   const notesIcon = () => {
     return (
       <svg
@@ -13,11 +17,12 @@ export default function Notes() {
       </svg>
     );
   };
+
   const backIcon = () => {
     return (
       <div
         role="button"
-        className="flex items-center justify-center hover:scale-[1.15] duration-100 ease-in-out rounded-full w-[4vh] sm:w-[6vh] h-[4vh] sm:h-[6vh] mt-1"
+        className="flex items-center justify-center hover:scale-[1.15] duration-100 ease-in-out rounded-full w-[4vh] sm:w-[6vh] h-[4vh] sm:h-[6vh]"
       >
         <svg
           className="fill-white opacity-80 w-[2.5vh] sm:w-[4.2vh] h-[2.5vh] sm:h-[4.2vh] m-auto hover:opacity-100"
@@ -30,11 +35,11 @@ export default function Notes() {
     );
   };
 
-  const checkIcon = (display: string) => {
+  const checkIcon = () => {
     return (
       <div
         role="button"
-        className={`${display} ml-auto items-center justify-center hover:scale-[1.15] right-0 duration-100 ease-in-out rounded-full w-[4vh] sm:w-[6vh] h-[4vh] sm:h-[6vh] mt-1`}
+        className="ml-auto items-center justify-center hover:scale-[1.15] right-0 duration-100 ease-in-out rounded-full w-[4vh] sm:w-[6vh] h-[4vh] sm:h-[6vh] mt-1"
       >
         <svg
           className="fill-white opacity-80 w-[2.5vh] sm:w-[4.2vh] h-[2.5vh] sm:h-[4.2vh] m-auto hover:opacity-100"
@@ -47,10 +52,12 @@ export default function Notes() {
     );
   };
 
-  const plusIcon = () => {
+  const plusIcon = (rotate: string) => {
     return (
       <svg
-        className="fill-white opacity-80 w-[3.5vh] sm:w-[5vh] h-[3.5vh] sm:h-[5vh] m-auto hover:opacity-100"
+        className={`${rotate}  ${
+          rotate === "rotate-45" && "hover:scale-[1.15]"
+        } items-center justify-center fill-white duration-100 ease-in-out w-[3vh] sm:w-[4.7vh] h-[3vh] sm:h-[4.7vh]`}
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 448 512"
       >
@@ -59,67 +66,167 @@ export default function Notes() {
     );
   };
 
-  type ObjectTask = {
+  const saveIcon = () => {
+    return (
+      <svg
+        className=" fill-white hover:scale-[1.15] duration-100 ease-in-out w-[2.2vh] sm:w-[3.4vh] h-[2.2vh] sm:h-[3.4vh]"
+        xmlns="http:// * www.w3.org/2000/svg"
+        viewBox="0 0 448 512"
+      >
+        <path d="M64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V173.3c0-17-6.7-33.3-18.7-45.3L352 50.7C340 38.7 323.7 32 306.7 32H64zm0 96c0-17.7 14.3-32 32-32H288c17.7 0 32 14.3 32 32v64c0 17.7-14.3 32-32 32H96c-17.7 0-32-14.3-32-32V128zM224 416c-35.3 0-64-28.7-64-64s28.7-64 64-64s64 28.7 64 64s-28.7 64-64 64z" />
+      </svg>
+    );
+  };
+
+  const trashIcon = () => {
+    return (
+      <svg
+        className="fill-white hover:scale-[1.15] duration-100 ease-in-out w-[2vh] sm:w-[3.2vh] h-[2vh] sm:h-[3.2vh]"
+        xmlns="http:// * www.w3.org/2000/svg"
+        viewBox="0 0 448 512"
+      >
+        <path d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z" />
+      </svg>
+    );
+  };
+
+  type Objectnote = {
     title: string;
     id: string;
     description: string;
-    dateCreated: string;
-  };
-  // Khusus bagian variabel kerja
-  const uniqid = require("uniqid"); // * to generate id from npm
-  const [subNotesPreview, setSubNotesPreview] = useState(false);
-  const [dateToday, setDateToday] = useState(new Date());
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [notes, setNotes] = useState<ObjectTask[]>([]);
-  const [dateClick, setDateClick] = useState("");
-  const [timeClick, setTimeClick] = useState("");
-  const currentTimeDiv = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    const currentTimeButton = document.getElementById('current-time-button') as HTMLButtonElement;
-    currentTimeButton.addEventListener('click', () => {
-      const currentTime = new Date();
-      currentTimeDiv.current!.innerHTML = currentTime.toString();
-    });
-  }, []);
-
-  const dateNow = () => {
-    return dateToday.toLocaleDateString("en-GB", {
-      weekday: "long",
-      day: "numeric",
-      month: "long",
-      year: "numeric",
-    });
-  };
-  const timeNow = () => {
-    return dateToday.toLocaleTimeString("en-GB", {
-      hour: "numeric",
-      minute: "numeric",
-    });
+    dateCreated: number | null;
   };
 
+  // ! I've tidied the lines, don't use automation from prettier to make tidier
+  // *  VARIABLE INITIALIZATION
+
+  const uniqid = require("uniqid");                                         // * to generate id from npm
+  const [subNotesPreviewMode, setSubNotesPreviewMode] = useState("back");   // * to popUp editing field or add new notes
+  const [dateNow, setDateNow] = useState<number | null>(Date.now());        // * to set the displayed date
+  const [dateChange, setDateChange] = useState<number | null>(Date.now());  // * to set the date change after edit
+
+  // ? Entah kenapa gw nemuin bug gegara pas mode edit gw ambil data yang diedit buat ditampilin pas subnotespreview mode edit
+  // ? Abis itu pas disave kan harusnya gw otak atik dateNow ga masalah kan buat gw set date now pas ngeklik save tapi entah kenapa ga kesave
+
+  const [title, setTitle] = useState("");                     // * to track changes in inputs title and data sets title
+  const [description, setDescription] = useState("");         // * to track changes in inputs title and data sets description
+  const [notes, setNotes] = useState<Objectnote[]>([]);       // TODO : notes dataset should be saved to the database     
+  const [noteEdit, setNoteEdit] = useState<Objectnote>({      // * contains the notes that is being edited
+    title: "",
+    id: "",
+    description: "",
+    dateCreated: null,
+  });
+
+  // * to convert from dateCreated number format to date string
+  const generateDateNow = () => {
+    if (dateNow !== null) {
+      return new Date(dateNow).toLocaleDateString("en-GB", {
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+      });
+    }
+  };
+
+  // * to convert from dateCreated number format to a time string
+  const generateTimeNow = () => {
+    if (dateNow !== null) {
+      return new Date(dateNow).toLocaleTimeString("en-GB", {
+        hour: "numeric",
+        minute: "numeric",
+      });
+    }
+  };
+
+  // * function to add new notes
   function addNotes() {
-    setNotes([
-      ...notes,
-      {
-        id: uniqid("note_"),
-        title: title,
-        description: description,
-        dateCreated: "",
-      },
-    ]);
-
+    // only to prevent empty title or empty description
+    title !== "" &&
+      description !== "" &&
+      setNotes([
+        ...notes,
+        {
+          id: uniqid("note_"),
+          title: title,
+          description: description,
+          dateCreated: dateNow,
+        },
+      ]);
     setTitle("");
     setDescription("");
-    setSubNotesPreview(false);
-    setDateClick("");
-    setTimeClick("");
+    setSubNotesPreviewMode("back");
   }
 
+  // * function to return to the main display mode without making changes
+  function backMenuNote() {
+    setTitle("");
+    setDescription("");
+    setSubNotesPreviewMode("back");
+  }
+
+  // * function when clicking the add button which will set the time state
   function handleNewNotesPreview() {
-    setSubNotesPreview(true);
-    setDateClick(dateNow());
-    setTimeClick(timeNow());
+    setSubNotesPreviewMode("add");
+    setDateNow(Date.now().valueOf());
+  }
+
+  // * function to set which note is being edited
+  function handleEdit(note: {
+    title: string;
+    id: string;
+    description: string;
+    dateCreated: number | null;
+  }) {
+    // taking specific data and set to state
+    setNoteEdit(note);
+    setTitle(note.title);
+    setDescription(note.description);
+    setDateNow(note.dateCreated);
+    setDateChange(Date.now().valueOf());
+    setSubNotesPreviewMode("edit");
+  }
+
+  // * function to handle delete note that edited
+  function handleDelete(idNote: string) {
+  // return data without deleted note
+    setNotes(
+      notes.filter(function (note) {
+        return note.id !== idNote;
+      })
+    );
+    setTitle("");
+    setDescription("");
+    setSubNotesPreviewMode("back");
+  }
+
+  // *  to save changes after editing
+  function handleSave(note: {
+    title: string;
+    id: string;
+    description: string;
+    dateCreated: number | null;
+  }) {
+    // updating data
+    setDateChange(Date.now().valueOf());
+    const updateAction = {
+      id: note.id,
+      title: title,
+      description: description,
+      dateCreated: dateChange,
+    };
+    const updateIndex = notes.findIndex(function (note) {
+      return note.id === noteEdit.id;
+    });
+    // to handle note's date that actually change
+    if (updateAction.title !== notes[updateIndex].title || updateAction.description !== notes[updateIndex].description) { 
+      notes[updateIndex] = updateAction;
+      setNotes([...notes]);
+    }
+    setNoteEdit({ id: "", title: "", description: "", dateCreated: null });
+    setTitle("");
+    setDescription("");
+    setSubNotesPreviewMode("back");
   }
 
   return (
@@ -127,36 +234,36 @@ export default function Notes() {
       <Layout>
         <div className="flex flex-1">
           <div className="flex flex-col flex-1 pt-[2vh] lg:px-[3.8vh] lg:pt-[3.8vh] px-[3.4vh] ">
+
+            {/* // ! HEADER NOTES SECTION */}
             <div className="flex  items-center gap-x-2">
               <span>{notesIcon()}</span>
               <p className="font-semibold text-[2.5vh] sm:text-[3.8vh]">
                 Notes{" "}
               </p>
             </div>
+
+            {/* // ! MAPPING DATASET NOTES SECTION */}
             <div
-              className="flex flex-wrap justify-center mt-8 overflow-y-scroll gap-x-[8.71vw] gap-y-[2.97vh] xl:gap-x-[4.31vw] sm:gap-y-[6vh]"
+              className="notes grid min-[250px]:grid-cols-2 xl:grid-cols-3 mt-8 overflow-y-scroll m-auto gap-x-[8.71vw] gap-y-[2.97vh] xl:gap-x-[4.31vw] sm:gap-y-[6vh]"
               id="no-scrollbar"
             >
-              {notes.map((note, index) => (
+              {notes.map((note) => (
                 <>
                   <div
                     role="button"
-                    onClick={() => {
-                      subNotesPreview
-                        ? setSubNotesPreview(false)
-                        : setSubNotesPreview(true);
-                    }}
-                    className="flex bg-[#424242] rounded-[10px] sm:rounded-[20px] h-[20.83vh] w-[30.411vw] sm:w-[20.83vw] sm:h-[30.411vh] hover:opacity-80 px-[2vw] py-[1.8vh] cursor-pointer "
+                    onClick={() => {handleEdit(note);}}
+                    className="flex bg-[#424242] rounded-[10px] sm:rounded-[20px] h-[17.83vh] w-[50.411vw] min-[250px]:h-[20.83vh] min-[250px]:w-[30.411vw] lg:w-[20.83vw] sm:h-[30.411vh] hover:opacity-80 px-[2vw] py-[1.8vh] cursor-pointer "
                   >
-                    <div className="flex flex-col flex-1 justify-center my-[0.3vh] mx-[1.8vw] sm:my-[1.1vh] sm:mx-[1vw]">
-                      <p className="font-semibold text-[2vh] sm:text-[2.9vh] lg:mb-[2vh] mb-[0.5vh] lg:mt-1">
+                    <div className="flex flex-col flex-1 justify-center my-[0.9vh] mx-[2vw] sm:my-[1.6vh] sm:mx-[1.3vw]">
+                      <p className="font-semibold mb-auto text-[2vh] sm:text-[2.9vh] break-all line-clamp-1  lg:mt-1">
                         {note.title}
                       </p>
-                      <p className="flex flex-1 break-all text-[1.3vh] sm:text-[2.1vh] text-justify text-[#CECECE] line-clamp-4">
+                      <p className="flex break-all text-[1.3vh] sm:text-[2.1vh] text-justify text-[#CECECE] line-clamp-3">
                         {note.description}
                       </p>
-                      <p className="text-[1.3vh] sm:text-[2.1vh] text-[#CECECE]">
-                        {note.dateCreated}
+                      <p className="mt-auto text-[1vh] sm:text-[1.6vh] text-[#CECECE]">
+                        {generateDateNow()}
                       </p>
                     </div>
                   </div>
@@ -164,64 +271,77 @@ export default function Notes() {
               ))}
             </div>
           </div>
+
+          {/* // ! Add Blue Button */}
           <button
-            onClick={() => {
-              handleNewNotesPreview();
-            }}
+            onClick={() => {handleNewNotesPreview();}}
             className="flex items-center justify-center bg-blue-400 hover:scale-[1.15] duration-300 ease-in-out absolute sm:bottom-[6vh] sm:right-[4vw] bottom-[4vh] right-[10vw] rounded-full w-[4.5vh] sm:w-[7vh] h-[4.5vh] sm:h-[7vh]"
           >
-            {plusIcon()}
+            {plusIcon("rotate-0")}
           </button>
         </div>
+
         {/* // ! NOTESPREVIEW SECTION */}
-        {subNotesPreview && (
+        {(subNotesPreviewMode == "add" || subNotesPreviewMode === "edit") && (
           <>
-            {" "}
             <div className="flex flex-col w-[100vw] lg:w-[81vw] right-0  absolute z-10 bg-[#323232]  h-[94vh] md:h-[90.5vh]">
               <div className="flex flex-col  flex-1 mx-4 pt-[1vh] lg:px-[3.8vh] px-[3.4vh] gap-y-[1.6vh] sm:gap-y-[2.2vh]">
-                <div className="flex flex-center">
-                  <button>{backIcon()}</button>
+                <div className="flex flex-center mt-2">
+                  {/* //* Back Button */}
                   <button
-                    className="ml-auto"
-                    onClick={() => {
-                      addNotes();
-                    }}
+                    onClick={() => {backMenuNote();}}
                   >
-                    {checkIcon("flex")}
+                    {backIcon()}
                   </button>
+
+                  <div className="ml-auto flex gap-x-[4vh]">
+                  {/* // * Delete Button if in edit mode */}
+                    {subNotesPreviewMode === "edit" && (
+                      <button
+                        onClick={() => {handleDelete(noteEdit.id);}}
+                      >
+                        {trashIcon()}
+                      </button>
+                    )}
+                  {/* //* Cross Button if empty input, Save Button in edit mode, and Add Button in add mode  */}
+                    <button
+                      className="ml-auto"
+                      onClick={() => {subNotesPreviewMode === "add" ? addNotes() : handleSave(noteEdit);}}
+                    >
+                      {title === "" || description === "" ? plusIcon("rotate-45")
+                        : subNotesPreviewMode === "edit"  ? saveIcon()
+                        : checkIcon()}
+                    </button>
+                  </div>
                 </div>
 
-                {/* // * TITLE */}
+                {/* // ! TITLE SUBNOTES SECTION */}
                 <div className="flex items-center gap-x-3 mt-1">
-                  {/* Input title */}
                   <input
-                    className="font-semibold text-[2.5vh] sm:text-[3.4vh] w-[65vw] bg-transparent outline-none"
-                    onChange={(event) => {
-                      setTitle(event.target.value);
-                    }}
+                    className="font-semibold text-[2vh] sm:text-[2.9vh] w-full bg-transparent outline-none"
+                    onChange={(event) => {setTitle(event.target.value);}}
                     value={title}
                     type="text"
                     placeholder="Title"
                   />
                 </div>
-                {/* //* Time Subnotes Created */}
+                {/* // ! TIME SUBNOTES SECTION */}
                 <p className="text-[1.7vh] sm:text-[2.2vh] mt-1 sm:mt-2 text-slate-300">
                   {/* Date */}
-                  {dateClick}
+                  {generateDateNow()}
                   {/* Time */}
                   <span className="ml-1">
-                    {"|"} {timeClick}
+                    {"|"} {generateTimeNow()}
                   </span>
                 </p>
-                {/* // * SUBNOTES */}
+                {/* // ! DESCRIPTION SUBNOTES SECTION */}
                 <div className="flex flex-1 items-start mb-[4vh]">
                   <textarea
                     id="descriptionInput"
-                    onChange={(event) => {
-                      setDescription(event.target.value);
-                    }}
+                    value={description}
+                    onChange={(event) => {setDescription(event.target.value);}}
                     className="flex-1 h-full items-start break-all overflow-y-visible outline-none bg-transparent text-[1.4vh] sm:text-[2.1vh]"
-                    placeholder="Mulai mengetik..."
+                    placeholder="Start Typing....."
                   ></textarea>
                 </div>
               </div>
