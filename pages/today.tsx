@@ -1,9 +1,9 @@
 import Layout from "../components/layout";
-
+import getUserData from "../lib/getUserData";
 import React, { useEffect, useState } from "react";
 import SubTask from "../components/subtask";
 
-export default function Today() {
+export default function Today({ data } : any) {
   // Khusus bagian icon
   const todayIcon = () => {
     return (
@@ -111,9 +111,10 @@ export default function Today() {
     }, 1000);
     return () => clearInterval(interval);
   }, []);
+
   return (
     <>
-      <Layout>
+      <Layout name={data.name} username={data.username}>
         <div className="flex flex-1">
           <div className="flex flex-col flex-1 py-[2vh] lg:p-[3.8vh] px-[3.4vh] gap-1">
             <div className="flex  items-center gap-x-3">
@@ -350,4 +351,12 @@ export default function Today() {
       </Layout>
     </>
   );
+}
+
+export async function getServerSideProps(ctx: any) {
+  const username = ctx.req.headers.cookie.split("=")[0];
+  const data = await getUserData(username);
+  return {
+    props: { data }
+  }
 }

@@ -1,14 +1,14 @@
 import Header from "./header";
 import NavbarMenu from "./navbar-menu";
 
-export default function Layout(props: any) {
+export default function Layout({ name, username, children }: { name: string, username: string, children: any }) {
   return (
     <>
       <Header />
       <div className="flex h-[94vh] md:h-[90.5vh]">
         <div className={`flex flex-auto max-h-full`}>
-          <NavbarMenu/>
-          {props.children}
+          <NavbarMenu name={name} username={username} />
+          {children}
         </div>
       </div>
     </>

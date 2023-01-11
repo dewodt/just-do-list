@@ -1,9 +1,10 @@
 import Layout from "../components/layout";
-
+import axios from "axios";
 import React, { useState } from "react";
 import SubTask from "../components/subtask";
+import getUserData from "../lib/getUserData";
 
-export default function Tasks() {
+export default function Tasks({ data } : any) {
   // Khusus bagian icon
   const homeIcon = () => {
     return (
@@ -101,12 +102,17 @@ export default function Tasks() {
   const [addTaskInputShow, setAddTaskInputShow] = useState(false);
   const [taskDone, setTaskDone] = useState(false);
   const [important, setImportant] = useState(false);
-  const [subTaskPreview, setSubTaskPreview] = useState(true);
+  const [subTaskPreview, setSubTaskPreview] = useState(false);
   const [dropDownFinished, setDropDownFinished] = useState(false);
+
+  const handleAddTask = () => {
+    axios.post("http://localhost:3000/api/addtask", {})
+      .then()
+  }
 
   return (
     <>
-      <Layout>
+      <Layout name={data.name} username={data.username}>
         <div className="flex flex-1">
           <div className="flex flex-col flex-1 py-[2vh] lg:p-[3.8vh] px-[3.4vh] gap-1">
             <div className="flex  items-center gap-x-3">
@@ -115,7 +121,6 @@ export default function Tasks() {
                 Tasks{" "}
               </p>
             </div>
-
             <div
               className="flex flex-1 flex-col my-3 overflow-y-scroll"
               id="no-scrollbar"
@@ -171,112 +176,12 @@ export default function Tasks() {
                   <button>{trashIcon()}</button>
                 </div>
               </div>
-              <div className="flex bg-[#424242] hover:opacity-80 p-[1.4vh] cursor-pointer mb-[1.47vh] ">
-                <div className="flex flex-1 items-center justify-center mx-[1vw] gap-3">
-                  {taskDone ? (
-                    <span
-                      onClick={() => {
-                        setTaskDone(false);
-                      }}
-                    >
-                      {circleCheckIcon()}
-                    </span>
-                  ) : (
-                    <span
-                      onClick={() => {
-                        setTaskDone(true);
-                      }}
-                    >
-                      {circleIcon("#54A1EA")}
-                    </span>
-                  )}
-                  <p
-                    className="flex break-all flex-1 text-[1.5vh] sm:text-[2.25vh] text-justify"
-                    onClick={() => {
-                      subTaskPreview
-                        ? setSubTaskPreview(false)
-                        : setSubTaskPreview(true);
-                    }}
-                  >
-                    list1asdasdasdahoaisjdjaosjdjasuin hassj hdkja dkjhas djkha
-                    kjshd si dias
-                    ddainduniocauosndoiuzonisunioufousiyfbiurfysbiuodyuiboybiuuoiassybuidybuiasyduiyuiyasbuidbyasuidyb
-                  </p>
-                  {important ? (
-                    <div
-                      onClick={() => {
-                        setImportant(false);
-                      }}
-                    >
-                      {starLineIcon()}
-                    </div>
-                  ) : (
-                    <button
-                      onClick={() => {
-                        setImportant(true);
-                      }}
-                    >
-                      {starFullIcon()}
-                    </button>
-                  )}
-                  <button>{trashIcon()}</button>
-                </div>
-              </div>
-              <div className="flex bg-[#424242] hover:opacity-80 p-[1.4vh] cursor-pointer mb-[1.47vh] ">
-                <div className="flex flex-1 items-center justify-center mx-[1vw] gap-3">
-                  {taskDone ? (
-                    <span
-                      onClick={() => {
-                        setTaskDone(false);
-                      }}
-                    >
-                      {circleCheckIcon()}
-                    </span>
-                  ) : (
-                    <span
-                      onClick={() => {
-                        setTaskDone(true);
-                      }}
-                    >
-                      {circleIcon("#54A1EA")}
-                    </span>
-                  )}
-                  <p
-                    className="flex break-all flex-1 text-[1.5vh] sm:text-[2.25vh] text-justify"
-                    onClick={() => {
-                      subTaskPreview
-                        ? setSubTaskPreview(false)
-                        : setSubTaskPreview(true);
-                    }}
-                  >
-                    list1asdasdasdahoaisjdjaosjdjasuin hassj hdkja dkjhas djkha
-                    kjshd si dias
-                    ddainduniocauosndoiuzonisunioufousiyfbiurfysbiuodyuiboybiuuoiassybuidybuiasyduiyuiyasbuidbyasuidyb
-                  </p>
-                  {important ? (
-                    <div
-                      onClick={() => {
-                        setImportant(false);
-                      }}
-                    >
-                      {starLineIcon()}
-                    </div>
-                  ) : (
-                    <button
-                      onClick={() => {
-                        setImportant(true);
-                      }}
-                    >
-                      {starFullIcon()}
-                    </button>
-                  )}
-                  <button>{trashIcon()}</button>
-                </div>
-              </div>
               <div onClick = {()=>{dropDownFinished?setDropDownFinished(false):setDropDownFinished(true)}} className="flex items-center gap-1 bg-[#424242] hover:opacity-80 w-fit pl-[0.6vw] pr-[1vw] py-[0.3vh] cursor-pointer mb-[1.47vh]">
                 <span >
                   <svg
-                    className={`w-4 h-4 sm:w-5 sm:h-5 ${!dropDownFinished && "-rotate-90"}`}
+                    className={`w-4 h-4 sm:w-5 sm:h-5 ${
+                      !dropDownFinished && "-rotate-90"
+                    }`}
                     aria-hidden="true"
                     fill="currentColor"
                     viewBox="0 0 20 20"
@@ -289,7 +194,9 @@ export default function Tasks() {
                     ></path>
                   </svg>
                 </span>
-                <p className="text-[1.6vh] font-medium sm:text-[2.3vh]">Finished</p>
+                <p className="text-[1.6vh] font-medium sm:text-[2.3vh]">
+                  Finished
+                </p>
               </div>
             </div>
 
@@ -307,16 +214,12 @@ export default function Tasks() {
                   className="flex-1 outline-none w-[8vw] font-medium text-[1.5vh] sm:text-[2.2vh] bg-transparent placeholder:text-white placeholder:opacity-70"
                   placeholder="Add New Task"
                 />
-                {addTaskInputShow && (
-                  <div
-                    className="m-auto cursor-pointer"
-                    onClick={() => {
-                      setAddTaskInputShow(false);
-                    }}
-                  >
-                    {checkIcon()}
-                  </div>
-                )}
+                <button 
+                  className="m-auto cursor-pointer"
+                  onClick={handleAddTask}
+                >
+                  {checkIcon()}
+                </button>
               </div>
             </div>
           </div>
@@ -325,4 +228,12 @@ export default function Tasks() {
       </Layout>
     </>
   );
+}
+
+export async function getServerSideProps(ctx: any) {
+  const username = ctx.req.headers.cookie.split("=")[0];
+  const data = await getUserData(username);
+  return {
+    props: { data }
+  }
 }
