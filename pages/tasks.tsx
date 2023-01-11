@@ -206,12 +206,20 @@ export default function Tasks({ data } : any) {
 
   // *  to delete certain task
   function handleDelete(idTaskEdit: string) {
-    setTasks(
-      tasks.filter(function (task) {
-        return task.id != idTaskEdit;
-      })
-    );
-    // 
+    // Update database
+    axios.post("http://localhost:3000/api/deletetask", {
+      username: data.username, 
+      menu: "tasks",
+      task_id: idTaskEdit
+    })
+      .then( () => {
+        // Update client side
+        setTasks(
+          tasks.filter(function (task) {
+            return task.id != idTaskEdit;
+          })
+        );
+      });
   }
 
   // *  to set which task is being edited
