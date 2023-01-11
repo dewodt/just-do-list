@@ -1,10 +1,9 @@
-import Layout from "../components/layout";  
-import React, { useState } from "react";
+import Layout from "../components/layout";
+import getUserData from "../lib/getUserData";
+import React, { useEffect, useState } from "react";
 import SubTask from "../components/subtask";
 
-// ! I've tidied the lines, don't use automation from prettier to make tidier
-
-export default function Today() {
+export default function Today({ data } : any) {
   // *  * ICON
   const titleIcon = () => {
     return (
@@ -264,7 +263,7 @@ export default function Today() {
 
   return (
     <>
-      <Layout>
+      <Layout name={data.name} username={data.username}>
         <div className="flex flex-1">
           <div className="flex flex-col flex-1 py-[2vh] lg:p-[3.8vh] px-[3.4vh] gap-1">
 
@@ -503,4 +502,12 @@ export default function Today() {
       </Layout>
     </>
   );
+}
+
+export async function getServerSideProps(ctx: any) {
+  const username = ctx.req.headers.cookie.split("=")[0];
+  const data = await getUserData(username);
+  return {
+    props: { data }
+  }
 }

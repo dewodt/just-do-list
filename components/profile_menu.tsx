@@ -3,11 +3,13 @@ import { useState } from "react";
 import Link from "next/link";
 import axios from "axios";
 
-export default function ProfileMenu() {
+export default function ProfileMenu({ name, username }: { name: string, username: string }) {
   const [dropDownProfile, setDropDownProfile] = useState(false);
 
   function handleLogout() {
-    axios.post("http://localhost:3000/api/logout")
+    axios.post("http://localhost:3000/api/logout", {
+      username: username
+    })
       .then(() => {
         window.location.href = "http://localhost:3000/";
       });
@@ -31,11 +33,11 @@ export default function ProfileMenu() {
               layout="fill"
               alt="gambar"
               className="rounded-full  max-w-full h-auto align-middle border-none"
-            ></Image>
+            />
           </div>
           <div className="flex flex-col flex-1 m-auto">
-            <div className="font-semibold">Name</div>
-            <div className="text-xs">Username</div>
+            <div className="font-semibold">{name}</div>
+            <div className="text-xs">{username}</div>
           </div>
           <div className="m-auto">
             <svg
@@ -49,7 +51,7 @@ export default function ProfileMenu() {
                 fill-rule="evenodd"
                 d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
                 clip-rule="evenodd"
-              ></path>
+              />
             </svg>
           </div>
         </div>
@@ -60,14 +62,6 @@ export default function ProfileMenu() {
               dropDownProfile ? "block" : "hidden"
             } z-10 w-fill rounded m-auto mb-2 text-center mx-4`}
           >
-            {/* <div className="py-1.5 text-xs text-gray-400 dark:text-gray-200 dark:hover:bg-gray-600 rounded-[8px]">
-              <a
-                href="/"
-                className="block px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-              >
-                Profile
-              </a>
-            </div> */}
             <div className="py-1.5 text-xs text-gray-400 dark:text-gray-200 dark:hover:bg-gray-600 rounded-[8px]">
               <Link
                 href="/"

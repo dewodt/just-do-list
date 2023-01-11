@@ -1,11 +1,9 @@
 import { useState } from "react";
 import Layout from "../components/layout";
+import SubNotes from "../components/subnotes";
+import getUserData from "../lib/getUserData";
 
-// ! I've tidied the lines, don't use automation from prettier to make tidier
-
-export default function Notes() {
-  // *  * ICON
-
+export default function Notes({ data } : any) {
   const notesIcon = () => {
     return (
       <svg
@@ -231,7 +229,7 @@ export default function Notes() {
 
   return (
     <>
-      <Layout>
+      <Layout name={data.name} username={data.username}>
         <div className="flex flex-1">
           <div className="flex flex-col flex-1 pt-[2vh] lg:px-[3.8vh] lg:pt-[3.8vh] px-[3.4vh] ">
 
@@ -351,4 +349,12 @@ export default function Notes() {
       </Layout>
     </>
   );
+}
+
+export async function getServerSideProps(ctx: any) {
+  const username = ctx.req.headers.cookie.split("=")[0];
+  const data = await getUserData(username);
+  return {
+    props: { data }
+  }
 }

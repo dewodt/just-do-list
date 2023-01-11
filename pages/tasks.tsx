@@ -1,10 +1,10 @@
-import Layout from "../components/layout";  
+import Layout from "../components/layout";
+import axios from "axios";
 import React, { useState } from "react";
 import SubTask from "../components/subtask";
+import getUserData from "../lib/getUserData";
 
-// ! I've tidied the lines, don't use automation from prettier to make tidier
-
-export default function Tasks() {
+export default function Tasks({ data } : any) {
   // *  * ICON
   const homeIcon = () => {
     return (
@@ -262,9 +262,14 @@ export default function Tasks() {
 
 // ! I've tidied the lines, don't use automation from prettier to make tidier
 
+  const handleAddTask = () => {
+    axios.post("http://localhost:3000/api/addtask", {})
+      .then()
+  }
+
   return (
     <>
-      <Layout>
+      <Layout name={data.name} username={data.username}>
         <div className="flex flex-1">
           <div className="flex flex-col flex-1 py-[2vh] lg:p-[3.8vh] px-[3.4vh] gap-1">
 
@@ -275,7 +280,7 @@ export default function Tasks() {
                 Tasks{" "}
               </p>
             </div>
-
+            
       {/* // ! TASK LIST UNDONE SECTION */}
             <div
               className="flex flex-1 flex-col my-3 overflow-y-scroll"
@@ -503,4 +508,12 @@ export default function Tasks() {
       </Layout>
     </>
   );
+}
+
+export async function getServerSideProps(ctx: any) {
+  const username = ctx.req.headers.cookie.split("=")[0];
+  const data = await getUserData(username);
+  return {
+    props: { data }
+  }
 }

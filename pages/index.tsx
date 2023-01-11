@@ -13,8 +13,8 @@ export default function Home() {
   const [name, setName] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [popUp, setPopUp] = useState("")
-  const [popUpSuccess, setPopUpSuccess] = useState()
+  const [popUp, setPopUp] = useState("");
+  const [popUpSuccess, setPopUpSuccess] = useState();
 
   function handleLoginTab() {
     setLoginPage(true);

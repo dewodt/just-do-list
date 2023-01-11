@@ -4,10 +4,10 @@ import Projects from "./projects";
 import { useRouter } from "next/router";
 import Link from "next/link";
 
-export default function NavbarMenu() {
+export default function NavbarMenu({ name, username }: { name: string, username: string }) {
   return (
     <div className="hidden lg:flex flex-col bg-[#3D3C40] w-[19vw] border-r-[1px] border-[#959595] gap-2 rounded-[3px]">
-      <ProfileMenu />
+      <ProfileMenu name={name} username={username} />
       <span className="inline-block border-[0.6px] opacity-80 bg-white mx-auto w-[15vw] my-1" />
       <Fitur />
       <span className="inline-block opacity-80 border-[0.6px] bg-white mx-auto w-[15vw]" />

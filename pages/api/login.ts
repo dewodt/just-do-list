@@ -19,7 +19,7 @@ export default async function logIn(
       secretJWT
     )
     
-    const serialised = serialize("Login-JustDoList", token, {
+    const serialised = serialize(`${username}`, token, {
       httpOnly: true,
       secure: process.env.NODE_ENV !== "development",
       sameSite: "strict",
