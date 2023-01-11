@@ -284,11 +284,26 @@ export default function Tasks({ data } : any) {
   }
 
   // *  to change important status of task
-  function handleImportant(i: number) {
-    tasks[i].important
-      ? (tasks[i].important = false)
-      : (tasks[i].important = true);
-    setTasks([...tasks]);
+  function handleImportant(taskId: string) {
+    // Create new array (no mutation)
+    const newTasks = tasks.map( (item) => {
+      if (item.id === taskId) {
+        return {...item, important: !item.important};
+      } else {
+        return {...item};
+      }
+    })
+
+    // Update database
+    axios.post("http://localhost:3000/api/edittask", {
+      username: data.username,
+      menu: "tasks",
+      newTasks: newTasks
+    })
+      .then( () => {
+        // Update client side
+        setTasks(newTasks);
+      });
   }
 
   // * to handle change step preview popup
@@ -376,13 +391,13 @@ export default function Tasks({ data } : any) {
                             {/* // * Handle changes to starIcon Important */}
                             {!task.important ? (
                               <button
-                                onClick={() => {handleImportant(index)}}
+                                onClick={() => {handleImportant(task.id)}}
                               >
                                 {starLineIcon()}
                               </button>
                             ) : (
                               <button
-                                onClick={() => {handleImportant(index)}}
+                                onClick={() => {handleImportant(task.id)}}
                               >
                                 {starFullIcon()}
                               </button>
@@ -475,13 +490,13 @@ export default function Tasks({ data } : any) {
                             {/* //* Handle icon important changes */}
                             {!task.important ? (
                               <button
-                                onClick={() => {handleImportant(index);}}
+                                onClick={() => {handleImportant(task.id);}}
                               >
                                 {starLineIcon()}
                               </button>
                             ) : (
                               <button
-                                onClick={() => {handleImportant(index);}}
+                                onClick={() => {handleImportant(task.id);}}
                               >
                                 {starFullIcon()}
                               </button>
