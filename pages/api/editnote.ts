@@ -9,12 +9,12 @@ const dbname = process.env.DB_NAME;
 
 const client = new MongoClient(uri);
 
-export default async function addNote(
+export default async function editNote(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
   // Get req
-  const { username, newNote } = req.body;
+  const { username, noteId, newTitle, newDesc, newDate } = req.body;
 
   // Connect MongoDB
   await client.connect();
@@ -23,8 +23,8 @@ export default async function addNote(
 
   // Add newTask data
   await coll.updateOne(
-    { username: username },
-    { $push: { notes: newNote} }
+    { username: username, "notes.id": noteId },
+    { $set: { "notes.$.title": newTitle, "notes.$.description": newDesc, "notes.$.dateCreated": newDate } }
   )
   
   // Tutup DB
