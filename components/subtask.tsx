@@ -130,15 +130,15 @@ export default function SubTask( {username, taskData, subtaskPreview}: SubtaskIn
   const uniqid = require("uniqid"); // Ini buat generate id dari npm
   const [calendarStatus, setCalendarStatus] = useState(false);
   const [stepTitle, setStepTitle] = useState(""); // isinya adalah status value input
-  const [steps, setSteps] = useState<ObjectStep[]>(taskData.subtask); // Isinya adalah kumpulan data subtasks
+  const [steps, setSteps] = useState<ObjectStep[]>(taskData.subtask); // Isinya adalah subtask atau kumpulan data step
   const [stepEdit, setStepEdit] = useState<ObjectStep>({
-    // isinya adalah task yang lagi di rename/diedit
+    // isinya adalah step yang lagi di rename/diedit
     title: "",
     id: "",
     done: false,
   });
 
-  // Buat nambahin task baru
+  // Buat nambahin subtask/step baru
   function addStep() {
     const newStep = { 
       id: uniqid("step_"),
@@ -163,13 +163,23 @@ export default function SubTask( {username, taskData, subtaskPreview}: SubtaskIn
     setStepTitle("");
   }
 
-  // Buat hapus task tertentu
-  function handleDelete(idTask: string) {
-    setSteps(
-      steps.filter(function (task) {
-        return task.id != idTask;
-      })
-    );
+  // Buat hapus subtask tertentu
+  function handleDelete(idStep: string) {
+    // Update database
+    axios.post("http://localhost:3000/api/deletestep", {
+      username: username, 
+      menu: "tasks",
+      taskId: taskData.id,
+      stepId: idStep,
+    })
+      .then( () => {
+        // Update client side
+        setSteps(
+          steps.filter((step) => {
+            return step.id != idStep;
+          })
+        );
+      });
   }
 
   // Buat set mana task yang lagi diedit
@@ -180,12 +190,12 @@ export default function SubTask( {username, taskData, subtaskPreview}: SubtaskIn
   }
 
   // Buat save abis diedit
-  function handleSave(i: number) {
-    if (stepTitle == "") {
-      steps[i].title = "New Step";
-    } else {
-      steps[i].title = stepTitle;
-    }
+  function handleSave(idStep: string) {
+    // if (stepTitle == "") {
+    //   steps[i].title = "New Step";
+    // } else {
+    //   steps[i].title = stepTitle;
+    // }
     setSteps([...steps]);
     setStepEdit({ id: "", title: "", done: false });
     setStepTitle("");
@@ -193,9 +203,9 @@ export default function SubTask( {username, taskData, subtaskPreview}: SubtaskIn
   }
 
   // Buat ganti status done
-  function handleDone(i: number) {
-    steps[i].done ? (steps[i].done = false) : (steps[i].done = true);
-    setSteps([...steps]);
+  function handleDone(idStep: string) {
+    // steps[i].done ? (steps[i].done = false) : (steps[i].done = true);
+    // setSteps([...steps]);
   }
 
   return (
@@ -219,13 +229,13 @@ export default function SubTask( {username, taskData, subtaskPreview}: SubtaskIn
               className="flex flex-col max-h-[53vh] lg:max-h-[51vh] gap-2.5 overflow-y-scroll"
               id="no-scrollbar"
             >
-              {steps.map((step, index) => (
+              {steps.map((step) => (
                 <div key={step.id} className="flex w-full gap-3 items-center">
                   {step.done ? (
                     <span
                       className="m-auto"
                       onClick={() => {
-                        handleDone(index);
+                        handleDone(step.id);
                       }}
                     >
                       {circleCheckIcon()}
@@ -234,7 +244,7 @@ export default function SubTask( {username, taskData, subtaskPreview}: SubtaskIn
                     <span
                       className="m-auto"
                       onClick={() => {
-                        handleDone(index);
+                        handleDone(step.id);
                       }}
                     >
                       {circleIcon("#54A1EA")}
@@ -254,7 +264,7 @@ export default function SubTask( {username, taskData, subtaskPreview}: SubtaskIn
                       ></input>
                       <button
                         onClick={() => {
-                          handleSave(index);
+                          handleSave(step.id);
                         }}
                       >
                         {saveIcon()}
