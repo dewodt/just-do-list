@@ -167,7 +167,7 @@ export default function SubTask( {username, taskData, subtaskPreview}: SubtaskIn
   function handleDelete(stepId: string) {
     // Update database
     axios.post("http://localhost:3000/api/deletestep", {
-      username: username, 
+      username: username,
       menu: "tasks",
       taskId: taskData.id,
       stepId: stepId,
@@ -218,9 +218,27 @@ export default function SubTask( {username, taskData, subtaskPreview}: SubtaskIn
   }
 
   // Buat ganti status done
-  function handleDone(stepId: string) {
-    // steps[i].done ? (steps[i].done = false) : (steps[i].done = true);
-    // setSteps([...steps]);
+  function handleDone(stepId: string, stepDone: boolean) {
+    // Update database
+    axios.post("http://localhost:3000/api/donestep", {
+      username: username, 
+      menu: "tasks",
+      taskId: taskData.id,
+      stepId: stepId,
+      stepDone: !stepDone
+    })
+      .then( () => {
+        // New array so no mutation
+        const newSteps = steps.map( (step) => {
+          if (step.id === stepId) {
+            return {...step, done: !step.done};
+          } else {
+            return {...step};
+          }
+        })
+        // Update client side
+        setSteps(newSteps)
+      });
   }
 
   return (
@@ -250,7 +268,7 @@ export default function SubTask( {username, taskData, subtaskPreview}: SubtaskIn
                     <span
                       className="m-auto"
                       onClick={() => {
-                        handleDone(step.id);
+                        handleDone(step.id, step.done);
                       }}
                     >
                       {circleCheckIcon()}
@@ -259,7 +277,7 @@ export default function SubTask( {username, taskData, subtaskPreview}: SubtaskIn
                     <span
                       className="m-auto"
                       onClick={() => {
-                        handleDone(step.id);
+                        handleDone(step.id, step.done);
                       }}
                     >
                       {circleIcon("#54A1EA")}

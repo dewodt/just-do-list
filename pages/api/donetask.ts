@@ -24,7 +24,7 @@ export default async function doneTask(
   // Edit the title
   await coll.updateOne(
     { username: username, [`${menu}.id`]: taskId },
-    { $set: { [`${menu}.$.done`]: !taskDone} }
+    { $set: { [`${menu}.$.done`]: taskDone} }
   )
   
   // Tutup DB

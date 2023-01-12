@@ -270,7 +270,7 @@ export default function Tasks({ data } : any) {
       username: data.username,
       menu: "tasks",
       taskId: taskId,
-      taskDone: taskDone
+      taskDone: !taskDone
     })
     .then( () => {
       // Create new array (no mutation)
@@ -294,7 +294,7 @@ export default function Tasks({ data } : any) {
       username: data.username,
       menu: "tasks",
       taskId: taskId,
-      taskImportant: taskImportant
+      taskImportant: !taskImportant
     })
     .then( () => {
         // Create new array (no mutation)
