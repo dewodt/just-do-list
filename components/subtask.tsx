@@ -164,19 +164,19 @@ export default function SubTask( {username, taskData, subtaskPreview}: SubtaskIn
   }
 
   // Buat hapus subtask tertentu
-  function handleDelete(idStep: string) {
+  function handleDelete(stepId: string) {
     // Update database
     axios.post("http://localhost:3000/api/deletestep", {
       username: username, 
       menu: "tasks",
       taskId: taskData.id,
-      stepId: idStep,
+      stepId: stepId,
     })
       .then( () => {
         // Update client side
         setSteps(
           steps.filter((step) => {
-            return step.id != idStep;
+            return step.id != stepId;
           })
         );
       });
@@ -190,20 +190,35 @@ export default function SubTask( {username, taskData, subtaskPreview}: SubtaskIn
   }
 
   // Buat save abis diedit
-  function handleSave(idStep: string) {
-    // if (stepTitle == "") {
-    //   steps[i].title = "New Step";
-    // } else {
-    //   steps[i].title = stepTitle;
-    // }
-    setSteps([...steps]);
-    setStepEdit({ id: "", title: "", done: false });
-    setStepTitle("");
-    setAddStepInputShow(false);
+  function handleSave(stepId: string) {
+    // Update database
+    axios.post("http://localhost:3000/api/editstep", {
+      username: username, 
+      menu: "tasks",
+      taskId: taskData.id,
+      stepId: stepId,
+      newStepTitle: stepTitle === "" ? "New Step" : stepTitle
+    })
+      .then( () => {
+        // Create new array (no mutation)
+        const newSteps = steps.map( (item) => {
+          if (item.id === stepId) {
+            return {...item, title: stepTitle === "" ? "New Step" : stepTitle};
+          } else {
+            return {...item};
+          }
+        })
+
+        // Update client side
+        setSteps(newSteps);
+        setStepEdit({ id: "", title: "", done: false });
+        setStepTitle("");
+        setAddStepInputShow(false);
+      });
   }
 
   // Buat ganti status done
-  function handleDone(idStep: string) {
+  function handleDone(stepId: string) {
     // steps[i].done ? (steps[i].done = false) : (steps[i].done = true);
     // setSteps([...steps]);
   }

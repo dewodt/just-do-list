@@ -9,22 +9,23 @@ const dbname = process.env.DB_NAME;
 
 const client = new MongoClient(uri);
 
-export default async function deleteTask(
+export default async function editStep(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
   // Get req
-  const { username, menu, taskId, stepId } = req.body;
+  const { username, menu, taskId, stepId, newStepTitle } = req.body;
 
   // Connect MongoDB
   await client.connect();
   const db = client.db(dbname);
   const coll = db.collection(username);
 
-  // Delete a task
+  // Edit the title
   await coll.updateOne(
-    { username: username, [`${menu}.id`]: taskId },
-    { $pull: { [`${menu}.$.subtask`]: {id: stepId} } }
+    { username: username, [`${menu}.id`]: taskId, [`${menu}.subtask.id`]: stepId },
+    { $set: { [`${menu}.$[task].subtask.$[step].title`]: newStepTitle } },
+    { arrayFilters: [ { "task.id": taskId }, { "step.id": stepId } ] }
   )
 
   // Tutup DB
