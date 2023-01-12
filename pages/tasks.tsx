@@ -186,14 +186,15 @@ export default function Tasks({ data } : any) {
       important: false,
       createdDate: Date.now(),
       dueDate: null,
+      subtask: []
     }
     
     if (addTaskInputShow && taskTitle !== "") {
       // Update database
       axios.post("http://localhost:3000/api/addtask", {
-          username: data.username, 
-          menu: "tasks",
-          newTask: newTask
+        username: data.username, 
+        menu: "tasks",
+        newTask: newTask
       })
         .then( () => {
           // Update client-side
@@ -318,8 +319,8 @@ export default function Tasks({ data } : any) {
   }) {
     setStepTaskPreview(task);
     setAddTaskInputShow(false);
-    setTaskTitle("")
-    stepPreview ? setStepPreview(false) :  setStepPreview(true);
+    setTaskTitle("");
+    stepPreview ? setStepPreview(false) : setStepPreview(true);
   }
 
 // ! I've tidied the lines, don't use automation from prettier to make tidier
@@ -345,7 +346,7 @@ export default function Tasks({ data } : any) {
               >
               {/* // * div to loop through the created task list * */}
               {tasks.map(
-                (task, index) =>
+                (task) =>
                   !task.done && (
                     <div
                       key={task.id}
@@ -444,7 +445,7 @@ export default function Tasks({ data } : any) {
       {/* // ! TASK LIST DONE SECTION */}
               {/* // * div to loop through the created task list * */}
               {tasks.map(
-                (task, index) =>
+                (task) =>
                   task.done && (
                     <div
                       key={task.id}
@@ -560,7 +561,7 @@ export default function Tasks({ data } : any) {
           </div>
 
       {/* // ! STEP PREVIEW SECTION */}
-          {stepPreview && <SubTask title={stepTaskPreview.title} subtaskPreview={setStepPreview}/>}
+          {stepPreview && <SubTask username={data.username} taskData={stepTaskPreview} subtaskPreview={setStepPreview}/>}
         </div>
       </Layout>
     </>

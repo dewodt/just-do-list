@@ -1,15 +1,16 @@
+import axios from "axios";
 import { useState } from "react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 
 interface SubtaskInterface {
-  title: string;
+  username: string;
+  taskData: any;
   subtaskPreview: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export default function SubTask(props: SubtaskInterface) {
+export default function SubTask( {username, taskData, subtaskPreview}: SubtaskInterface ) {
   // Khusus bagian icon
-
   const plusIcon = (design: string) => {
     return (
       <svg
@@ -126,13 +127,12 @@ export default function SubTask(props: SubtaskInterface) {
     id: string;
     done: boolean;
   };
-  const uniqid = require("uniqid"); //Ini buat generate id dari npm
+  const uniqid = require("uniqid"); // Ini buat generate id dari npm
   const [calendarStatus, setCalendarStatus] = useState(false);
-  const [stepPreview, setStepPreview] = useState(false); //open subtask
-  const [stepTitle, setStepTitle] = useState(""); //isinya adalah status value input
-  const [steps, setSteps] = useState<ObjectStep[]>([]); //Isinya adalah kumpulan data task
+  const [stepTitle, setStepTitle] = useState(""); // isinya adalah status value input
+  const [steps, setSteps] = useState<ObjectStep[]>(taskData.subtask); // Isinya adalah kumpulan data subtasks
   const [stepEdit, setStepEdit] = useState<ObjectStep>({
-    //isinya adalah task yang lagi di rename/diedit
+    // isinya adalah task yang lagi di rename/diedit
     title: "",
     id: "",
     done: false,
@@ -140,26 +140,27 @@ export default function SubTask(props: SubtaskInterface) {
 
   // Buat nambahin task baru
   function addStep() {
-    if (addStepInputShow) {
-      if (stepTitle === "") {
-      } else {
-        setStepEdit({ id: "", title: "", done: false });
-        setSteps([
-          ...steps,
-          {
-            id: uniqid("step_"),
-            title: stepTitle,
-            done: false,
-          },
-        ]);
-        setStepTitle("");
-      }
-      setAddStepInputShow(false);
-    } else {
-      setAddStepInputShow(true);
-      setStepTitle("");
+    const newStep = { 
+      id: uniqid("step_"),
+      title: stepTitle,
+      done: false 
+    };
+    if (addStepInputShow && stepTitle !== "") {
+      // Edit DB
+      axios.post("http://localhost:3000/api/addstep", {
+        username: username,
+        menu: "tasks",
+        taskId: taskData.id,
+        newStep: newStep
+      })
+        .then( () => {
+          // Update client-side
+          setStepEdit({ id: "", title: "", done: false });
+          setSteps([...steps, newStep]);
+        });
     }
-    console.log(stepEdit);
+    setAddStepInputShow(!addStepInputShow);
+    setStepTitle("");
   }
 
   // Buat hapus task tertentu
@@ -204,11 +205,11 @@ export default function SubTask(props: SubtaskInterface) {
           <div className="flex flex-col m-[3vh] gap-2">
             <div className="flex items-center justify-between">
               <p className="text-[2vh] sm:text-[2.9vh] font-semibold break-all mr-1.5">
-                {props.title}
+                {taskData.title}
               </p>
               <button
                 onClick={() => {
-                  props.subtaskPreview(false);
+                  subtaskPreview(false);
                 }}
               >
                 {crossIcon()}
@@ -219,11 +220,10 @@ export default function SubTask(props: SubtaskInterface) {
               id="no-scrollbar"
             >
               {steps.map((step, index) => (
-                <div className="flex w-full gap-3 items-center">
+                <div key={step.id} className="flex w-full gap-3 items-center">
                   {step.done ? (
                     <span
                       className="m-auto"
-                      key={step.id}
                       onClick={() => {
                         handleDone(index);
                       }}
@@ -403,7 +403,7 @@ export default function SubTask(props: SubtaskInterface) {
         </div>
       </div>
       <div className="flex justify-center items-center mb-[3vh]">
-        <p className="text-[1.4vh] sm:text-[2.2vh] font-medium">Created day</p>
+        <p className="text-[1.4vh] sm:text-[2.2vh] font-medium">{`Created at ${(new Date(taskData.createdDate)).toLocaleString("en-UK", { dateStyle: "full" })}`}</p>
       </div>
     </div>
   );
