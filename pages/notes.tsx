@@ -1,6 +1,6 @@
+import axios from "axios";
 import { useState } from "react";
 import Layout from "../components/layout";
-import SubNotes from "../components/subnotes";
 import getUserData from "../lib/getUserData";
 
 export default function Notes({ data } : any) {
@@ -100,15 +100,13 @@ export default function Notes({ data } : any) {
 
   const uniqid = require("uniqid");                                         // * to generate id from npm
   const [subNotesPreviewMode, setSubNotesPreviewMode] = useState("back");   // * to popUp editing field or add new notes
-  const [dateNow, setDateNow] = useState<number | null>(Date.now());        // * to set the displayed date
-  const [dateChange, setDateChange] = useState<number | null>(Date.now());  // * to set the date change after edit
 
   // ? Entah kenapa gw nemuin bug gegara pas mode edit gw ambil data yang diedit buat ditampilin pas subnotespreview mode edit
   // ? Abis itu pas disave kan harusnya gw otak atik dateNow ga masalah kan buat gw set date now pas ngeklik save tapi entah kenapa ga kesave
 
   const [title, setTitle] = useState("");                     // * to track changes in inputs title and data sets title
   const [description, setDescription] = useState("");         // * to track changes in inputs title and data sets description
-  const [notes, setNotes] = useState<Objectnote[]>([]);       // TODO : notes dataset should be saved to the database     
+  const [notes, setNotes] = useState<Objectnote[]>(data.notes);       // TODO : notes dataset should be saved to the database     
   const [noteEdit, setNoteEdit] = useState<Objectnote>({      // * contains the notes that is being edited
     title: "",
     id: "",
@@ -118,39 +116,41 @@ export default function Notes({ data } : any) {
 
   // * to convert from dateCreated number format to date string
   const generateDateNow = () => {
-    if (dateNow !== null) {
-      return new Date(dateNow).toLocaleDateString("en-GB", {
-        day: "numeric",
-        month: "long",
-        year: "numeric",
-      });
-    }
-  };
+    return (new Date()).toLocaleDateString("en-GB", {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    });
+    };
 
   // * to convert from dateCreated number format to a time string
   const generateTimeNow = () => {
-    if (dateNow !== null) {
-      return new Date(dateNow).toLocaleTimeString("en-GB", {
-        hour: "numeric",
-        minute: "numeric",
-      });
-    }
+    return (new Date()).toLocaleTimeString("en-GB", {
+      hour: "numeric",
+      minute: "numeric",
+    });
   };
 
   // * function to add new notes
   function addNotes() {
-    // only to prevent empty title or empty description
-    title !== "" &&
-      description !== "" &&
-      setNotes([
-        ...notes,
-        {
-          id: uniqid("note_"),
-          title: title,
-          description: description,
-          dateCreated: dateNow,
-        },
-      ]);
+    // New Note
+    const newNote = {
+      id: uniqid("note_"),
+      title: title,
+      description: description,
+      dateCreated: Date.now()
+    }
+    if (title && description) {
+      // Call api utk edit database
+      axios.post("http://localhost:3000/api/addnote", {
+        username: data.username, 
+        newNote: newNote
+      })
+        .then( () => {
+          // Update client-side
+          setNotes([...notes, newNote]);
+        });
+    }
     setTitle("");
     setDescription("");
     setSubNotesPreviewMode("back");
@@ -166,7 +166,6 @@ export default function Notes({ data } : any) {
   // * function when clicking the add button which will set the time state
   function handleNewNotesPreview() {
     setSubNotesPreviewMode("add");
-    setDateNow(Date.now().valueOf());
   }
 
   // * function to set which note is being edited
@@ -180,8 +179,6 @@ export default function Notes({ data } : any) {
     setNoteEdit(note);
     setTitle(note.title);
     setDescription(note.description);
-    setDateNow(note.dateCreated);
-    setDateChange(Date.now().valueOf());
     setSubNotesPreviewMode("edit");
   }
 
@@ -206,12 +203,11 @@ export default function Notes({ data } : any) {
     dateCreated: number | null;
   }) {
     // updating data
-    setDateChange(Date.now().valueOf());
     const updateAction = {
       id: note.id,
       title: title,
       description: description,
-      dateCreated: dateChange,
+      dateCreated: null,
     };
     const updateIndex = notes.findIndex(function (note) {
       return note.id === noteEdit.id;
