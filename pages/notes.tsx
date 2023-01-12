@@ -183,16 +183,19 @@ export default function Notes({ data } : any) {
   }
 
   // * function to handle delete note that edited
-  function handleDelete(idNote: string) {
-  // return data without deleted note
-    setNotes(
-      notes.filter(function (note) {
-        return note.id !== idNote;
-      })
-    );
-    setTitle("");
-    setDescription("");
-    setSubNotesPreviewMode("back");
+  function handleDelete(noteId: string) {
+    // Edit database
+    axios.post("http://localhost:3000/api/deletenote", {
+      username: data.username,
+      noteId: noteId
+    })
+      .then( () => {
+        // Update client side
+          setNotes(notes.filter( (note) => { return note.id !== noteId;}));
+          setTitle("");
+          setDescription("");
+          setSubNotesPreviewMode("back");
+        });
   }
 
   // *  to save changes after editing
