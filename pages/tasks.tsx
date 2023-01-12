@@ -220,6 +220,7 @@ export default function Tasks({ data } : any) {
             return task.id != idTaskEdit;
           })
         );
+        setStepPreview(false);
       });
   }
 
@@ -242,7 +243,7 @@ export default function Tasks({ data } : any) {
       username: data.username, 
       menu: "tasks",
       taskId: taskId,
-      newTaskTitle: taskTitle
+      newTaskTitle: taskTitle === "" ? "New Tasks" : taskTitle
     })
       .then( () => {
         // Create new array (no mutation)
