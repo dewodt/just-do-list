@@ -27,5 +27,9 @@ export default async function deleteTask(
     { $pull: { [menu]: {id: taskId}} }
   )
 
+  // Tutup DB
+  await client.close();
+
+  // Res
   res.json({})
 }

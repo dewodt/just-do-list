@@ -26,6 +26,10 @@ export default async function addTask(
     { username: username },
     { $push: { [menu]: newTask} }
   )
+  
+  // Tutup DB
+  await client.close();
 
+  // Res
   res.json({})
 }

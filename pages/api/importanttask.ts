@@ -9,12 +9,12 @@ const dbname = process.env.DB_NAME;
 
 const client = new MongoClient(uri);
 
-export default async function editTask(
+export default async function doneTask(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
   // Get req
-  const { username, menu, taskId, newTaskTitle } = req.body;
+  const { username, menu, taskId, taskImportant } = req.body;
 
   // Connect MongoDB
   await client.connect();
@@ -24,9 +24,9 @@ export default async function editTask(
   // Edit the title
   await coll.updateOne(
     { username: username, [`${menu}.id`]: taskId },
-    { $set: { [`${menu}.$.title`]: newTaskTitle } }
+    { $set: { [`${menu}.$.important`]: !taskImportant} }
   )
-
+  
   // Tutup DB
   await client.close();
 

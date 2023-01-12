@@ -236,22 +236,23 @@ export default function Tasks({ data } : any) {
 
   // *  to save changes after editing
   function handleSave(taskId: string) {
-    // Create new array (no mutation)
-    const newTasks = tasks.map( (item) => {
-      if (item.id === taskId) {
-        return {...item, title: taskTitle === "" ? "New Tasks" : taskTitle};
-      } else {
-        return {...item};
-      }
-    })
-
     // Update database
     axios.post("http://localhost:3000/api/edittask", {
       username: data.username, 
       menu: "tasks",
-      newTasks: newTasks
+      taskId: taskId,
+      newTaskTitle: taskTitle
     })
       .then( () => {
+        // Create new array (no mutation)
+        const newTasks = tasks.map( (item) => {
+          if (item.id === taskId) {
+            return {...item, title: taskTitle === "" ? "New Tasks" : taskTitle};
+          } else {
+            return {...item};
+          }
+        })
+
         // Update client side
         setTasks(newTasks);
         setTaskEdit({ id: "", title: "", done: false, important: false });
@@ -261,46 +262,47 @@ export default function Tasks({ data } : any) {
   }
 
   // *  to change done status of task
-  function handleDone(taskId: string) {
-    // Create new array (no mutation)
-    const newTasks = tasks.map( (item) => {
-      if (item.id === taskId) {
-        return {...item, done: !item.done};
-      } else {
-        return {...item};
-      }
-    })
-
+  function handleDone(taskId: string, taskDone: boolean) {
     // Update database
-    axios.post("http://localhost:3000/api/edittask", {
+    axios.post("http://localhost:3000/api/donetask", {
       username: data.username,
       menu: "tasks",
-      newTasks: newTasks
+      taskId: taskId,
+      taskDone: taskDone
     })
-      .then( () => {
-        // Update client side
-        setTasks(newTasks);
-      });
+    .then( () => {
+      // Create new array (no mutation)
+      const newTasks = tasks.map( (item) => {
+        if (item.id === taskId) {
+          return {...item, done: !item.done};
+        } else {
+          return {...item};
+        }
+      })
+
+      // Update client side
+      setTasks(newTasks);
+    });
   }
 
   // *  to change important status of task
-  function handleImportant(taskId: string) {
-    // Create new array (no mutation)
-    const newTasks = tasks.map( (item) => {
-      if (item.id === taskId) {
-        return {...item, important: !item.important};
-      } else {
-        return {...item};
-      }
-    })
-
+  function handleImportant(taskId: string, taskImportant: boolean) {
     // Update database
-    axios.post("http://localhost:3000/api/edittask", {
+    axios.post("http://localhost:3000/api/importanttask", {
       username: data.username,
       menu: "tasks",
-      newTasks: newTasks
+      taskId: taskId,
+      taskImportant: taskImportant
     })
-      .then( () => {
+    .then( () => {
+        // Create new array (no mutation)
+        const newTasks = tasks.map( (item) => {
+          if (item.id === taskId) {
+            return {...item, important: !item.important};
+          } else {
+            return {...item};
+          }
+        })
         // Update client side
         setTasks(newTasks);
       });
@@ -353,13 +355,13 @@ export default function Tasks({ data } : any) {
                         {/* // * Handle changes to the checkdone icon */}
                         {task.done ? (
                           <span
-                            onClick={() => {handleDone(task.id);}}
+                            onClick={() => {handleDone(task.id, task.done);}}
                           >
                             {circleCheckIcon()}
                           </span>
                         ) : (
                           <span
-                            onClick={() => {handleDone(task.id);}}
+                            onClick={() => {handleDone(task.id, task.done);}}
                           >
                             {circleIcon("#54A1EA")}
                           </span>
@@ -391,13 +393,13 @@ export default function Tasks({ data } : any) {
                             {/* // * Handle changes to starIcon Important */}
                             {!task.important ? (
                               <button
-                                onClick={() => {handleImportant(task.id)}}
+                                onClick={() => {handleImportant(task.id, task.important)}}
                               >
                                 {starLineIcon()}
                               </button>
                             ) : (
                               <button
-                                onClick={() => {handleImportant(task.id)}}
+                                onClick={() => {handleImportant(task.id, task.important)}}
                               >
                                 {starFullIcon()}
                               </button>
@@ -452,13 +454,13 @@ export default function Tasks({ data } : any) {
                         {/* // * Handle changes to the icon done checklist */}
                         {task.done ? (
                           <span
-                            onClick={() => {handleDone(task.id);}}
+                            onClick={() => {handleDone(task.id, task.done);}}
                           >
                             {circleCheckIcon()}
                           </span>
                         ) : (
                           <span
-                            onClick={() => {handleDone(task.id);}}
+                            onClick={() => {handleDone(task.id, task.done);}}
                           >
                             {circleIcon("#54A1EA")}
                           </span>
@@ -490,13 +492,13 @@ export default function Tasks({ data } : any) {
                             {/* //* Handle icon important changes */}
                             {!task.important ? (
                               <button
-                                onClick={() => {handleImportant(task.id);}}
+                                onClick={() => {handleImportant(task.id, task.important);}}
                               >
                                 {starLineIcon()}
                               </button>
                             ) : (
                               <button
-                                onClick={() => {handleImportant(task.id);}}
+                                onClick={() => {handleImportant(task.id, task.important);}}
                               >
                                 {starFullIcon()}
                               </button>
