@@ -82,7 +82,7 @@ export default function Projects( { userData, projectsTitleId }: { userData: typ
   const [title, setTitle] = useState("");
   const [editProject, setEdit] = useState<MyObject>({ title: "", id: "" });
 
-  const addProjects = () => {
+  function addProjects() {
     // New Array (no mutation)
     const newProject = {
       id: uniqid("project_"),
@@ -104,18 +104,30 @@ export default function Projects( { userData, projectsTitleId }: { userData: typ
     setShowInput(!showInput);
   };
 
-  function handleSave(index: number) {
-    if (title == "") {
-      projects[index].title = "New Project";
-    } else {
-      projects[index].title = title;
-    }
-    setProjects([...projects]);
-    setEdit({ id: "", title: "" });
-    setTitle(projects[index].title);
+  function handleSave(projectId: string) {
+    // Edit database
+    axios.post("http://localhost:3000/api/editproject", {
+        username: userData.username,
+        projectId: projectId,
+        newTitle: title ? title : "New Project",
+      }).then( () => {
+        // Create new array (no mutation)
+        const newProjects = projects.map( (project) => {
+          if (project.id === projectId) { 
+            return {...project, title: title ? title : "New Project"}
+          } else {
+            return {...project}
+          }
+        })
+
+        // Edit client side
+        setProjects(newProjects);
+        setEdit({ id: "", title: "" });
+        setTitle("");
+      })
   }
 
-  function handleeditProject(project: { title: string; id: string }) {
+  function handleEditProject(project: { title: string; id: string }) {
     setEdit(project);
     setShowInput(false);
     setTitle(project.title);
@@ -211,7 +223,7 @@ export default function Projects( { userData, projectsTitleId }: { userData: typ
               )}
             </div>
             {/* New project when clicking */}
-            {projects.map((project, index) =>
+            {projects.map((project) =>
               editProject === project && showInput === false ? (
                 <>
                   <li
@@ -235,7 +247,7 @@ export default function Projects( { userData, projectsTitleId }: { userData: typ
                       </div>
                       <button
                         className="py-1"
-                        onClick={() => handleSave(index)}
+                        onClick={() => handleSave(project.id)}
                       >
                         {checkIcon()}
                       </button>
@@ -249,7 +261,7 @@ export default function Projects( { userData, projectsTitleId }: { userData: typ
                       <button disabled={true} className="py-1.5">
                         {projectIcon()}
                       </button>
-                      <div className="my-auto flex-1 w-[7vw]" key={index}>
+                      <div className="my-auto flex-1 w-[7vw]" key={project.id}>
                         <Link
                           href={{
                             pathname: "/projects/[slug]",
@@ -266,7 +278,7 @@ export default function Projects( { userData, projectsTitleId }: { userData: typ
                       </div>
                       <button
                         className="text- py-1 mr-2"
-                        onClick={() => handleeditProject(project)}
+                        onClick={() => handleEditProject(project)}
                       >
                         {renameIcon()}
                       </button>

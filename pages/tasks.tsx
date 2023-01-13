@@ -166,15 +166,6 @@ export default function Tasks({ userData, projectsTitleId, pageData }: { userDat
       </svg>
     );
   };
-  
-
-// *  for the data typescript template
-  type ObjectTask = {
-    title: string;
-    id: string;
-    done: boolean;
-    important: boolean;
-  };
 
 // ! I've tidied the lines, don't use automation from prettier to make tidier
   // *  VARIABLE INITIALIZATION
@@ -183,15 +174,15 @@ export default function Tasks({ userData, projectsTitleId, pageData }: { userDat
   const [stepPreview, setStepPreview] = useState(false);            // * open subtask of a task
   const [dropDownFinished, setDropDownFinished] = useState(false);  // * make dropdown finished popup
   const [taskTitle, setTaskTitle] = useState("");                   // * the value input to state and submit on data changes
-  const [tasks, setTasks] = useState<ObjectTask[]>(pageData);     // * array of all task
-  const [taskEdit, setTaskEdit] = useState<ObjectTask>({            // * contains the task that is being renamed or edited
+  const [tasks, setTasks] = useState<typeTask[]>(pageData);     // * array of all task
+  const [taskEdit, setTaskEdit] = useState<typeTask>({            // * contains the task that is being renamed or edited
     title: "",
     id: "",
     done: false,
     important: false,
   });
 
-  const [stepTaskPreview, setStepTaskPreview] = useState<ObjectTask>({  // * contains the task that the step wants to display
+  const [stepTaskPreview, setStepTaskPreview] = useState<typeTask>({  // * contains the task that the step wants to display
     title: "",
     id: "",
     done: false,

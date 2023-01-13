@@ -166,14 +166,6 @@ export default function Important({ userData, projectsTitleId, pageData }: { use
     );
   };
 
-// *  for the data typescript template
-  type ObjectTask = {
-    title: string;
-    id: string;
-    done: boolean;
-    important: boolean;
-  };
-
 // ! I've tidied the lines, don't use automation from prettier to make tidier
   // *  VARIABLE INITIALIZATION
   const uniqid = require("uniqid");                                 // * to generate id from npm
@@ -181,15 +173,15 @@ export default function Important({ userData, projectsTitleId, pageData }: { use
   const [stepPreview, setStepPreview] = useState(false);            // * open subtask
   const [dropDownFinished, setDropDownFinished] = useState(false);  // * make dropdown finished popup
   const [taskTitle, setTaskTitle] = useState("");                   // * the value input to state and submit on data changes
-  const [tasks, setTasks] = useState<ObjectTask[]>([]);             // TODO : task dataset should be saved to the database
-  const [taskEdit, setTaskEdit] = useState<ObjectTask>({            // * contains the task that is being renamed or edited
+  const [tasks, setTasks] = useState<typeTask[]>([]);             // TODO : task dataset should be saved to the database
+  const [taskEdit, setTaskEdit] = useState<typeTask>({            // * contains the task that is being renamed or edited
     title: "",
     id: "",
     done: false,
     important: false,
   });
 
-  const [stepTaskPreview, setTaskPreview] = useState<ObjectTask>({  // * contains the task that the step wants to display
+  const [stepTaskPreview, setTaskPreview] = useState<typeTask>({  // * contains the task that the step wants to display
     title: "",
     id: "",
     done: false,
