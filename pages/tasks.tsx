@@ -4,7 +4,30 @@ import React, { useState } from "react";
 import SubTask from "../components/subtask";
 import getUserData from "../lib/getUserData";
 
-export default function Tasks({ data } : any) {
+interface typeUserData {
+  username: string;
+  name: string;
+}
+
+interface typeTask {
+  title: string;
+  id: string;
+  done: boolean;
+  important: boolean;
+};
+
+interface typeProjects {
+  title: string;
+  id: string;
+  tasks: typeTask[];
+}
+
+interface typeProjectsTitleId {
+  id: string;
+  title: string;
+}
+
+export default function Tasks({ userData, projectsTitleId, pageData }: { userData: typeUserData, projectsTitleId: typeProjectsTitleId[], pageData: typeTask[] }) {
   // *  * ICON
   const homeIcon = () => {
     return (
@@ -160,7 +183,7 @@ export default function Tasks({ data } : any) {
   const [stepPreview, setStepPreview] = useState(false);            // * open subtask of a task
   const [dropDownFinished, setDropDownFinished] = useState(false);  // * make dropdown finished popup
   const [taskTitle, setTaskTitle] = useState("");                   // * the value input to state and submit on data changes
-  const [tasks, setTasks] = useState<ObjectTask[]>(data.tasks);     // * array of all task
+  const [tasks, setTasks] = useState<ObjectTask[]>(pageData);     // * array of all task
   const [taskEdit, setTaskEdit] = useState<ObjectTask>({            // * contains the task that is being renamed or edited
     title: "",
     id: "",
@@ -192,7 +215,7 @@ export default function Tasks({ data } : any) {
     if (addTaskInputShow && taskTitle !== "") {
       // Update database
       axios.post("http://localhost:3000/api/addtask", {
-        username: data.username, 
+        username: userData.username, 
         menu: "tasks",
         newTask: newTask
       })
@@ -209,7 +232,7 @@ export default function Tasks({ data } : any) {
   function handleDelete(idTaskEdit: string) {
     // Update database
     axios.post("http://localhost:3000/api/deletetask", {
-      username: data.username, 
+      username: userData.username, 
       menu: "tasks",
       taskId: idTaskEdit
     })
@@ -240,7 +263,7 @@ export default function Tasks({ data } : any) {
   function handleSave(taskId: string) {
     // Update database
     axios.post("http://localhost:3000/api/edittask", {
-      username: data.username, 
+      username: userData.username, 
       menu: "tasks",
       taskId: taskId,
       newTaskTitle: taskTitle === "" ? "New Tasks" : taskTitle
@@ -267,7 +290,7 @@ export default function Tasks({ data } : any) {
   function handleDone(taskId: string, taskDone: boolean) {
     // Update database
     axios.post("http://localhost:3000/api/donetask", {
-      username: data.username,
+      username: userData.username,
       menu: "tasks",
       taskId: taskId,
       taskDone: !taskDone
@@ -291,7 +314,7 @@ export default function Tasks({ data } : any) {
   function handleImportant(taskId: string, taskImportant: boolean) {
     // Update database
     axios.post("http://localhost:3000/api/importanttask", {
-      username: data.username,
+      username: userData.username,
       menu: "tasks",
       taskId: taskId,
       taskImportant: !taskImportant
@@ -328,7 +351,7 @@ export default function Tasks({ data } : any) {
 
   return (
     <>
-      <Layout name={data.name} username={data.username}>
+      <Layout userData={userData} projectsTitleId={projectsTitleId}>
         <div className="flex flex-1">
           <div className="flex flex-col flex-1 py-[2vh] lg:p-[3.8vh] px-[3.4vh] gap-1">
 
@@ -562,7 +585,7 @@ export default function Tasks({ data } : any) {
           </div>
 
       {/* // ! STEP PREVIEW SECTION */}
-          {stepPreview && <SubTask username={data.username} taskData={stepTaskPreview} subtaskPreview={setStepPreview}/>}
+          {stepPreview && <SubTask username={userData.username} taskData={stepTaskPreview} subtaskPreview={setStepPreview}/>}
         </div>
       </Layout>
     </>
@@ -570,9 +593,23 @@ export default function Tasks({ data } : any) {
 }
 
 export async function getServerSideProps(ctx: any) {
+  // Get username from cookie
   const username = ctx.req.headers.cookie.split("=")[0];
+  
+  // Get datas from database
   const data = await getUserData(username);
+  
+  // User data
+  const name = data.name;
+  const userData = {username: username, name: name}
+
+  // Projects Title
+  const projectsTitleId = data.projects.map( (proj: typeProjects ) => { return {id: proj.id, title: proj.title} })
+
+  // Tasks data
+  const pageData = data.tasks;
+
   return {
-    props: { data }
+    props: { userData, projectsTitleId, pageData }
   }
 }

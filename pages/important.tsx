@@ -3,7 +3,30 @@ import React, { useState } from "react";
 import SubTask from "../components/subtask";
 import getUserData from "../lib/getUserData";
 
-export default function Important({ data } : any) {
+interface typeUserData {
+  username: string;
+  name: string;
+}
+
+interface typeTask {
+  title: string;
+  id: string;
+  done: boolean;
+  important: boolean;
+};
+
+interface typeProjects {
+  title: string;
+  id: string;
+  tasks: typeTask[];
+}
+
+interface typeProjectsTitleId {
+  id: string;
+  title: string;
+}
+
+export default function Important({ userData, projectsTitleId, pageData }: { userData: typeUserData, projectsTitleId: typeProjectsTitleId[], pageData: typeTask[] }) {
   // Khusus bagian icon
   const titleIcon = () => {
     return (
@@ -262,7 +285,7 @@ export default function Important({ data } : any) {
 
   return (
     <>
-      <Layout name={data.name} username={data.username}>
+      <Layout userData={userData} projectsTitleId={projectsTitleId}>
         <div className="flex flex-1">
           <div className="flex flex-col flex-1 py-[2vh] lg:p-[3.8vh] px-[3.4vh] gap-1">
 
@@ -498,17 +521,30 @@ export default function Important({ data } : any) {
           </div>
 
       {/* // ! STEP PREVIEW SECTION */}
-          {stepPreview && <SubTask title={stepTaskPreview.title} subtaskPreview={setStepPreview}/>}
-        </div>
+        {stepPreview && <SubTask username={userData.username} taskData={stepTaskPreview} subtaskPreview={setStepPreview}/>}        </div>
       </Layout>
     </>
   );
 }
 
 export async function getServerSideProps(ctx: any) {
+  // Get username from cookie
   const username = ctx.req.headers.cookie.split("=")[0];
+  
+  // Get datas from database
   const data = await getUserData(username);
+  
+  // User data
+  const name = data.name;
+  const userData = {username: username, name: name}
+
+  // Projects Title
+  const projectsTitleId = data.projects.map( (proj: typeProjects ) => { return {id: proj.id, title: proj.title} })
+
+  // Tasks data
+  const pageData = data.important;
+
   return {
-    props: { data }
+    props: { userData, projectsTitleId, pageData }
   }
 }

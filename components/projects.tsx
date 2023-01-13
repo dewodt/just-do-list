@@ -1,8 +1,18 @@
+import axios from "axios";
 import Link from "next/link";
-import { useRouter } from "next/router";
 import { useState } from "react";
 
-const Projects: React.FC = () => {
+interface typeUserData {
+  username: string;
+  name: string;
+}
+
+interface typeProjectsTitleId {
+  title: string;
+  id: string;
+};
+
+export default function Projects( { userData, projectsTitleId }: { userData: typeUserData, projectsTitleId: typeProjectsTitleId[] } ) {
   const projectIcon = () => {
     return (
       <svg
@@ -65,30 +75,33 @@ const Projects: React.FC = () => {
     id: string;
   };
 
-  const uniqid = require("uniqid"); //Ini buat generate id dari npm
+  const uniqid = require("uniqid"); // Ini buat generate id dari npm
   const [dropDownProjects, setDropDownProjects] = useState(false);
   const [showInput, setShowInput] = useState(false);
-  const [projects, setProjects] = useState<MyObject[]>([]);
+  const [projects, setProjects] = useState<MyObject[]>(projectsTitleId);
   const [title, setTitle] = useState("");
   const [editProject, setEdit] = useState<MyObject>({ title: "", id: "" });
 
   const addProjects = () => {
-    if (showInput) {
-      if (title === "") {
-      } else {
-        setProjects([
-          ...projects,
-          {
-            id: uniqid("project_"),
-            title: title,
-          },
-        ]);
-      }
-      setShowInput(false);
-    } else {
-      setShowInput(true);
-      setTitle("");
+    // New Array (no mutation)
+    const newProject = {
+      id: uniqid("project_"),
+      title: title,
+      tasks: []
+    };
+
+    if (showInput && title !== "") {
+      // Edit database
+      axios.post("http://localhost:3000/api/addproject", {
+        username: userData.username,
+        newProject: newProject,
+      }).then( () => {
+        // Edit client side
+        setProjects([...projects, newProject]);
+      })
     }
+    setTitle("");
+    setShowInput(!showInput);
   };
 
   function handleSave(index: number) {
@@ -274,4 +287,3 @@ const Projects: React.FC = () => {
     </div>
   );
 };
-export default Projects;

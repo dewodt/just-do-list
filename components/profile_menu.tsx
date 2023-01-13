@@ -3,12 +3,17 @@ import { useState } from "react";
 import Link from "next/link";
 import axios from "axios";
 
-export default function ProfileMenu({ name, username }: { name: string, username: string }) {
+interface typeUserData {
+  username: string;
+  name: string;
+}
+
+export default function ProfileMenu({ userData }: { userData: typeUserData }) {
   const [dropDownProfile, setDropDownProfile] = useState(false);
 
   function handleLogout() {
     axios.post("http://localhost:3000/api/logout", {
-      username: username
+      username: userData.username
     })
       .then(() => {
         window.location.href = "http://localhost:3000/";
@@ -36,8 +41,8 @@ export default function ProfileMenu({ name, username }: { name: string, username
             />
           </div>
           <div className="flex flex-col flex-1 m-auto">
-            <div className="font-semibold">{name}</div>
-            <div className="text-xs">{username}</div>
+            <div className="font-semibold">{userData.name}</div>
+            <div className="text-xs">{userData.username}</div>
           </div>
           <div className="m-auto">
             <svg
