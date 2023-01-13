@@ -1,8 +1,18 @@
+import axios from "axios";
 import Link from "next/link";
-import { useRouter } from "next/router";
 import { useState } from "react";
 
-const Projects: React.FC = () => {
+interface typeUserData {
+  username: string;
+  name: string;
+}
+
+interface typeProjectsTitleId {
+  title: string;
+  id: string;
+};
+
+export default function Projects( { userData, projectsTitleId }: { userData: typeUserData, projectsTitleId: typeProjectsTitleId[] } ) {
   const projectIcon = () => {
     return (
       <svg
@@ -65,57 +75,81 @@ const Projects: React.FC = () => {
     id: string;
   };
 
-  const uniqid = require("uniqid"); //Ini buat generate id dari npm
+  const uniqid = require("uniqid"); // Ini buat generate id dari npm
   const [dropDownProjects, setDropDownProjects] = useState(false);
   const [showInput, setShowInput] = useState(false);
-  const [projects, setProjects] = useState<MyObject[]>([]);
+  const [projects, setProjects] = useState<MyObject[]>(projectsTitleId);
   const [title, setTitle] = useState("");
   const [editProject, setEdit] = useState<MyObject>({ title: "", id: "" });
 
-  const addProjects = () => {
-    if (showInput) {
-      if (title === "") {
-      } else {
-        setProjects([
-          ...projects,
-          {
-            id: uniqid("project_"),
-            title: title,
-          },
-        ]);
-      }
-      setShowInput(false);
-    } else {
-      setShowInput(true);
-      setTitle("");
+  function addProjects() {
+    // New Array (no mutation)
+    const newProject = {
+      id: uniqid("project_"),
+      title: title,
+      tasks: []
+    };
+
+    if (showInput && title !== "") {
+      // Edit database
+      axios.post("http://localhost:3000/api/addproject", {
+        username: userData.username,
+        newProject: newProject,
+      }).then( () => {
+        // Edit client side
+        setProjects([...projects, newProject]);
+      })
     }
+    setTitle("");
+    setShowInput(!showInput);
   };
 
-  function handleSave(index: number) {
-    if (title == "") {
-      projects[index].title = "New Project";
-    } else {
-      projects[index].title = title;
-    }
-    setProjects([...projects]);
-    setEdit({ id: "", title: "" });
-    setTitle(projects[index].title);
+  function handleSave(projectId: string) {
+    // Edit database
+    axios.post("http://localhost:3000/api/editproject", {
+        username: userData.username,
+        projectId: projectId,
+        newTitle: title ? title : "New Project",
+      }).then( () => {
+        // Create new array (no mutation)
+        const newProjects = projects.map( (project) => {
+          if (project.id === projectId) { 
+            return {...project, title: title ? title : "New Project"}
+          } else {
+            return {...project}
+          }
+        })
+
+        // Edit client side
+        setProjects(newProjects);
+        setEdit({ id: "", title: "" });
+        setTitle("");
+      })
   }
 
-  function handleeditProject(project: { title: string; id: string }) {
+  function handleEditProject(project: { title: string; id: string }) {
     setEdit(project);
     setShowInput(false);
     setTitle(project.title);
   }
 
-  function handleDelete(idproject: string) {
-    setProjects(
-      projects.filter(function (project) {
-        return project.id != idproject;
+  function handleDelete(projectId: string) {
+    // Edit database
+    axios.post("http://localhost:3000/api/deleteproject", {
+      username: userData.username,
+      projectId: projectId,
+    })
+      .then( () => {
+        // New Array (no mutation)
+        const newProjects = projects.filter( (project) => { return project.id !== projectId } );
+
+        // Edit client side
+        setProjects(newProjects);
+        setEdit({ id: "", title: "" });
+        setTitle("");
       })
-    );
   }
-  // Update
+
   return (
     <div
       id="no-scrollbar"
@@ -198,7 +232,7 @@ const Projects: React.FC = () => {
               )}
             </div>
             {/* New project when clicking */}
-            {projects.map((project, index) =>
+            {projects.map((project) =>
               editProject === project && showInput === false ? (
                 <>
                   <li
@@ -222,7 +256,7 @@ const Projects: React.FC = () => {
                       </div>
                       <button
                         className="py-1"
-                        onClick={() => handleSave(index)}
+                        onClick={() => handleSave(project.id)}
                       >
                         {checkIcon()}
                       </button>
@@ -236,7 +270,7 @@ const Projects: React.FC = () => {
                       <button disabled={true} className="py-1.5">
                         {projectIcon()}
                       </button>
-                      <div className="my-auto flex-1 w-[7vw]" key={index}>
+                      <div className="my-auto flex-1 w-[7vw]" key={project.id}>
                         <Link
                           href={{
                             pathname: "/projects/[slug]",
@@ -245,7 +279,6 @@ const Projects: React.FC = () => {
                         >
                           <div
                             className="mx-4 indent-0 break-all cursor-pointer"
-                            // onClick={() => handleActionClick(project.title)}
                           >
                             {project.title}{" "}
                           </div>
@@ -253,7 +286,7 @@ const Projects: React.FC = () => {
                       </div>
                       <button
                         className="text- py-1 mr-2"
-                        onClick={() => handleeditProject(project)}
+                        onClick={() => handleEditProject(project)}
                       >
                         {renameIcon()}
                       </button>
@@ -274,4 +307,3 @@ const Projects: React.FC = () => {
     </div>
   );
 };
-export default Projects;

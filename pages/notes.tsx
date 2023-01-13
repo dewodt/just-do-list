@@ -3,7 +3,30 @@ import { useState } from "react";
 import Layout from "../components/layout";
 import getUserData from "../lib/getUserData";
 
-export default function Notes({ data } : any) {
+interface typeUserData {
+  username: string;
+  name: string;
+}
+
+interface typeTask {
+  title: string;
+  id: string;
+  description: string;
+  dateCreated: number | null;
+};
+
+interface typeProjects {
+  title: string;
+  id: string;
+  tasks: typeTask[];
+}
+
+interface typeProjectsTitleId {
+  id: string;
+  title: string;
+}
+
+export default function Notes({ userData, projectsTitleId, pageData }: { userData: typeUserData, projectsTitleId: typeProjectsTitleId[], pageData: typeTask[] }) {
   const notesIcon = () => {
     return (
       <svg
@@ -106,7 +129,7 @@ export default function Notes({ data } : any) {
 
   const [title, setTitle] = useState("");                         // * to track changes in inputs title and data sets title
   const [description, setDescription] = useState("");             // * to track changes in inputs title and data sets description
-  const [notes, setNotes] = useState<Objectnote[]>(data.notes);   // TODO : notes dataset should be saved to the database     
+  const [notes, setNotes] = useState<Objectnote[]>(pageData);   // TODO : notes dataset should be saved to the database     
   const [noteEdit, setNoteEdit] = useState<Objectnote>({          // * contains the notes that is being edited
     title: "",
     id: "",
@@ -143,7 +166,7 @@ export default function Notes({ data } : any) {
     if (title && description) {
       // Call api utk edit database
       axios.post("http://localhost:3000/api/addnote", {
-        username: data.username, 
+        username: userData.username, 
         newNote: newNote
       })
         .then( () => {
@@ -186,7 +209,7 @@ export default function Notes({ data } : any) {
   function handleDelete(noteId: string) {
     // Edit database
     axios.post("http://localhost:3000/api/deletenote", {
-      username: data.username,
+      username: userData.username,
       noteId: noteId
     })
       .then( () => {
@@ -204,7 +227,7 @@ export default function Notes({ data } : any) {
     // to handle note's date that actually change
     if (title !== notes[updateIndex].title || description !== notes[updateIndex].description) {
       axios.post("http://localhost:3000/api/editnote", {
-        username: data.username, 
+        username: userData.username, 
         noteId: noteId,
         newTitle: title,
         newDesc: description,
@@ -231,7 +254,7 @@ export default function Notes({ data } : any) {
 
   return (
     <>
-      <Layout name={data.name} username={data.username}>
+      <Layout userData={userData} projectsTitleId={projectsTitleId}>
         <div className="flex flex-1">
           <div className="flex flex-col flex-1 pt-[2vh] lg:px-[3.8vh] lg:pt-[3.8vh] px-[3.4vh] ">
 
@@ -354,9 +377,23 @@ export default function Notes({ data } : any) {
 }
 
 export async function getServerSideProps(ctx: any) {
+  // Get username from cookie
   const username = ctx.req.headers.cookie.split("=")[0];
+  
+  // Get datas from database
   const data = await getUserData(username);
+  
+  // User data
+  const name = data.name;
+  const userData = {username: username, name: name}
+
+  // Projects Title
+  const projectsTitleId = data.projects.map( (proj: typeProjects ) => { return {id: proj.id, title: proj.title} })
+
+  // Tasks data
+  const pageData = data.notes;
+
   return {
-    props: { data }
+    props: { userData, projectsTitleId, pageData }
   }
 }

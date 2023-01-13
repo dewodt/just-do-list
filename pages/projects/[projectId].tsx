@@ -1,14 +1,34 @@
 import React, { useState } from "react";
 import Layout from "../../components/layout";
 import { useRouter } from "next/router";
-
 import SubTask from "../../components/subtask";
+import getUserData from "../../lib/getUserData";
 
-// ! I've tidied the lines, don't use automation from prettier to make tidier
+interface typeUserData {
+  username: string;
+  name: string;
+}
 
-export default function ProjectDetails() {
+interface typeProjectsTitleId {
+  id: string;
+  title: string;
+}
+
+interface typeTask {
+  title: string;
+  id: string;
+  done: boolean;
+  important: boolean;
+};
+
+interface typePageData {
+  title: string;
+  id: string;
+  task: typeTask[];
+};
+
+export default function ProjectDetails( { userData, projectsTitleId, pageData }: { userData: typeUserData, projectsTitleId: typeProjectsTitleId[], pageData: typePageData } ) {
   // *  * ICON
-
   const starLineIcon = () => {
     return (
       <svg
@@ -135,15 +155,6 @@ export default function ProjectDetails() {
     );
   };
   
-
-// *  for the data typescript template
-  type ObjectTask = {
-    title: string;
-    id: string;
-    done: boolean;
-    important: boolean;
-  };
-
 // ! I've tidied the lines, don't use automation from prettier to make tidier
   // *  VARIABLE INITIALIZATION
   const router = useRouter();
@@ -153,15 +164,15 @@ export default function ProjectDetails() {
   const [stepPreview, setStepPreview] = useState(false);            // * open subtask
   const [dropDownFinished, setDropDownFinished] = useState(false);  // * make dropdown finished popup
   const [taskTitle, setTaskTitle] = useState("");                   // * the value input to state and submit on data changes
-  const [tasks, setTasks] = useState<ObjectTask[]>([]);             // TODO : task dataset should be saved to the database
-  const [taskEdit, setTaskEdit] = useState<ObjectTask>({            // * contains the task that is being renamed or edited
+  const [tasks, setTasks] = useState<typeTask[]>([]);             // TODO : task dataset should be saved to the database
+  const [taskEdit, setTaskEdit] = useState<typeTask>({            // * contains the task that is being renamed or edited
     title: "",
     id: "",
     done: false,
     important: false,
   });
 
-  const [stepTaskPreview, setTaskPreview] = useState<ObjectTask>({  // * contains the task that the step wants to display
+  const [stepTaskPreview, setTaskPreview] = useState<typeTask>({  // * contains the task that the step wants to display
     title: "",
     id: "",
     done: false,
@@ -257,14 +268,14 @@ export default function ProjectDetails() {
 
   return (
     <>
-      <Layout>
+      <Layout userData={userData} projectsTitleId={projectsTitleId}>
         <div className="flex flex-1">
           <div className="flex flex-col flex-1 py-[2vh] lg:p-[3.8vh] px-[3.4vh] gap-1">
 
       {/* // ! TITLE SECTION */}
             <div className="flex  items-center gap-x-3">
               <p className="font-semibold text-[2.5vh] sm:text-[3.8vh]">
-                {projectId}
+                {pageData.title}
               </p>
             </div>
 
@@ -490,9 +501,32 @@ export default function ProjectDetails() {
           </div>
 
       {/* // ! STEP PREVIEW SECTION */}
-          {stepPreview && <SubTask title={stepTaskPreview.title} subtaskPreview={setStepPreview}/>}
+          {stepPreview && <SubTask username={userData.username} taskData={stepTaskPreview} subtaskPreview={setStepPreview}/>}
         </div>
       </Layout>
     </>
   );
+}
+
+export async function getServerSideProps(ctx: any) {
+  // Get username from cookie
+  const username = ctx.req.headers.cookie.split("=")[0];
+  
+  // Get datas from database
+  const data = await getUserData(username);
+  
+  // Get user data
+  const name = data.name;
+  const userData = {username: username, name: name}
+
+  // Projects Title & ID (Left Nav Bar)
+  const projectsTitleId = data.projects.map( (project: typePageData ) => { return {id: project.id, title: project.title} })
+
+  // Get chosen project data
+  const projectId = ctx.query.projectId;
+  const [ pageData ] = data.projects.filter( (project: typePageData ) => { return project.id === projectId });
+
+  return {
+    props: { userData, projectsTitleId, pageData }
+  }
 }

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { useRouter } from 'next/router';
+
 export default function Fitur() {
   return (
     <div className="flex flex-col mb-2 mx-10 indent-4 text-[0.87rem] gap-1">
