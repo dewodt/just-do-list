@@ -66,14 +66,6 @@ export default function ProfileMenu({ name, username }: { name: string, username
               <Link
                 href="/"
                 className="block px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-              >
-                Settings
-              </Link>
-            </div>
-            <div className="py-1.5 text-xs text-gray-400 dark:text-gray-200 dark:hover:bg-gray-600 rounded-[8px]">
-              <Link
-                href="/"
-                className="block px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
                 onClick={handleLogout}
               >
                 Log Out

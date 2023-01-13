@@ -156,11 +156,11 @@ export default function Tasks({ data } : any) {
 // ! I've tidied the lines, don't use automation from prettier to make tidier
   // *  VARIABLE INITIALIZATION
   const uniqid = require("uniqid");                                 // * to generate id from npm
-  const [addTaskInputShow, setAddTaskInputShow] = useState(false);  // * to popup input
-  const [stepPreview, setStepPreview] = useState(false);            // * open subtask
+  const [addTaskInputShow, setAddTaskInputShow] = useState(false);  // * to popup input new task
+  const [stepPreview, setStepPreview] = useState(false);            // * open subtask of a task
   const [dropDownFinished, setDropDownFinished] = useState(false);  // * make dropdown finished popup
   const [taskTitle, setTaskTitle] = useState("");                   // * the value input to state and submit on data changes
-  const [tasks, setTasks] = useState<ObjectTask[]>([]);             // TODO : task dataset should be saved to the database
+  const [tasks, setTasks] = useState<ObjectTask[]>(data.tasks);     // * array of all task
   const [taskEdit, setTaskEdit] = useState<ObjectTask>({            // * contains the task that is being renamed or edited
     title: "",
     id: "",
@@ -168,7 +168,7 @@ export default function Tasks({ data } : any) {
     important: false,
   });
 
-  const [stepTaskPreview, setTaskPreview] = useState<ObjectTask>({  // * contains the task that the step wants to display
+  const [stepTaskPreview, setStepTaskPreview] = useState<ObjectTask>({  // * contains the task that the step wants to display
     title: "",
     id: "",
     done: false,
@@ -179,32 +179,49 @@ export default function Tasks({ data } : any) {
 
   // *  to add new task
   function addTask() {
-    if (addTaskInputShow) {
-      (taskTitle !== "") && 
-      setTasks([
-        ...tasks,
-          {
-            id: uniqid("task_"),
-            title: taskTitle,
-            done: false,
-            important: false,
-          },
-        ]);
-      setTaskTitle("");
-      setAddTaskInputShow(false);
-      } else {
-      setAddTaskInputShow(true);
-      setTaskTitle("");
+    const newTask = {
+      id: uniqid("task_"),
+      title: taskTitle,
+      done: false,
+      important: false,
+      createdDate: Date.now(),
+      dueDate: null,
+      subtask: []
     }
+    
+    if (addTaskInputShow && taskTitle !== "") {
+      // Update database
+      axios.post("http://localhost:3000/api/addtask", {
+        username: data.username, 
+        menu: "tasks",
+        newTask: newTask
+      })
+        .then( () => {
+          // Update client-side
+          setTasks([...tasks, newTask]);
+        });
+    }
+    setTaskTitle("");
+    setAddTaskInputShow(!addTaskInputShow);
   }
 
   // *  to delete certain task
   function handleDelete(idTaskEdit: string) {
-    setTasks(
-      tasks.filter(function (task) {
-        return task.id != idTaskEdit;
-      })
-    );
+    // Update database
+    axios.post("http://localhost:3000/api/deletetask", {
+      username: data.username, 
+      menu: "tasks",
+      taskId: idTaskEdit
+    })
+      .then( () => {
+        // Update client side
+        setTasks(
+          tasks.filter(function (task) {
+            return task.id != idTaskEdit;
+          })
+        );
+        setStepPreview(false);
+      });
   }
 
   // *  to set which task is being edited
@@ -220,30 +237,77 @@ export default function Tasks({ data } : any) {
   }
 
   // *  to save changes after editing
-  function handleSave(i: number) {
-    if (taskTitle == "") {
-      tasks[i].title = "New Task";
-    } else {
-      tasks[i].title = taskTitle;
-    }
-    setTasks([...tasks]);
-    setTaskEdit({ id: "", title: "", done: false, important: false });
-    setTaskTitle("");
-    setAddTaskInputShow(false);
+  function handleSave(taskId: string) {
+    // Update database
+    axios.post("http://localhost:3000/api/edittask", {
+      username: data.username, 
+      menu: "tasks",
+      taskId: taskId,
+      newTaskTitle: taskTitle === "" ? "New Tasks" : taskTitle
+    })
+      .then( () => {
+        // Create new array (no mutation)
+        const newTasks = tasks.map( (item) => {
+          if (item.id === taskId) {
+            return {...item, title: taskTitle === "" ? "New Tasks" : taskTitle};
+          } else {
+            return {...item};
+          }
+        })
+
+        // Update client side
+        setTasks(newTasks);
+        setTaskEdit({ id: "", title: "", done: false, important: false });
+        setTaskTitle("");
+        setAddTaskInputShow(false);
+      });
   }
 
   // *  to change done status of task
-  function handleDone(i: number) {
-    tasks[i].done ? (tasks[i].done = false) : (tasks[i].done = true);
-    setTasks([...tasks]);
+  function handleDone(taskId: string, taskDone: boolean) {
+    // Update database
+    axios.post("http://localhost:3000/api/donetask", {
+      username: data.username,
+      menu: "tasks",
+      taskId: taskId,
+      taskDone: !taskDone
+    })
+    .then( () => {
+      // Create new array (no mutation)
+      const newTasks = tasks.map( (item) => {
+        if (item.id === taskId) {
+          return {...item, done: !item.done};
+        } else {
+          return {...item};
+        }
+      })
+
+      // Update client side
+      setTasks(newTasks);
+    });
   }
 
   // *  to change important status of task
-  function handleImportant(i: number) {
-    tasks[i].important
-      ? (tasks[i].important = false)
-      : (tasks[i].important = true);
-    setTasks([...tasks]);
+  function handleImportant(taskId: string, taskImportant: boolean) {
+    // Update database
+    axios.post("http://localhost:3000/api/importanttask", {
+      username: data.username,
+      menu: "tasks",
+      taskId: taskId,
+      taskImportant: !taskImportant
+    })
+    .then( () => {
+        // Create new array (no mutation)
+        const newTasks = tasks.map( (item) => {
+          if (item.id === taskId) {
+            return {...item, important: !item.important};
+          } else {
+            return {...item};
+          }
+        })
+        // Update client side
+        setTasks(newTasks);
+      });
   }
 
   // * to handle change step preview popup
@@ -254,18 +318,13 @@ export default function Tasks({ data } : any) {
     done: boolean;
     important: boolean;
   }) {
-    setTaskPreview(task);
+    setStepTaskPreview(task);
     setAddTaskInputShow(false);
-    setTaskTitle("")
-    stepPreview ? setStepPreview(false) :  setStepPreview(true);
+    setTaskTitle("");
+    stepPreview ? setStepPreview(false) : setStepPreview(true);
   }
 
 // ! I've tidied the lines, don't use automation from prettier to make tidier
-
-  const handleAddTask = () => {
-    axios.post("http://localhost:3000/api/addtask", {})
-      .then()
-  }
 
   return (
     <>
@@ -288,7 +347,7 @@ export default function Tasks({ data } : any) {
               >
               {/* // * div to loop through the created task list * */}
               {tasks.map(
-                (task, index) =>
+                (task) =>
                   !task.done && (
                     <div
                       key={task.id}
@@ -298,13 +357,13 @@ export default function Tasks({ data } : any) {
                         {/* // * Handle changes to the checkdone icon */}
                         {task.done ? (
                           <span
-                            onClick={() => {handleDone(index);}}
+                            onClick={() => {handleDone(task.id, task.done);}}
                           >
                             {circleCheckIcon()}
                           </span>
                         ) : (
                           <span
-                            onClick={() => {handleDone(index);}}
+                            onClick={() => {handleDone(task.id, task.done);}}
                           >
                             {circleIcon("#54A1EA")}
                           </span>
@@ -320,7 +379,7 @@ export default function Tasks({ data } : any) {
                               onChange={(event) => {setTaskTitle(event.target.value)}}
                             />
                             <button
-                              onClick={() => {handleSave(index);}}
+                              onClick={() => {handleSave(task.id);}}
                             >
                               {saveIcon()}
                             </button>
@@ -336,13 +395,13 @@ export default function Tasks({ data } : any) {
                             {/* // * Handle changes to starIcon Important */}
                             {!task.important ? (
                               <button
-                                onClick={() => {handleImportant(index)}}
+                                onClick={() => {handleImportant(task.id, task.important)}}
                               >
                                 {starLineIcon()}
                               </button>
                             ) : (
                               <button
-                                onClick={() => {handleImportant(index)}}
+                                onClick={() => {handleImportant(task.id, task.important)}}
                               >
                                 {starFullIcon()}
                               </button>
@@ -367,7 +426,7 @@ export default function Tasks({ data } : any) {
               )}
 
       {/* // ! FINISHED SECTION   */}
-        {/* // * The logic is that finished will appear if one of the task.done is true */}
+        {/* // * The logic is that finished will appear if one of the task done is true */}
               {tasks.some((task) => {
                 return task.done === true;
               }) && (
@@ -387,7 +446,7 @@ export default function Tasks({ data } : any) {
       {/* // ! TASK LIST DONE SECTION */}
               {/* // * div to loop through the created task list * */}
               {tasks.map(
-                (task, index) =>
+                (task) =>
                   task.done && (
                     <div
                       key={task.id}
@@ -397,13 +456,13 @@ export default function Tasks({ data } : any) {
                         {/* // * Handle changes to the icon done checklist */}
                         {task.done ? (
                           <span
-                            onClick={() => {handleDone(index);}}
+                            onClick={() => {handleDone(task.id, task.done);}}
                           >
                             {circleCheckIcon()}
                           </span>
                         ) : (
                           <span
-                            onClick={() => {handleDone(index);}}
+                            onClick={() => {handleDone(task.id, task.done);}}
                           >
                             {circleIcon("#54A1EA")}
                           </span>
@@ -419,7 +478,7 @@ export default function Tasks({ data } : any) {
                               onChange={(event) => {setTaskTitle(event.target.value);}}
                             />
                             <button
-                              onClick={() => {handleSave(index);}}
+                              onClick={() => {handleSave(task.id);}}
                             >
                               {saveIcon()}
                             </button>
@@ -435,13 +494,13 @@ export default function Tasks({ data } : any) {
                             {/* //* Handle icon important changes */}
                             {!task.important ? (
                               <button
-                                onClick={() => {handleImportant(index);}}
+                                onClick={() => {handleImportant(task.id, task.important);}}
                               >
                                 {starLineIcon()}
                               </button>
                             ) : (
                               <button
-                                onClick={() => {handleImportant(index);}}
+                                onClick={() => {handleImportant(task.id, task.important);}}
                               >
                                 {starFullIcon()}
                               </button>
@@ -471,7 +530,7 @@ export default function Tasks({ data } : any) {
               className={`${(taskEdit.id !== "" && taskEdit.title !== "") && "cursor-not-allowed"} bg-[#424242] opacity-100 flex p-[1.5vh] hover:opacity-80 `}
               onClick={() => {!addTaskInputShow && setAddTaskInputShow(true);}}
             >
-              <div className="flex flex-1 px-[1.5vw] gap-4 ">
+              <div className="flex flex-1 px-[1.5vw] gap-4">
                 <div className="m-auto">
                   {addTaskInputShow && taskEdit.id === "" && taskEdit.title === "" ? circleIcon("none")
                     :
@@ -503,7 +562,7 @@ export default function Tasks({ data } : any) {
           </div>
 
       {/* // ! STEP PREVIEW SECTION */}
-          {stepPreview && <SubTask title={stepTaskPreview.title} subtaskPreview={setStepPreview}/>}
+          {stepPreview && <SubTask username={data.username} taskData={stepTaskPreview} subtaskPreview={setStepPreview}/>}
         </div>
       </Layout>
     </>

@@ -1,15 +1,16 @@
+import axios from "axios";
 import { useState } from "react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 
 interface SubtaskInterface {
-  title: string;
+  username: string;
+  taskData: any;
   subtaskPreview: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export default function SubTask(props: SubtaskInterface) {
+export default function SubTask( {username, taskData, subtaskPreview}: SubtaskInterface ) {
   // Khusus bagian icon
-
   const plusIcon = (design: string) => {
     return (
       <svg
@@ -126,49 +127,59 @@ export default function SubTask(props: SubtaskInterface) {
     id: string;
     done: boolean;
   };
-  const uniqid = require("uniqid"); //Ini buat generate id dari npm
+  const uniqid = require("uniqid"); // Ini buat generate id dari npm
   const [calendarStatus, setCalendarStatus] = useState(false);
-  const [stepPreview, setStepPreview] = useState(false); //open subtask
-  const [stepTitle, setStepTitle] = useState(""); //isinya adalah status value input
-  const [steps, setSteps] = useState<ObjectStep[]>([]); //Isinya adalah kumpulan data task
+  const [stepTitle, setStepTitle] = useState(""); // isinya adalah status value input
+  const [steps, setSteps] = useState<ObjectStep[]>(taskData.subtask); // Isinya adalah subtask atau kumpulan data step
   const [stepEdit, setStepEdit] = useState<ObjectStep>({
-    //isinya adalah task yang lagi di rename/diedit
+    // isinya adalah step yang lagi di rename/diedit
     title: "",
     id: "",
     done: false,
   });
 
-  // Buat nambahin task baru
+  // Buat nambahin subtask/step baru
   function addStep() {
-    if (addStepInputShow) {
-      if (stepTitle === "") {
-      } else {
-        setStepEdit({ id: "", title: "", done: false });
-        setSteps([
-          ...steps,
-          {
-            id: uniqid("step_"),
-            title: stepTitle,
-            done: false,
-          },
-        ]);
-        setStepTitle("");
-      }
-      setAddStepInputShow(false);
-    } else {
-      setAddStepInputShow(true);
-      setStepTitle("");
+    const newStep = { 
+      id: uniqid("step_"),
+      title: stepTitle,
+      done: false 
+    };
+    if (addStepInputShow && stepTitle !== "") {
+      // Edit DB
+      axios.post("http://localhost:3000/api/addstep", {
+        username: username,
+        menu: "tasks",
+        taskId: taskData.id,
+        newStep: newStep
+      })
+        .then( () => {
+          // Update client-side
+          setStepEdit({ id: "", title: "", done: false });
+          setSteps([...steps, newStep]);
+        });
     }
-    console.log(stepEdit);
+    setAddStepInputShow(!addStepInputShow);
+    setStepTitle("");
   }
 
-  // Buat hapus task tertentu
-  function handleDelete(idTask: string) {
-    setSteps(
-      steps.filter(function (task) {
-        return task.id != idTask;
-      })
-    );
+  // Buat hapus subtask tertentu
+  function handleDelete(stepId: string) {
+    // Update database
+    axios.post("http://localhost:3000/api/deletestep", {
+      username: username,
+      menu: "tasks",
+      taskId: taskData.id,
+      stepId: stepId,
+    })
+      .then( () => {
+        // Update client side
+        setSteps(
+          steps.filter((step) => {
+            return step.id != stepId;
+          })
+        );
+      });
   }
 
   // Buat set mana task yang lagi diedit
@@ -179,22 +190,55 @@ export default function SubTask(props: SubtaskInterface) {
   }
 
   // Buat save abis diedit
-  function handleSave(i: number) {
-    if (stepTitle == "") {
-      steps[i].title = "New Step";
-    } else {
-      steps[i].title = stepTitle;
-    }
-    setSteps([...steps]);
-    setStepEdit({ id: "", title: "", done: false });
-    setStepTitle("");
-    setAddStepInputShow(false);
+  function handleSave(stepId: string) {
+    // Update database
+    axios.post("http://localhost:3000/api/editstep", {
+      username: username, 
+      menu: "tasks",
+      taskId: taskData.id,
+      stepId: stepId,
+      newStepTitle: stepTitle === "" ? "New Step" : stepTitle
+    })
+      .then( () => {
+        // Create new array (no mutation)
+        const newSteps = steps.map( (item) => {
+          if (item.id === stepId) {
+            return {...item, title: stepTitle === "" ? "New Step" : stepTitle};
+          } else {
+            return {...item};
+          }
+        })
+
+        // Update client side
+        setSteps(newSteps);
+        setStepEdit({ id: "", title: "", done: false });
+        setStepTitle("");
+        setAddStepInputShow(false);
+      });
   }
 
   // Buat ganti status done
-  function handleDone(i: number) {
-    steps[i].done ? (steps[i].done = false) : (steps[i].done = true);
-    setSteps([...steps]);
+  function handleDone(stepId: string, stepDone: boolean) {
+    // Update database
+    axios.post("http://localhost:3000/api/donestep", {
+      username: username, 
+      menu: "tasks",
+      taskId: taskData.id,
+      stepId: stepId,
+      stepDone: !stepDone
+    })
+      .then( () => {
+        // New array so no mutation
+        const newSteps = steps.map( (step) => {
+          if (step.id === stepId) {
+            return {...step, done: !step.done};
+          } else {
+            return {...step};
+          }
+        })
+        // Update client side
+        setSteps(newSteps)
+      });
   }
 
   return (
@@ -204,11 +248,11 @@ export default function SubTask(props: SubtaskInterface) {
           <div className="flex flex-col m-[3vh] gap-2">
             <div className="flex items-center justify-between">
               <p className="text-[2vh] sm:text-[2.9vh] font-semibold break-all mr-1.5">
-                {props.title}
+                {taskData.title}
               </p>
               <button
                 onClick={() => {
-                  props.subtaskPreview(false);
+                  subtaskPreview(false);
                 }}
               >
                 {crossIcon()}
@@ -218,14 +262,13 @@ export default function SubTask(props: SubtaskInterface) {
               className="flex flex-col max-h-[53vh] lg:max-h-[51vh] gap-2.5 overflow-y-scroll"
               id="no-scrollbar"
             >
-              {steps.map((step, index) => (
-                <div className="flex w-full gap-3 items-center">
+              {steps.map((step) => (
+                <div key={step.id} className="flex w-full gap-3 items-center">
                   {step.done ? (
                     <span
                       className="m-auto"
-                      key={step.id}
                       onClick={() => {
-                        handleDone(index);
+                        handleDone(step.id, step.done);
                       }}
                     >
                       {circleCheckIcon()}
@@ -234,7 +277,7 @@ export default function SubTask(props: SubtaskInterface) {
                     <span
                       className="m-auto"
                       onClick={() => {
-                        handleDone(index);
+                        handleDone(step.id, step.done);
                       }}
                     >
                       {circleIcon("#54A1EA")}
@@ -254,7 +297,7 @@ export default function SubTask(props: SubtaskInterface) {
                       ></input>
                       <button
                         onClick={() => {
-                          handleSave(index);
+                          handleSave(step.id);
                         }}
                       >
                         {saveIcon()}
@@ -403,7 +446,7 @@ export default function SubTask(props: SubtaskInterface) {
         </div>
       </div>
       <div className="flex justify-center items-center mb-[3vh]">
-        <p className="text-[1.4vh] sm:text-[2.2vh] font-medium">Created day</p>
+        <p className="text-[1.4vh] sm:text-[2.2vh] font-medium">{`Created at ${(new Date(taskData.createdDate)).toLocaleString("en-UK", { dateStyle: "full" })}`}</p>
       </div>
     </div>
   );
