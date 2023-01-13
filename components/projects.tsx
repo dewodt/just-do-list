@@ -133,14 +133,23 @@ export default function Projects( { userData, projectsTitleId }: { userData: typ
     setTitle(project.title);
   }
 
-  function handleDelete(idproject: string) {
-    setProjects(
-      projects.filter(function (project) {
-        return project.id != idproject;
+  function handleDelete(projectId: string) {
+    // Edit database
+    axios.post("http://localhost:3000/api/deleteproject", {
+      username: userData.username,
+      projectId: projectId,
+    })
+      .then( () => {
+        // New Array (no mutation)
+        const newProjects = projects.filter( (project) => { return project.id !== projectId } );
+
+        // Edit client side
+        setProjects(newProjects);
+        setEdit({ id: "", title: "" });
+        setTitle("");
       })
-    );
   }
-  // Update
+
   return (
     <div
       id="no-scrollbar"
