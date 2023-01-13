@@ -279,7 +279,6 @@ export default function Projects( { userData, projectsTitleId }: { userData: typ
                         >
                           <div
                             className="mx-4 indent-0 break-all cursor-pointer"
-                            // onClick={() => handleActionClick(project.title)}
                           >
                             {project.title}{" "}
                           </div>

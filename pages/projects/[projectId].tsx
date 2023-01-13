@@ -9,6 +9,11 @@ interface typeUserData {
   name: string;
 }
 
+interface typeProjectsTitleId {
+  id: string;
+  title: string;
+}
+
 interface typeTask {
   title: string;
   id: string;
@@ -22,7 +27,7 @@ interface typePageData {
   task: typeTask[];
 };
 
-export default function ProjectDetails({ userData, pageData }: { userData: typeUserData, pageData: typePageData[] }) {
+export default function ProjectDetails( { userData, projectsTitleId, pageData }: { userData: typeUserData, projectsTitleId: typeProjectsTitleId[], pageData: typePageData } ) {
   // *  * ICON
   const starLineIcon = () => {
     return (
@@ -258,11 +263,6 @@ export default function ProjectDetails({ userData, pageData }: { userData: typeU
     setTaskTitle("")
     stepPreview ? setStepPreview(false) :  setStepPreview(true);
   }
-  
-  // Return array of each project id and title
-  const projectsTitleId = pageData.map((proj) => {
-    return {id: proj.id, title: proj.title}
-  })
 
 // ! I've tidied the lines, don't use automation from prettier to make tidier
 
@@ -275,7 +275,7 @@ export default function ProjectDetails({ userData, pageData }: { userData: typeU
       {/* // ! TITLE SECTION */}
             <div className="flex  items-center gap-x-3">
               <p className="font-semibold text-[2.5vh] sm:text-[3.8vh]">
-                {projectId}
+                {pageData.title}
               </p>
             </div>
 
@@ -515,14 +515,18 @@ export async function getServerSideProps(ctx: any) {
   // Get datas from database
   const data = await getUserData(username);
   
-  // User data
+  // Get user data
   const name = data.name;
   const userData = {username: username, name: name}
 
-  // Projects data
-  const pageData = data.projects;
+  // Projects Title & ID (Left Nav Bar)
+  const projectsTitleId = data.projects.map( (project: typePageData ) => { return {id: project.id, title: project.title} })
+
+  // Get chosen project data
+  const projectId = ctx.query.projectId;
+  const [ pageData ] = data.projects.filter( (project: typePageData ) => { return project.id === projectId });
 
   return {
-    props: { userData, pageData }
+    props: { userData, projectsTitleId, pageData }
   }
 }
