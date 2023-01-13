@@ -12,7 +12,7 @@ interface typeTask {
   title: string;
   id: string;
   description: string;
-  dateCreated: number | null;
+  dateCreated: number;
 };
 
 interface typeProjects {
@@ -111,13 +111,6 @@ export default function Notes({ userData, projectsTitleId, pageData }: { userDat
     );
   };
 
-  type Objectnote = {
-    title: string;
-    id: string;
-    description: string;
-    dateCreated: number | null;
-  };
-
   // ! I've tidied the lines, don't use automation from prettier to make tidier
   // *  VARIABLE INITIALIZATION
 
@@ -127,19 +120,15 @@ export default function Notes({ userData, projectsTitleId, pageData }: { userDat
   // ? Entah kenapa gw nemuin bug gegara pas mode edit gw ambil data yang diedit buat ditampilin pas subnotespreview mode edit
   // ? Abis itu pas disave kan harusnya gw otak atik dateNow ga masalah kan buat gw set date now pas ngeklik save tapi entah kenapa ga kesave
 
-  const [title, setTitle] = useState("");                         // * to track changes in inputs title and data sets title
-  const [description, setDescription] = useState("");             // * to track changes in inputs title and data sets description
-  const [notes, setNotes] = useState<Objectnote[]>(pageData);   // TODO : notes dataset should be saved to the database     
-  const [noteEdit, setNoteEdit] = useState<Objectnote>({          // * contains the notes that is being edited
-    title: "",
-    id: "",
-    description: "",
-    dateCreated: null,
-  });
+  const [title, setTitle] = useState("");                     // store the state of title that's being edited
+  const [description, setDescription] = useState("");         // store the state of description that's being edited
+  const [editingId, setEditingId] = useState("");             // store the state of Id that's being edited
+  const [editingDate, setEditingDate] = useState(Date.now())  // store the state of date that's being edited
+  const [notes, setNotes] = useState<typeTask[]>(pageData);   // TODO : notes dataset should be saved to the database     
 
   // * to convert from dateCreated number format to date string
-  const generateDateNow = () => {
-    return (new Date()).toLocaleDateString("en-GB", {
+  const generateDateNow = (numDate: number) => {
+    return (new Date(numDate)).toLocaleDateString("en-GB", {
       day: "numeric",
       month: "long",
       year: "numeric",
@@ -147,8 +136,8 @@ export default function Notes({ userData, projectsTitleId, pageData }: { userDat
     };
 
   // * to convert from dateCreated number format to a time string
-  const generateTimeNow = () => {
-    return (new Date()).toLocaleTimeString("en-GB", {
+  const generateTimeNow = (numDate: number) => {
+    return (new Date(numDate)).toLocaleTimeString("en-GB", {
       hour: "numeric",
       minute: "numeric",
     });
@@ -183,25 +172,25 @@ export default function Notes({ userData, projectsTitleId, pageData }: { userDat
   function backMenuNote() {
     setTitle("");
     setDescription("");
+    setEditingId("");
     setSubNotesPreviewMode("back");
   }
 
   // * function when clicking the add button which will set the time state
   function handleNewNotesPreview() {
     setSubNotesPreviewMode("add");
+    setEditingDate(Date.now())
   }
 
   // * function to set which note is being edited
-  function handleEdit(note: {
-    title: string;
-    id: string;
-    description: string;
-    dateCreated: number | null;
-  }) {
+  function handleEdit(noteId: string) {
     // taking specific data and set to state
-    setNoteEdit(note);
-    setTitle(note.title);
-    setDescription(note.description);
+    // Find the note that's gonna be edited
+    const [ editingNote ] = notes.filter( (note) => { return note.id === noteId })
+    setEditingId(noteId);
+    setTitle(editingNote.title);
+    setDescription(editingNote.description);
+    setEditingDate(editingNote.dateCreated);
     setSubNotesPreviewMode("edit");
   }
 
@@ -223,7 +212,7 @@ export default function Notes({ userData, projectsTitleId, pageData }: { userDat
 
   // *  to save changes after editing
   function handleSave(noteId: string) {
-    const updateIndex = notes.findIndex((note) => { return note.id === noteEdit.id; });
+    const updateIndex = notes.findIndex((note) => { return note.id === editingId; });
     // to handle note's date that actually change
     if (title !== notes[updateIndex].title || description !== notes[updateIndex].description) {
       axios.post("http://localhost:3000/api/editnote", {
@@ -246,9 +235,9 @@ export default function Notes({ userData, projectsTitleId, pageData }: { userDat
           setNotes(newNotes);
         })
     }
-    setNoteEdit({ id: "", title: "", description: "", dateCreated: null });
     setTitle("");
     setDescription("");
+    setEditingId("");
     setSubNotesPreviewMode("back");
   }
 
@@ -275,7 +264,7 @@ export default function Notes({ userData, projectsTitleId, pageData }: { userDat
                 <>
                   <div
                     role="button"
-                    onClick={() => {handleEdit(note);}}
+                    onClick={() => {handleEdit(note.id);}}
                     className="flex bg-[#424242] rounded-[10px] sm:rounded-[20px] h-[17.83vh] w-[50.411vw] min-[250px]:h-[20.83vh] min-[250px]:w-[30.411vw] lg:w-[20.83vw] sm:h-[30.411vh] hover:opacity-80 px-[2vw] py-[1.8vh] cursor-pointer "
                   >
                     <div className="flex flex-col flex-1 justify-center my-[0.9vh] mx-[2vw] sm:my-[1.6vh] sm:mx-[1.3vw]">
@@ -286,7 +275,7 @@ export default function Notes({ userData, projectsTitleId, pageData }: { userDat
                         {note.description}
                       </p>
                       <p className="mt-auto text-[1vh] sm:text-[1.6vh] text-[#CECECE]">
-                        {generateDateNow()}
+                        {generateDateNow(note.dateCreated)}
                       </p>
                     </div>
                   </div>
@@ -321,7 +310,7 @@ export default function Notes({ userData, projectsTitleId, pageData }: { userDat
                   {/* // * Delete Button if in edit mode */}
                     {subNotesPreviewMode === "edit" && (
                       <button
-                        onClick={() => {handleDelete(noteEdit.id);}}
+                        onClick={() => {handleDelete(editingId);}}
                       >
                         {trashIcon()}
                       </button>
@@ -329,7 +318,7 @@ export default function Notes({ userData, projectsTitleId, pageData }: { userDat
                   {/* //* Cross Button if empty input, Save Button in edit mode, and Add Button in add mode  */}
                     <button
                       className="ml-auto"
-                      onClick={() => {subNotesPreviewMode === "add" ? addNotes() : handleSave(noteEdit.id);}}
+                      onClick={() => {subNotesPreviewMode === "add" ? addNotes() : handleSave(editingId);}}
                     >
                       {title === "" || description === "" ? plusIcon("rotate-45")
                         : subNotesPreviewMode === "edit"  ? saveIcon()
@@ -351,10 +340,10 @@ export default function Notes({ userData, projectsTitleId, pageData }: { userDat
                 {/* // ! TIME SUBNOTES SECTION */}
                 <p className="text-[1.7vh] sm:text-[2.2vh] mt-1 sm:mt-2 text-slate-300">
                   {/* Date */}
-                  {generateDateNow()}
+                  {generateDateNow(editingDate)}
                   {/* Time */}
                   <span className="ml-1">
-                    {"|"} {generateTimeNow()}
+                    {"|"} {generateTimeNow(editingDate)}
                   </span>
                 </p>
                 {/* // ! DESCRIPTION SUBNOTES SECTION */}
