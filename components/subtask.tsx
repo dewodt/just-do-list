@@ -2,14 +2,17 @@ import axios from "axios";
 import { useState } from "react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
+import Datetime from "react-datetime"
+import "react-datetime/css/react-datetime.css"; 
 
 interface SubtaskInterface {
   username: string;
   taskData: any;
+  setTaskData: any;
   subtaskPreview: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export default function SubTask( {username, taskData, subtaskPreview}: SubtaskInterface ) {
+export default function SubTask( {username, taskData, subtaskPreview, setTaskData}: SubtaskInterface ) {
   // Khusus bagian icon
   const plusIcon = (design: string) => {
     return (
@@ -36,7 +39,7 @@ export default function SubTask( {username, taskData, subtaskPreview}: SubtaskIn
   };
 
   const circleCheckIcon = () => {
-    return (
+    return (  
       <svg
         className="fill-white opacity-80 w-[1.5vh] sm:w-[2vh] hover:fill-[#54A1EA]"
         xmlns="http://www.w3.org/2000/svg"
@@ -74,7 +77,7 @@ export default function SubTask( {username, taskData, subtaskPreview}: SubtaskIn
   const calendarIcon = () => {
     return (
       <svg
-        className="fill-white opacity-80 w-[1.5vh] sm:w-[2vh] h-[1.5vh] sm:h-[2vh] m-auto"
+        className={`${taskData.dueDate !== null && "fill-[#6cb0ef]"} fill-white opacity-80 w-[1.5vh] sm:w-[2vh] h-[1.5vh] sm:h-[2vh] m-auto`}
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 448 512"
       >
@@ -129,6 +132,7 @@ export default function SubTask( {username, taskData, subtaskPreview}: SubtaskIn
   };
   const uniqid = require("uniqid"); // Ini buat generate id dari npm
   const [calendarStatus, setCalendarStatus] = useState(false);
+  const [dueDate,setDueDate] = useState<number>(taskData.dueDate);
   const [stepTitle, setStepTitle] = useState(""); // isinya adalah status value input
   const [steps, setSteps] = useState<ObjectStep[]>(taskData.subtask); // Isinya adalah subtask atau kumpulan data step
   const [stepEdit, setStepEdit] = useState<ObjectStep>({
@@ -158,11 +162,11 @@ export default function SubTask( {username, taskData, subtaskPreview}: SubtaskIn
           setStepEdit({ id: "", title: "", done: false });
           setSteps([...steps, newStep]);
         });
-    }
-    setAddStepInputShow(!addStepInputShow);
+      }
+      setAddStepInputShow(!addStepInputShow);
     setStepTitle("");
   }
-
+  
   // Buat hapus subtask tertentu
   function handleDelete(stepId: string) {
     // Update database
@@ -199,23 +203,23 @@ export default function SubTask( {username, taskData, subtaskPreview}: SubtaskIn
       stepId: stepId,
       newStepTitle: stepTitle === "" ? "New Step" : stepTitle
     })
-      .then( () => {
-        // Create new array (no mutation)
-        const newSteps = steps.map( (item) => {
-          if (item.id === stepId) {
-            return {...item, title: stepTitle === "" ? "New Step" : stepTitle};
+    .then( () => {
+      // Create new array (no mutation)
+      const newSteps = steps.map( (item) => {
+        if (item.id === stepId) {
+          return {...item, title: stepTitle === "" ? "New Step" : stepTitle};
           } else {
             return {...item};
           }
         })
-
+        
         // Update client side
         setSteps(newSteps);
         setStepEdit({ id: "", title: "", done: false });
         setStepTitle("");
         setAddStepInputShow(false);
       });
-  }
+    }
 
   // Buat ganti status done
   function handleDone(stepId: string, stepDone: boolean) {
@@ -227,11 +231,11 @@ export default function SubTask( {username, taskData, subtaskPreview}: SubtaskIn
       stepId: stepId,
       stepDone: !stepDone
     })
-      .then( () => {
-        // New array so no mutation
-        const newSteps = steps.map( (step) => {
-          if (step.id === stepId) {
-            return {...step, done: !step.done};
+    .then( () => {
+      // New array so no mutation
+      const newSteps = steps.map( (step) => {
+        if (step.id === stepId) {
+          return {...step, done: !step.done};
           } else {
             return {...step};
           }
@@ -239,7 +243,52 @@ export default function SubTask( {username, taskData, subtaskPreview}: SubtaskIn
         // Update client side
         setSteps(newSteps)
       });
+    }
+    
+  function handleSaveDate(){
+    setDueDate(dueDate);
+    const updateData = {...taskData, dueDate:dueDate}
+    setTaskData(updateData)
+    console.log(updateData.dueDate)
+    console.log(taskData.dueDate)
+    setDueDatePreview(false)
   }
+  
+  function handleSetToday(){
+    setDueDate(new Date().setHours(23,59,59,0));
+    const updateData = {...taskData, dueDate:dueDate}
+    setTaskData(updateData)
+    console.log(updateData.dueDate)
+    console.log(taskData.dueDate)
+    setDueDatePreview(false)
+  }
+  
+  function handleSetTomorrow(){
+    setDueDate((new Date().setHours(23,59,59,0)) + 86400000);
+    const updateData = {...taskData, dueDate:dueDate}
+    setTaskData(updateData)
+    console.log(updateData.dueDate)
+    console.log(taskData.dueDate)
+    setDueDatePreview(false)
+    // Disini lu update ke database lngsung aj
+  }
+  
+  // * to convert from dueDate number format to a date string
+  const generateDate = (dateData:number) => {
+    return (new Date(dateData)).toLocaleDateString("en-GB", {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    });
+    };
+
+  // * to convert from dueDate number format to a time string
+  const generateTime = (dateData:number) => {
+    return (new Date(dateData)).toLocaleTimeString("en-GB", {
+      hour: "numeric",
+      minute: "numeric",
+    });
+  };
 
   return (
     <div className="flex flex-col w-[70vw] absolute right-0 lg:relative h-[94vh] md:h-[90.5vh] z-10 sm:w-[45vw] lg:w-[24.4375vw] bg-[#323232]">
@@ -388,9 +437,7 @@ export default function SubTask( {username, taskData, subtaskPreview}: SubtaskIn
         </div>
         <div
           className="bg-[#424242] px-2.5 py-2 relative flex justify-center hover:bg-[#4b4b4b]"
-          onClick={() => {
-            !dueDatePreview && setDueDatePreview(true);
-          }}
+          
         >
           <div
             className={`${
@@ -400,27 +447,40 @@ export default function SubTask( {username, taskData, subtaskPreview}: SubtaskIn
             {/* // TODO: set due date */}
             {calendarStatus ? (
               <>
-                <div className="text-black bg-[#424242] ">
-                  <Calendar />
+              <div className="flex flex-col text-center cursor-pointer px-[1.8vh] sm:px-[2.6vh] py-[1.3vh] md:py-[2vh] text-[1.4vh] sm:text-[2.2vh] text-white">
+                <div className="text-black ">
+                  {/* // ? Ini kenapakah padahal masih jalan aja pas gw debug */}
+                  <Datetime onChange={(date)=>{typeof date !== "string" && setDueDate(date._d.valueOf())}} inputProps={{ className: "text-white outline-none bg-transparent text-center", placeholder:"Click Me To Set" }} className="appearance-none shadow rounded" />
                 </div>
-                <div className="flex flex-col text-center">
+              </div>
+              <div className="flex">
                   <button
                     onClick={() => {
                       setCalendarStatus(false);
                       setDueDatePreview(false);
                     }}
-                    className="hover:bg-[#4b4b4b] cursor-pointer px-[1.8vh] sm:px-[2.6vh] py-[1.3vh] md:py-[2vh] text-[1.4vh] sm:text-[2.2vh] "
+                    className="flex  items-center justify-center w-1/2 hover:bg-[#4b4b4b] cursor-pointer px-[1.8vh] sm:px-[2.6vh] py-[1.3vh] md:py-[2vh] text-[1.4vh] sm:text-[2.2vh] "
                   > 
                     {plusIcon("rotate-45")}
                   </button>
-                </div>
+                  <button
+                    onClick={() => {
+                      handleSaveDate()
+                    }}
+                    className="w-1/2  flex items-center justify-center hover:bg-[#4b4b4b] cursor-pointer px-[1.8vh] sm:px-[2.6vh] py-[1.3vh] md:py-[2vh] text-[1.4vh] sm:text-[2.2vh] "
+                  > 
+                    {checkIcon()}
+                  </button>
+              </div>
+
               </>
             ) : (
               <div className="flex flex-col text-center">
-                <div className="hover:bg-[#4b4b4b] cursor-pointer px-[1.8vh] sm:px-[2.6vh] py-[1.3vh] md:py-[2vh] text-[1.4vh] sm:text-[2.2vh] ">
+                {}
+                <div onClick={()=>{handleSetToday()}} className="hover:bg-[#4b4b4b] cursor-pointer px-[1.8vh] sm:px-[2.6vh] py-[1.3vh] md:py-[2vh] text-[1.4vh] sm:text-[2.2vh] ">
                   Today
                 </div>
-                <div className="hover:bg-[#4b4b4b] cursor-pointer px-[1.8vh] sm:px-[2.6vh] py-[1.3vh] md:py-[2vh] text-[1.4vh] sm:text-[2.2vh] ">
+                <div onClick={()=>{handleSetTomorrow()}} className="hover:bg-[#4b4b4b] cursor-pointer px-[1.8vh] sm:px-[2.6vh] py-[1.3vh] md:py-[2vh] text-[1.4vh] sm:text-[2.2vh] ">
                   Tomorrow
                 </div>
                 <div
@@ -437,11 +497,15 @@ export default function SubTask( {username, taskData, subtaskPreview}: SubtaskIn
               </div>
             )}
           </div>
-          <div className="flex p-[0.5vh] sm:p-[1vh] gap-4 mr-auto">
-            <div className="m-auto">{calendarIcon()}</div>
-            <p className="flex-1 cursor-pointer text-[1.4vh] sm:text-[2.2vh]">
-              Add due date
+          <div className="flex p-[0.5vh] sm:p-[1vh] gap-4 justify-around items-center">
+            <div>{calendarIcon()}</div>
+            <p onClick={() => {
+            !dueDatePreview && setDueDatePreview(true);
+          }} className={`${taskData.dueDate !== null && "text-[#6cb0ef]"} flex-1 cursor-pointer text-[1.4vh] sm:text-[2.2vh]`}>
+              {taskData.dueDate === null ? "Add Due Date" : generateDate(taskData.dueDate) + " " + "|" + " " + generateTime(taskData.dueDate)}
             </p>
+            
+            {taskData.dueDate !== null && (<button onClick={()=>{taskData.dueDate = null;}}>{plusIcon("rotate-45 fill-[#6cb0ef]")}</button>)}
           </div>
         </div>
       </div>
