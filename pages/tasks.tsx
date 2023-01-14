@@ -14,6 +14,9 @@ interface typeTask {
   id: string;
   done: boolean;
   important: boolean;
+  createdDate: any,
+  dueDate: any,
+  subtask: never[]
 };
 
 interface typeProjects {
@@ -180,6 +183,9 @@ export default function Tasks({ userData, projectsTitleId, pageData }: { userDat
     id: "",
     done: false,
     important: false,
+    createdDate: null,
+    dueDate: null,
+    subtask: []
   });
 
   const [stepTaskPreview, setStepTaskPreview] = useState<typeTask>({  // * contains the task that the step wants to display
@@ -187,6 +193,10 @@ export default function Tasks({ userData, projectsTitleId, pageData }: { userDat
     id: "",
     done: false,
     important: false,
+    createdDate: null,
+    dueDate: null,
+    subtask: []
+    
   });
 
   // *  FUNCTION ACTION ONCLICK
@@ -244,6 +254,9 @@ export default function Tasks({ userData, projectsTitleId, pageData }: { userDat
     id: string;
     done: boolean;
     important: boolean;
+    createdDate: any;
+    dueDate: any;
+    subtask:never[]
   }) {
     setTaskEdit(task);
     setAddTaskInputShow(false);
@@ -271,7 +284,9 @@ export default function Tasks({ userData, projectsTitleId, pageData }: { userDat
 
         // Update client side
         setTasks(newTasks);
-        setTaskEdit({ id: "", title: "", done: false, important: false });
+        setTaskEdit({ id: "", title: "", done: false, important: false, createdDate: null,
+        dueDate: null,
+        subtask: [] });
         setTaskTitle("");
         setAddTaskInputShow(false);
       });
@@ -331,6 +346,9 @@ export default function Tasks({ userData, projectsTitleId, pageData }: { userDat
     id: string;
     done: boolean;
     important: boolean;
+    createdDate: any;
+    dueDate: any;
+    subtask:never[]
   }) {
     setStepTaskPreview(task);
     setAddTaskInputShow(false);
@@ -576,7 +594,7 @@ export default function Tasks({ userData, projectsTitleId, pageData }: { userDat
           </div>
 
       {/* // ! STEP PREVIEW SECTION */}
-          {stepPreview && <SubTask username={userData.username} taskData={stepTaskPreview} subtaskPreview={setStepPreview}/>}
+          {stepPreview && <SubTask username={userData.username} taskData={stepTaskPreview} setTaskData = {setStepTaskPreview} subtaskPreview={setStepPreview}/>}
         </div>
       </Layout>
     </>
