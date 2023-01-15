@@ -10,9 +10,12 @@ interface SubtaskInterface {
   taskData: any;
   setTaskData: any;
   subtaskPreview: React.Dispatch<React.SetStateAction<boolean>>;
+  design: string;
+  allData: any;
+  setAllData: any;
 }
 
-export default function SubTask( {username, taskData, subtaskPreview, setTaskData}: SubtaskInterface ) {
+export default function SubTask( {username, taskData, subtaskPreview, setTaskData, design, allData, setAllData}: SubtaskInterface ) {
   // Khusus bagian icon
   const plusIcon = (design: string) => {
     return (
@@ -161,6 +164,18 @@ export default function SubTask( {username, taskData, subtaskPreview, setTaskDat
           // Update client-side
           setStepEdit({ id: "", title: "", done: false });
           setSteps([...steps, newStep]);
+          // update all data tasks
+          const newTasks = allData.map( (item:any) => {
+            if (item.id === taskData.id) {
+              return {...item, subtask: steps};
+            } else {
+              return {...item};
+            }
+          })
+          setAllData(newTasks)
+          // update task data passed on subtask
+          const newTask = {...taskData, subtask:steps};
+          setTaskData(newTask);
         });
       }
       setAddStepInputShow(!addStepInputShow);
@@ -183,6 +198,19 @@ export default function SubTask( {username, taskData, subtaskPreview, setTaskDat
             return step.id != stepId;
           })
         );
+        // update all data tasks
+        const newTasks = allData.map( (item:any) => {
+          if (item.id === taskData.id) {
+            return {...item, subtask: steps};
+          } else {
+            return {...item};
+          }
+        })
+        setAllData(newTasks)
+        // update task data passed on subtask
+        const newTask = {...taskData, subtask:steps};
+        setTaskData(newTask);
+
       });
   }
 
@@ -218,6 +246,18 @@ export default function SubTask( {username, taskData, subtaskPreview, setTaskDat
         setStepEdit({ id: "", title: "", done: false });
         setStepTitle("");
         setAddStepInputShow(false);
+        // update all data tasks
+        const newTasks = allData.map( (item:any) => {
+          if (item.id === taskData.id) {
+            return {...item, subtask: steps};
+          } else {
+            return {...item};
+          }
+        })
+        setAllData(newTasks)
+        // update task data passed on subtask
+        const newTask = {...taskData, subtask:steps};
+        setTaskData(newTask);
       });
     }
 
@@ -242,6 +282,18 @@ export default function SubTask( {username, taskData, subtaskPreview, setTaskDat
         })
         // Update client side
         setSteps(newSteps)
+        // update all data tasks
+        const newTasks = allData.map( (item:any) => {
+          if (item.id === taskData.id) {
+            return {...item, subtask: steps};
+          } else {
+            return {...item};
+          }
+        })
+        setAllData(newTasks)
+        // update task data passed on subtask
+        const newTask = {...taskData, subtask:steps};
+        setTaskData(newTask);
       });
     }
     
@@ -291,7 +343,7 @@ export default function SubTask( {username, taskData, subtaskPreview, setTaskDat
   };
 
   return (
-    <div className="flex flex-col w-[70vw] absolute right-0 lg:relative h-[94vh] md:h-[90.5vh] z-10 sm:w-[45vw] lg:w-[24.4375vw] bg-[#323232]">
+    <div className={`${design} flex-col w-[70vw] absolute right-0 lg:relative h-[94vh] md:h-[90.5vh] z-10 sm:w-[45vw] lg:w-[24.4375vw] bg-[#323232]`}>
       <div className="flex flex-col flex-1 p-[2.421vh] gap-3">
         <div className="bg-[#424242] overflow-y-scroll" id="no-scrollbar">
           <div className="flex flex-col m-[3vh] gap-2">
@@ -302,6 +354,7 @@ export default function SubTask( {username, taskData, subtaskPreview, setTaskDat
               <button
                 onClick={() => {
                   subtaskPreview(false);
+
                 }}
               >
                 {crossIcon()}

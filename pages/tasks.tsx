@@ -1,6 +1,6 @@
 import Layout from "../components/layout";
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import SubTask from "../components/subtask";
 import getUserData from "../lib/getUserData";
 
@@ -199,6 +199,8 @@ export default function Tasks({ userData, projectsTitleId, pageData }: { userDat
     
   });
 
+  // useEffect(()=>{setStepTaskPreview(stepTaskPreview);console.log(stepTaskPreview);},[stepTaskPreview])
+
   // *  FUNCTION ACTION ONCLICK
 
   // *  to add new task
@@ -227,6 +229,7 @@ export default function Tasks({ userData, projectsTitleId, pageData }: { userDat
     }
     setTaskTitle("");
     setAddTaskInputShow(!addTaskInputShow);
+    console.log(tasks)
   }
 
   // *  to delete certain task
@@ -288,6 +291,11 @@ export default function Tasks({ userData, projectsTitleId, pageData }: { userDat
         dueDate: null,
         subtask: [] });
         setTaskTitle("");
+        // handle bug when clicking edit mode in stepPreview mode
+        const taskData = tasks.filter(function (task) {
+          return task.id === taskId;
+        });
+        setStepTaskPreview(taskData[0])
         setAddTaskInputShow(false);
       });
   }
@@ -401,7 +409,7 @@ export default function Tasks({ userData, projectsTitleId, pageData }: { userDat
                           </span>
                         )}
                          {/* // * Handle changes when edited from paragraphs to input */}
-                        {taskEdit === task && !stepPreview ? (
+                        {taskEdit === task ? (
                           <>
                             <input
                               type="text"
@@ -594,7 +602,8 @@ export default function Tasks({ userData, projectsTitleId, pageData }: { userDat
           </div>
 
       {/* // ! STEP PREVIEW SECTION */}
-          {stepPreview && <SubTask username={userData.username} taskData={stepTaskPreview} setTaskData = {setStepTaskPreview} subtaskPreview={setStepPreview}/>}
+           {/* <SubTask username={userData.username} design={stepPreview?"flex":"hidden"} taskData={stepTaskPreview} setTaskData = {setStepTaskPreview} allData={tasks} setAllData={setTasks} subtaskPreview={setStepPreview}/> */}
+           {stepPreview && <SubTask username={userData.username} design={stepPreview?"flex":"hidden"} taskData={stepTaskPreview} setTaskData = {setStepTaskPreview} allData={tasks} setAllData={setTasks} subtaskPreview={setStepPreview}/>}
         </div>
       </Layout>
     </>
