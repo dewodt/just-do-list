@@ -215,6 +215,11 @@ export default function Tasks({ userData, projectsTitleId, pageData }: { userDat
     setStepPreview(false);
   }
 
+  function handleResetSearch() {
+    setSearch("");
+    setFilteredTasks(tasks);
+  }
+  
   // *  to add new task
   function addTask() {
     const newTask = {
@@ -414,7 +419,7 @@ export default function Tasks({ userData, projectsTitleId, pageData }: { userDat
   return (
     <>
       <PageHead title="Tasks | Just Do List"/>
-      <Layout userData={userData} projectsTitleId={projectsTitleId} search={search} handleSearch={handleSearch}>
+      <Layout userData={userData} projectsTitleId={projectsTitleId} search={search} handleResetSearch={handleResetSearch} handleSearch={handleSearch}>
         <div className="flex flex-1">
           <div className="flex flex-col flex-1 py-[2vh] lg:p-[3.8vh] px-[3.4vh] gap-1">
 
