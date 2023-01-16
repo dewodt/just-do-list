@@ -135,7 +135,7 @@ export default function SubTask( {username, taskData, subtaskPreview, setTaskDat
   };
   const uniqid = require("uniqid"); // Ini buat generate id dari npm
   const [calendarStatus, setCalendarStatus] = useState(false);
-  const [dueDate,setDueDate] = useState<number>(taskData.dueDate);
+  const [dueDate, setDueDate] = useState<number | null>(taskData.dueDate);
   const [stepTitle, setStepTitle] = useState(""); // isinya adalah status value input
   const [steps, setSteps] = useState<ObjectStep[]>(taskData.subtask); // Isinya adalah subtask atau kumpulan data step
   const [stepEdit, setStepEdit] = useState<ObjectStep>({
@@ -161,26 +161,29 @@ export default function SubTask( {username, taskData, subtaskPreview, setTaskDat
         newStep: newStep
       })
         .then( () => {
-          // Update client-side
-          setStepEdit({ id: "", title: "", done: false });
-          setSteps([...steps, newStep]);
-          // update all data tasks
+          // New Steps
+          const newSteps = [...steps, newStep];
+          // New Tasks
           const newTasks = allData.map( (item:any) => {
             if (item.id === taskData.id) {
-              return {...item, subtask: steps};
+              return {...item, subtask: newSteps};
             } else {
               return {...item};
             }
           })
-          setAllData(newTasks)
-          // update task data passed on subtask
-          const newTask = {...taskData, subtask:steps};
+          // New Task
+          const newTask = {...taskData, subtask:newSteps};
+
+          // Update client-sde
+          setStepEdit({ id: "", title: "", done: false });
+          setSteps(newSteps);
+          setAllData(newTasks);
           setTaskData(newTask);
         });
       }
       setAddStepInputShow(!addStepInputShow);
-    setStepTitle("");
-  }
+      setStepTitle("");
+   }
   
   // Buat hapus subtask tertentu
   function handleDelete(stepId: string) {
@@ -192,25 +195,21 @@ export default function SubTask( {username, taskData, subtaskPreview, setTaskDat
       stepId: stepId,
     })
       .then( () => {
-        // Update client side
-        setSteps(
-          steps.filter((step) => {
-            return step.id != stepId;
-          })
-        );
-        // update all data tasks
+        // New Tasks, Steps, and Task
+        const newSteps = steps.filter((step) => { return step.id !== stepId;});
         const newTasks = allData.map( (item:any) => {
           if (item.id === taskData.id) {
-            return {...item, subtask: steps};
+            return {...item, subtask: newSteps};
           } else {
             return {...item};
           }
-        })
-        setAllData(newTasks)
-        // update task data passed on subtask
-        const newTask = {...taskData, subtask:steps};
-        setTaskData(newTask);
+        });
+        const newTask = {...taskData, subtask: newSteps};
 
+        // Update Client Side
+        setSteps(newSteps);
+        setAllData(newTasks)
+        setTaskData(newTask);
       });
   }
 
@@ -231,35 +230,33 @@ export default function SubTask( {username, taskData, subtaskPreview, setTaskDat
       stepId: stepId,
       newStepTitle: stepTitle === "" ? "New Step" : stepTitle
     })
-    .then( () => {
-      // Create new array (no mutation)
-      const newSteps = steps.map( (item) => {
-        if (item.id === stepId) {
-          return {...item, title: stepTitle === "" ? "New Step" : stepTitle};
+      .then( () => {
+        // New Steps, New Tasks, and New Task
+        const newSteps = steps.map( (item) => {
+          if (item.id === stepId) {
+            return {...item, title: stepTitle === "" ? "New Step" : stepTitle};
+          } else {
+            return {...item};
+          }
+        });
+        const newTasks = allData.map( (item:any) => {
+          if (item.id === taskData.id) {
+            return {...item, subtask: newSteps};
           } else {
             return {...item};
           }
         })
+        const newTask = {...taskData, subtask: newSteps};
         
         // Update client side
         setSteps(newSteps);
         setStepEdit({ id: "", title: "", done: false });
         setStepTitle("");
         setAddStepInputShow(false);
-        // update all data tasks
-        const newTasks = allData.map( (item:any) => {
-          if (item.id === taskData.id) {
-            return {...item, subtask: steps};
-          } else {
-            return {...item};
-          }
-        })
-        setAllData(newTasks)
-        // update task data passed on subtask
-        const newTask = {...taskData, subtask:steps};
+        setAllData(newTasks);
         setTaskData(newTask);
       });
-    }
+  }
 
   // Buat ganti status done
   function handleDone(stepId: string, stepDone: boolean) {
@@ -271,58 +268,65 @@ export default function SubTask( {username, taskData, subtaskPreview, setTaskDat
       stepId: stepId,
       stepDone: !stepDone
     })
-    .then( () => {
-      // New array so no mutation
-      const newSteps = steps.map( (step) => {
-        if (step.id === stepId) {
-          return {...step, done: !step.done};
-          } else {
-            return {...step};
-          }
-        })
-        // Update client side
-        setSteps(newSteps)
-        // update all data tasks
+      .then( () => {
+        // New steps, tasks, and task.
+        const newSteps = steps.map( (step) => {
+          if (step.id === stepId) {
+            return {...step, done: !step.done};
+            } else {
+              return {...step};
+            }
+        });
         const newTasks = allData.map( (item:any) => {
           if (item.id === taskData.id) {
-            return {...item, subtask: steps};
+            return {...item, subtask: newSteps};
           } else {
             return {...item};
           }
         })
-        setAllData(newTasks)
-        // update task data passed on subtask
-        const newTask = {...taskData, subtask:steps};
+        const newTask = {...taskData, subtask: newSteps};
+
+        // Update client side
+        setSteps(newSteps);
+        setAllData(newTasks);
         setTaskData(newTask);
       });
+  }
+  
+  function handleDueDate(type: string) {
+    // Different types of handling
+    let newDueDate = dueDate;
+    if (type === "today") {
+      newDueDate = (new Date()).setHours(23,59,59,0);
+    } else if (type === "tomorrow") {
+      newDueDate = (new Date()).setHours(23,59,59,0) + 86400000;
+    } else if (type === "reset") {
+      newDueDate = null;
     }
-    
-  function handleSaveDate(){
-    setDueDate(dueDate);
-    const updateData = {...taskData, dueDate:dueDate}
-    setTaskData(updateData)
-    console.log(updateData.dueDate)
-    console.log(taskData.dueDate)
-    setDueDatePreview(false)
-  }
-  
-  function handleSetToday(){
-    setDueDate(new Date().setHours(23,59,59,0));
-    const updateData = {...taskData, dueDate:dueDate}
-    setTaskData(updateData)
-    console.log(updateData.dueDate)
-    console.log(taskData.dueDate)
-    setDueDatePreview(false)
-  }
-  
-  function handleSetTomorrow(){
-    setDueDate((new Date().setHours(23,59,59,0)) + 86400000);
-    const updateData = {...taskData, dueDate:dueDate}
-    setTaskData(updateData)
-    console.log(updateData.dueDate)
-    console.log(taskData.dueDate)
-    setDueDatePreview(false)
-    // Disini lu update ke database lngsung aj
+    // Update database
+    axios.post("http://localhost:3000/api/editduedate", {
+      username: username,
+      menu: "tasks",
+      taskId: taskData.id,
+      newDueDate: newDueDate,
+    })
+      .then( () => {
+        // New tasks and task
+        const newTasks = allData.map( (item:any) => {
+          if (item.id === taskData.id) {
+            return {...item, dueDate: newDueDate};
+          } else {
+            return {...item};
+          }
+        })
+        const updateData = {...taskData, dueDate: newDueDate};
+
+        // Update Client Side
+        setDueDate(newDueDate);
+        setAllData(newTasks);
+        setTaskData(updateData);
+        setDueDatePreview(false);
+      })
   }
   
   // * to convert from dueDate number format to a date string
@@ -503,7 +507,7 @@ export default function SubTask( {username, taskData, subtaskPreview, setTaskDat
               <div className="flex flex-col text-center cursor-pointer px-[1.8vh] sm:px-[2.6vh] py-[1.3vh] md:py-[2vh] text-[1.4vh] sm:text-[2.2vh] text-white">
                 <div className="text-black ">
                   {/* // ? Ini kenapakah padahal masih jalan aja pas gw debug */}
-                  <Datetime onChange={(date)=>{typeof date !== "string" && setDueDate(date._d.valueOf())}} inputProps={{ className: "text-white outline-none bg-transparent text-center", placeholder:"Click Me To Set" }} className="appearance-none shadow rounded" />
+                  <Datetime onChange={(date) => {typeof date !== "string" && setDueDate(date._d.valueOf())}} inputProps={{ className: "text-white outline-none bg-transparent text-center", placeholder:"Click Me To Set" }} className="appearance-none shadow rounded" />
                 </div>
               </div>
               <div className="flex">
@@ -518,7 +522,7 @@ export default function SubTask( {username, taskData, subtaskPreview, setTaskDat
                   </button>
                   <button
                     onClick={() => {
-                      handleSaveDate()
+                      handleDueDate("custom")
                     }}
                     className="w-1/2  flex items-center justify-center hover:bg-[#4b4b4b] cursor-pointer px-[1.8vh] sm:px-[2.6vh] py-[1.3vh] md:py-[2vh] text-[1.4vh] sm:text-[2.2vh] "
                   > 
@@ -530,10 +534,10 @@ export default function SubTask( {username, taskData, subtaskPreview, setTaskDat
             ) : (
               <div className="flex flex-col text-center">
                 {}
-                <div onClick={()=>{handleSetToday()}} className="hover:bg-[#4b4b4b] cursor-pointer px-[1.8vh] sm:px-[2.6vh] py-[1.3vh] md:py-[2vh] text-[1.4vh] sm:text-[2.2vh] ">
+                <div onClick={()=>{handleDueDate("today")}} className="hover:bg-[#4b4b4b] cursor-pointer px-[1.8vh] sm:px-[2.6vh] py-[1.3vh] md:py-[2vh] text-[1.4vh] sm:text-[2.2vh] ">
                   Today
                 </div>
-                <div onClick={()=>{handleSetTomorrow()}} className="hover:bg-[#4b4b4b] cursor-pointer px-[1.8vh] sm:px-[2.6vh] py-[1.3vh] md:py-[2vh] text-[1.4vh] sm:text-[2.2vh] ">
+                <div onClick={() => {handleDueDate("tomorrow")}} className="hover:bg-[#4b4b4b] cursor-pointer px-[1.8vh] sm:px-[2.6vh] py-[1.3vh] md:py-[2vh] text-[1.4vh] sm:text-[2.2vh] ">
                   Tomorrow
                 </div>
                 <div
@@ -558,7 +562,7 @@ export default function SubTask( {username, taskData, subtaskPreview, setTaskDat
               {taskData.dueDate === null ? "Add Due Date" : generateDate(taskData.dueDate) + " " + "|" + " " + generateTime(taskData.dueDate)}
             </p>
             
-            {taskData.dueDate !== null && (<button onClick={()=>{taskData.dueDate = null;}}>{plusIcon("rotate-45 fill-[#6cb0ef]")}</button>)}
+            {taskData.dueDate !== null && (<button onClick={()=>{handleDueDate("reset")}}>{plusIcon("rotate-45 fill-[#6cb0ef]")}</button>)}
           </div>
         </div>
       </div>

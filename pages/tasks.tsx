@@ -1,8 +1,9 @@
 import Layout from "../components/layout";
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import SubTask from "../components/subtask";
 import getUserData from "../lib/getUserData";
+import PageHead from "../components/pagehead";
 
 interface typeUserData {
   username: string;
@@ -210,8 +211,6 @@ export default function Tasks({ userData, projectsTitleId, pageData }: { userDat
     
   });
 
-  // useEffect(()=>{setStepTaskPreview(stepTaskPreview);console.log(stepTaskPreview);},[stepTaskPreview])
-
   // *  FUNCTION ACTION ONCLICK
 
   // *  to add new task
@@ -240,7 +239,6 @@ export default function Tasks({ userData, projectsTitleId, pageData }: { userDat
     }
     setTaskTitle("");
     setAddTaskInputShow(!addTaskInputShow);
-    console.log(tasks)
   }
 
   // *  to delete certain task
@@ -380,6 +378,7 @@ export default function Tasks({ userData, projectsTitleId, pageData }: { userDat
 
   return (
     <>
+      <PageHead title="Tasks | Just Do List"/>
       <Layout userData={userData} projectsTitleId={projectsTitleId} design={navbarStatus}>
         <div className="flex flex-1">
           <div className="flex flex-col flex-1 py-[2vh] lg:p-[3.8vh] px-[3.4vh] gap-1">
