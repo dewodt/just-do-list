@@ -199,8 +199,6 @@ export default function Tasks({ userData, projectsTitleId, pageData }: { userDat
     
   });
 
-  // useEffect(()=>{setStepTaskPreview(stepTaskPreview);console.log(stepTaskPreview);},[stepTaskPreview])
-
   // *  FUNCTION ACTION ONCLICK
 
   // *  to add new task
@@ -229,7 +227,6 @@ export default function Tasks({ userData, projectsTitleId, pageData }: { userDat
     }
     setTaskTitle("");
     setAddTaskInputShow(!addTaskInputShow);
-    console.log(tasks)
   }
 
   // *  to delete certain task
