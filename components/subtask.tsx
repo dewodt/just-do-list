@@ -258,14 +258,21 @@ export default function SubTask( {username, taskData, subtaskPreview, setTaskDat
             return {...item};
           }
         });
+        const newTask = {...taskData, subtask: newSteps};
         const newTasks = allData.map( (item:any) => {
           if (item.id === taskData.id) {
             return {...item, subtask: newSteps};
           } else {
             return {...item};
           }
+        });
+        const newFilteredTasks = filteredTasks.map( (item:any) => {
+          if (item.id === taskData.id) {
+            return {...item, subtask: newSteps};
+          } else {
+            return {...item};
+          }
         })
-        const newTask = {...taskData, subtask: newSteps};
         
         // Update client side
         setSteps(newSteps);
@@ -273,6 +280,7 @@ export default function SubTask( {username, taskData, subtaskPreview, setTaskDat
         setStepTitle("");
         setAddStepInputShow(false);
         setAllData(newTasks);
+        setFilteredTasks(newFilteredTasks);
         setTaskData(newTask);
       });
   }
