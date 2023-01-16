@@ -303,12 +303,20 @@ export default function Tasks({ userData, projectsTitleId, pageData }: { userDat
           }
         })
 
+        const newFilteredTasks = newTasks.filter( (task) => {
+          if (task.title.toLocaleLowerCase().includes(search.toLocaleLowerCase())) {
+            return true;
+          } else {
+            return false;
+          }
+        })
+
         // Update client side
         setTasks(newTasks);
-        setTaskEdit({ id: "", title: "", done: false, important: false, createdDate: null,
-        dueDate: null,
-        subtask: [] });
+        setFilteredTasks(newFilteredTasks);
+        setTaskEdit({ id: "", title: "", done: false, important: false, createdDate: null, dueDate: null, subtask: [] });
         setTaskTitle("");
+
         // handle bug when clicking edit mode in stepPreview mode
         const taskData = tasks.filter(function (task) {
           return task.id === taskId;
