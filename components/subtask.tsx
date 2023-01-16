@@ -195,25 +195,21 @@ export default function SubTask( {username, taskData, subtaskPreview, setTaskDat
       stepId: stepId,
     })
       .then( () => {
-        // Update client side
-        setSteps(
-          steps.filter((step) => {
-            return step.id != stepId;
-          })
-        );
-        // update all data tasks
+        // New Tasks, Steps, and Task
+        const newSteps = steps.filter((step) => { return step.id !== stepId;});
         const newTasks = allData.map( (item:any) => {
           if (item.id === taskData.id) {
-            return {...item, subtask: steps};
+            return {...item, subtask: newSteps};
           } else {
             return {...item};
           }
-        })
-        setAllData(newTasks)
-        // update task data passed on subtask
-        const newTask = {...taskData, subtask:steps};
-        setTaskData(newTask);
+        });
+        const newTask = {...taskData, subtask: newSteps};
 
+        // Update Client Side
+        setSteps(newSteps);
+        setAllData(newTasks)
+        setTaskData(newTask);
       });
   }
 
