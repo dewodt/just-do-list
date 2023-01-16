@@ -165,6 +165,8 @@ export default function SubTask( {username, taskData, subtaskPreview, setTaskDat
         .then( () => {
           // New Steps
           const newSteps = [...steps, newStep];
+          // New Task
+          const newTask = {...taskData, subtask:newSteps};
           // New Tasks
           const newTasks = allData.map( (item:any) => {
             if (item.id === taskData.id) {
@@ -173,8 +175,6 @@ export default function SubTask( {username, taskData, subtaskPreview, setTaskDat
               return {...item};
             }
           })
-          // New Task
-          const newTask = {...taskData, subtask:newSteps};
           // New Filtered Tasks
           const newFilteredTasks = filteredTasks.map( (item:any) => {
             if (item.id === taskData.id) {
@@ -208,6 +208,7 @@ export default function SubTask( {username, taskData, subtaskPreview, setTaskDat
       .then( () => {
         // New Tasks, Steps, and Task
         const newSteps = steps.filter((step) => { return step.id !== stepId;});
+        const newTask = {...taskData, subtask: newSteps};
         const newTasks = allData.map( (item:any) => {
           if (item.id === taskData.id) {
             return {...item, subtask: newSteps};
@@ -215,11 +216,18 @@ export default function SubTask( {username, taskData, subtaskPreview, setTaskDat
             return {...item};
           }
         });
-        const newTask = {...taskData, subtask: newSteps};
+        const newFilteredTasks = filteredTasks.map( (item:any) => {
+          if (item.id === taskData.id) {
+            return {...item, subtask: newSteps};
+          } else {
+            return {...item};
+          }
+        });
 
         // Update Client Side
         setSteps(newSteps);
-        setAllData(newTasks)
+        setAllData(newTasks);
+        setFilteredTasks(newFilteredTasks);
         setTaskData(newTask);
       });
   }
