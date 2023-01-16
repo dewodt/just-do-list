@@ -1,4 +1,7 @@
 import Image from "next/image";
+import { Montserrat } from '@next/font/google';
+
+const montserrat = Montserrat({ subsets: ['latin'] });
 
 export default function Header() {
   return (
@@ -11,13 +14,13 @@ export default function Header() {
             height="2000"
             alt="gambar"
             className="rounded-full max-w-full h-auto align-middle border-none"
-          ></Image>
+          />
         </div>
         <div className=" hidden lg:flex lg:flex-col justify-center">
-          <p className="font-bold text-[2.6vh] font-['Montserrat'] whitespace-nowrap">
-            Just Do List!
+          <p className={`font-bold text-[2.6vh] ${montserrat.className} whitespace-nowrap`}>
+            Just Do List
           </p>
-          <p className="text-[1.2vh] text-[#908787]">for desktop users only</p>
+          <p className="text-[1.5vh] text-[#908787]">A to do list app</p>
         </div>
       </div>
       <div className="flex flex-1 justify-center items-center px-5 md:px-10">
