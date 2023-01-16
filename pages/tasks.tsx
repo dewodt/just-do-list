@@ -170,6 +170,17 @@ export default function Tasks({ userData, projectsTitleId, pageData }: { userDat
       </svg>
     );
   };
+  const backIcon = () => {
+    return (
+      <svg
+      className="fill-white opacity-80 w-[2.2vh] sm:w-[3.7vh] h-[2.2vh] sm:h-[3.7vh] hover:opacity-100"
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 448 512"
+    >
+      <path d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.2 288 416 288c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0L214.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z" />
+    </svg>
+    );
+  };
 
 // ! I've tidied the lines, don't use automation from prettier to make tidier
   // *  VARIABLE INITIALIZATION
@@ -362,14 +373,21 @@ export default function Tasks({ userData, projectsTitleId, pageData }: { userDat
     stepPreview ? setStepPreview(false) : setStepPreview(true);
   }
 
+  const [navbarStatus, setNavbarStatus] = useState(false)
 // ! I've tidied the lines, don't use automation from prettier to make tidier
 
   return (
     <>
       <PageHead title="Tasks | Just Do List"/>
-      <Layout userData={userData} projectsTitleId={projectsTitleId}>
+      <Layout userData={userData} projectsTitleId={projectsTitleId} design={navbarStatus}>
         <div className="flex flex-1">
           <div className="flex flex-col flex-1 py-[2vh] lg:p-[3.8vh] px-[3.4vh] gap-1">
+      {/* // ! BACK SECTION FOR MOBILE */}
+            <div className="flex sm:hidden">
+              <button onClick={()=>{navbarStatus ? setNavbarStatus(false) : setNavbarStatus(true)}}>
+                 {backIcon()}
+              </button>
+            </div>
 
       {/* // ! TITLE SECTION */}
             <div className="flex  items-center gap-x-3">
