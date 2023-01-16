@@ -231,34 +231,32 @@ export default function SubTask( {username, taskData, subtaskPreview, setTaskDat
       newStepTitle: stepTitle === "" ? "New Step" : stepTitle
     })
     .then( () => {
-      // Create new array (no mutation)
+      // New Steps, New Tasks, and New Task
       const newSteps = steps.map( (item) => {
         if (item.id === stepId) {
           return {...item, title: stepTitle === "" ? "New Step" : stepTitle};
-          } else {
-            return {...item};
-          }
-        })
-        
-        // Update client side
-        setSteps(newSteps);
-        setStepEdit({ id: "", title: "", done: false });
-        setStepTitle("");
-        setAddStepInputShow(false);
-        // update all data tasks
-        const newTasks = allData.map( (item:any) => {
-          if (item.id === taskData.id) {
-            return {...item, subtask: steps};
-          } else {
-            return {...item};
-          }
-        })
-        setAllData(newTasks)
-        // update task data passed on subtask
-        const newTask = {...taskData, subtask:steps};
-        setTaskData(newTask);
+        } else {
+          return {...item};
+        }
       });
-    }
+      const newTasks = allData.map( (item:any) => {
+        if (item.id === taskData.id) {
+          return {...item, subtask: newSteps};
+        } else {
+          return {...item};
+        }
+      })
+      const newTask = {...taskData, subtask: newSteps};
+      
+      // Update client side
+      setSteps(newSteps);
+      setStepEdit({ id: "", title: "", done: false });
+      setStepTitle("");
+      setAddStepInputShow(false);
+      setAllData(newTasks);
+      setTaskData(newTask);
+    });
+  }
 
   // Buat ganti status done
   function handleDone(stepId: string, stepDone: boolean) {
