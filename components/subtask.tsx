@@ -9,13 +9,15 @@ interface SubtaskInterface {
   username: string;
   taskData: any;
   setTaskData: any;
+  filteredTasks: any;
+  setFilteredTasks: any;
   subtaskPreview: React.Dispatch<React.SetStateAction<boolean>>;
   design: string;
   allData: any;
   setAllData: any;
 }
 
-export default function SubTask( {username, taskData, subtaskPreview, setTaskData, design, allData, setAllData}: SubtaskInterface ) {
+export default function SubTask( {username, taskData, subtaskPreview, setTaskData, filteredTasks, setFilteredTasks, design, allData, setAllData}: SubtaskInterface ) {
   // Khusus bagian icon
   const plusIcon = (design: string) => {
     return (
@@ -173,11 +175,20 @@ export default function SubTask( {username, taskData, subtaskPreview, setTaskDat
           })
           // New Task
           const newTask = {...taskData, subtask:newSteps};
+          // New Filtered Tasks
+          const newFilteredTasks = filteredTasks.map( (item:any) => {
+            if (item.id === taskData.id) {
+              return {...item, subtask: newSteps};
+            } else {
+              return {...item};
+            }
+          })
 
           // Update client-sde
           setStepEdit({ id: "", title: "", done: false });
           setSteps(newSteps);
           setAllData(newTasks);
+          setFilteredTasks(newFilteredTasks);
           setTaskData(newTask);
         });
       }

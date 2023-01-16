@@ -648,7 +648,7 @@ export default function Tasks({ userData, projectsTitleId, pageData }: { userDat
 
       {/* // ! STEP PREVIEW SECTION */}
            {/* <SubTask username={userData.username} design={stepPreview?"flex":"hidden"} taskData={stepTaskPreview} setTaskData = {setStepTaskPreview} allData={tasks} setAllData={setTasks} subtaskPreview={setStepPreview}/> */}
-           {stepPreview && <SubTask username={userData.username} design={stepPreview?"flex":"hidden"} taskData={stepTaskPreview} setTaskData = {setStepTaskPreview} allData={tasks} setAllData={setTasks} subtaskPreview={setStepPreview}/>}
+           {stepPreview && <SubTask username={userData.username} design={stepPreview?"flex":"hidden"} taskData={stepTaskPreview} setTaskData={setStepTaskPreview} allData={tasks} setAllData={setTasks} filteredTasks={filteredTasks} setFilteredTasks={setFilteredTasks} subtaskPreview={setStepPreview}/>}
         </div>
       </Layout>
     </>
