@@ -347,17 +347,25 @@ export default function SubTask( {username, taskData, subtaskPreview, setTaskDat
     })
       .then( () => {
         // New tasks and task
+        const updateData = {...taskData, dueDate: newDueDate};
         const newTasks = allData.map( (item:any) => {
           if (item.id === taskData.id) {
             return {...item, dueDate: newDueDate};
           } else {
             return {...item};
           }
-        })
-        const updateData = {...taskData, dueDate: newDueDate};
+        });
+        const newFilteredTasks = filteredTasks.map( (item:any) => {
+          if (item.id === taskData.id) {
+            return {...item, dueDate: newDueDate};
+          } else {
+            return {...item};
+          }
+        });
 
         // Update Client Side
         setDueDate(newDueDate);
+        setFilteredTasks(newFilteredTasks);
         setAllData(newTasks);
         setTaskData(updateData);
         setDueDatePreview(false);
