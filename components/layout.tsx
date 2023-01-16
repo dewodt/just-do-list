@@ -11,10 +11,18 @@ interface typeProjectsTitleId {
   title: string;
 }
 
-export default function Layout({ userData, projectsTitleId, children }: { userData: typeUserData, projectsTitleId: typeProjectsTitleId[], children: any }) {
+interface typeLayout { 
+  userData: typeUserData,
+  projectsTitleId: typeProjectsTitleId[],
+  search: string,
+  handleSearch: any,
+  children: any
+}
+
+export default function Layout({ userData, projectsTitleId, search, handleSearch, children }: typeLayout) {
   return (
     <>
-      <Header />
+      <Header search={search} handleSearch={handleSearch} />
       <div className="flex h-[94vh] md:h-[90.5vh]">
         <div className={`flex flex-auto max-h-full`}>
           <NavbarMenu userData={userData} projectsTitleId={projectsTitleId} />

@@ -3,7 +3,7 @@ import { Montserrat } from '@next/font/google';
 
 const montserrat = Montserrat({ subsets: ['latin'] });
 
-export default function Header() {
+export default function Header({ search, handleSearch }: { search: string, handleSearch: any }) {
   return (
     <header className="flex items-center justify-between bg-[#3E3E3E] border-b-[1px] border-[#959595] h-[6vh] md:h-[9.5vh] w-full">
       <div className="flex w-[19vw] justify-center items-center">
@@ -28,7 +28,9 @@ export default function Header() {
           <input
             placeholder="Search ..."
             className="w-[20vh] sm:w-[40vw] text-black text-[1.3vh] sm:text-[2vh] m-auto text-center bg-transparent outline-none placeholder:text-gray-600"
-          ></input>
+            onChange={(event) => handleSearch(event.target.value)}
+            value={search}
+          />
           <div
             className="w-[3vh] sm:flex hidden relative right-6"
             role="button"
