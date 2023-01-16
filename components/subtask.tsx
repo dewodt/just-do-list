@@ -9,13 +9,15 @@ interface SubtaskInterface {
   username: string;
   taskData: any;
   setTaskData: any;
+  filteredTasks: any;
+  setFilteredTasks: any;
   subtaskPreview: React.Dispatch<React.SetStateAction<boolean>>;
   design: string;
   allData: any;
   setAllData: any;
 }
 
-export default function SubTask( {username, taskData, subtaskPreview, setTaskData, design, allData, setAllData}: SubtaskInterface ) {
+export default function SubTask( {username, taskData, subtaskPreview, setTaskData, filteredTasks, setFilteredTasks, design, allData, setAllData}: SubtaskInterface ) {
   // Khusus bagian icon
   const plusIcon = (design: string) => {
     return (
@@ -163,6 +165,8 @@ export default function SubTask( {username, taskData, subtaskPreview, setTaskDat
         .then( () => {
           // New Steps
           const newSteps = [...steps, newStep];
+          // New Task
+          const newTask = {...taskData, subtask:newSteps};
           // New Tasks
           const newTasks = allData.map( (item:any) => {
             if (item.id === taskData.id) {
@@ -171,13 +175,20 @@ export default function SubTask( {username, taskData, subtaskPreview, setTaskDat
               return {...item};
             }
           })
-          // New Task
-          const newTask = {...taskData, subtask:newSteps};
+          // New Filtered Tasks
+          const newFilteredTasks = filteredTasks.map( (item:any) => {
+            if (item.id === taskData.id) {
+              return {...item, subtask: newSteps};
+            } else {
+              return {...item};
+            }
+          })
 
           // Update client-sde
           setStepEdit({ id: "", title: "", done: false });
           setSteps(newSteps);
           setAllData(newTasks);
+          setFilteredTasks(newFilteredTasks);
           setTaskData(newTask);
         });
       }
@@ -197,6 +208,7 @@ export default function SubTask( {username, taskData, subtaskPreview, setTaskDat
       .then( () => {
         // New Tasks, Steps, and Task
         const newSteps = steps.filter((step) => { return step.id !== stepId;});
+        const newTask = {...taskData, subtask: newSteps};
         const newTasks = allData.map( (item:any) => {
           if (item.id === taskData.id) {
             return {...item, subtask: newSteps};
@@ -204,11 +216,18 @@ export default function SubTask( {username, taskData, subtaskPreview, setTaskDat
             return {...item};
           }
         });
-        const newTask = {...taskData, subtask: newSteps};
+        const newFilteredTasks = filteredTasks.map( (item:any) => {
+          if (item.id === taskData.id) {
+            return {...item, subtask: newSteps};
+          } else {
+            return {...item};
+          }
+        });
 
         // Update Client Side
         setSteps(newSteps);
-        setAllData(newTasks)
+        setAllData(newTasks);
+        setFilteredTasks(newFilteredTasks);
         setTaskData(newTask);
       });
   }
@@ -239,14 +258,21 @@ export default function SubTask( {username, taskData, subtaskPreview, setTaskDat
             return {...item};
           }
         });
+        const newTask = {...taskData, subtask: newSteps};
         const newTasks = allData.map( (item:any) => {
           if (item.id === taskData.id) {
             return {...item, subtask: newSteps};
           } else {
             return {...item};
           }
+        });
+        const newFilteredTasks = filteredTasks.map( (item:any) => {
+          if (item.id === taskData.id) {
+            return {...item, subtask: newSteps};
+          } else {
+            return {...item};
+          }
         })
-        const newTask = {...taskData, subtask: newSteps};
         
         // Update client side
         setSteps(newSteps);
@@ -254,6 +280,7 @@ export default function SubTask( {username, taskData, subtaskPreview, setTaskDat
         setStepTitle("");
         setAddStepInputShow(false);
         setAllData(newTasks);
+        setFilteredTasks(newFilteredTasks);
         setTaskData(newTask);
       });
   }
@@ -277,18 +304,26 @@ export default function SubTask( {username, taskData, subtaskPreview, setTaskDat
               return {...step};
             }
         });
+        const newTask = {...taskData, subtask: newSteps};
         const newTasks = allData.map( (item:any) => {
           if (item.id === taskData.id) {
             return {...item, subtask: newSteps};
           } else {
             return {...item};
           }
-        })
-        const newTask = {...taskData, subtask: newSteps};
+        });
+        const newFilteredTasks = filteredTasks.map( (item:any) => {
+          if (item.id === taskData.id) {
+            return {...item, subtask: newSteps};
+          } else {
+            return {...item};
+          }
+        });
 
         // Update client side
         setSteps(newSteps);
         setAllData(newTasks);
+        setFilteredTasks(newFilteredTasks);
         setTaskData(newTask);
       });
   }
@@ -312,17 +347,25 @@ export default function SubTask( {username, taskData, subtaskPreview, setTaskDat
     })
       .then( () => {
         // New tasks and task
+        const updateData = {...taskData, dueDate: newDueDate};
         const newTasks = allData.map( (item:any) => {
           if (item.id === taskData.id) {
             return {...item, dueDate: newDueDate};
           } else {
             return {...item};
           }
-        })
-        const updateData = {...taskData, dueDate: newDueDate};
+        });
+        const newFilteredTasks = filteredTasks.map( (item:any) => {
+          if (item.id === taskData.id) {
+            return {...item, dueDate: newDueDate};
+          } else {
+            return {...item};
+          }
+        });
 
         // Update Client Side
         setDueDate(newDueDate);
+        setFilteredTasks(newFilteredTasks);
         setAllData(newTasks);
         setTaskData(updateData);
         setDueDatePreview(false);

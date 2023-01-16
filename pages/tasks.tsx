@@ -182,15 +182,14 @@ export default function Tasks({ userData, projectsTitleId, pageData }: { userDat
     );
   };
 
-// ! I've tidied the lines, don't use automation from prettier to make tidier
   // *  VARIABLE INITIALIZATION
   const uniqid = require("uniqid");                                 // * to generate id from npm
   const [addTaskInputShow, setAddTaskInputShow] = useState(false);  // * to popup input new task
   const [stepPreview, setStepPreview] = useState(false);            // * open subtask of a task
   const [dropDownFinished, setDropDownFinished] = useState(false);  // * make dropdown finished popup
   const [taskTitle, setTaskTitle] = useState("");                   // * the value input to state and submit on data changes
-  const [tasks, setTasks] = useState<typeTask[]>(pageData);     // * array of all task
-  const [taskEdit, setTaskEdit] = useState<typeTask>({            // * contains the task that is being renamed or edited
+  const [tasks, setTasks] = useState<typeTask[]>(pageData);         // * array of all task
+  const [taskEdit, setTaskEdit] = useState<typeTask>({              // * contains the task that is being renamed or edited
     title: "",
     id: "",
     done: false,
@@ -211,8 +210,28 @@ export default function Tasks({ userData, projectsTitleId, pageData }: { userDat
     
   });
 
-  // *  FUNCTION ACTION ONCLICK
+  const [search, setSearch] = useState("");
+  const [filteredTasks, setFilteredTasks] = useState(pageData);
+  const [navbarStatus, setNavbarStatus] = useState(false);
 
+  function handleSearch(search: string) {
+    setSearch(search);
+    const newTasks = tasks.filter( (task) => {
+      if (task.title.toLocaleLowerCase().includes(search.toLocaleLowerCase())) {
+        return true;
+      } else {
+        return false;
+      }
+    })
+    setFilteredTasks(newTasks);
+    setStepPreview(false);
+  }
+
+  function handleResetSearch() {
+    setSearch("");
+    setFilteredTasks(tasks);
+  }
+  
   // *  to add new task
   function addTask() {
     const newTask = {
@@ -235,6 +254,8 @@ export default function Tasks({ userData, projectsTitleId, pageData }: { userDat
         .then( () => {
           // Update client-side
           setTasks([...tasks, newTask]);
+          setFilteredTasks([...tasks, newTask]);
+          setSearch("")
         });
     }
     setTaskTitle("");
@@ -250,12 +271,18 @@ export default function Tasks({ userData, projectsTitleId, pageData }: { userDat
       taskId: idTaskEdit
     })
       .then( () => {
+        // New Tasks
+        const newTasks = tasks.filter(function (task) {
+          return task.id != idTaskEdit;
+        });
+
+        const newFilteredTasks = filteredTasks.filter(function (task) {
+          return task.id != idTaskEdit;
+        });
+
         // Update client side
-        setTasks(
-          tasks.filter(function (task) {
-            return task.id != idTaskEdit;
-          })
-        );
+        setTasks(newTasks);
+        setFilteredTasks(newFilteredTasks);
         setStepPreview(false);
       });
   }
@@ -294,12 +321,20 @@ export default function Tasks({ userData, projectsTitleId, pageData }: { userDat
           }
         })
 
+        const newFilteredTasks = newTasks.filter( (task) => {
+          if (task.title.toLocaleLowerCase().includes(search.toLocaleLowerCase())) {
+            return true;
+          } else {
+            return false;
+          }
+        })
+
         // Update client side
         setTasks(newTasks);
-        setTaskEdit({ id: "", title: "", done: false, important: false, createdDate: null,
-        dueDate: null,
-        subtask: [] });
+        setFilteredTasks(newFilteredTasks);
+        setTaskEdit({ id: "", title: "", done: false, important: false, createdDate: null, dueDate: null, subtask: [] });
         setTaskTitle("");
+
         // handle bug when clicking edit mode in stepPreview mode
         const taskData = tasks.filter(function (task) {
           return task.id === taskId;
@@ -328,8 +363,18 @@ export default function Tasks({ userData, projectsTitleId, pageData }: { userDat
         }
       })
 
+      // Create new array for filtered data
+      const newFilteredTasks = filteredTasks.map( (item) => {
+        if (item.id === taskId) {
+          return {...item, done: !item.done};
+        } else {
+          return {...item};
+        }
+      })
+
       // Update client side
       setTasks(newTasks);
+      setFilteredTasks(newFilteredTasks);
     });
   }
 
@@ -351,13 +396,23 @@ export default function Tasks({ userData, projectsTitleId, pageData }: { userDat
             return {...item};
           }
         })
+
+        // Create new array for filtered case
+        const newFilteredTasks = filteredTasks.map( (item) => {
+          if (item.id === taskId) {
+            return {...item, important: !item.important};
+          } else {
+            return {...item};
+          }
+        })
+
         // Update client side
         setTasks(newTasks);
+        setFilteredTasks(newFilteredTasks)
       });
   }
 
   // * to handle change step preview popup
-  //? add logic to overcome when clicked by a div that clicks to open the step it will be closed, while if not it will still be opened but the parameters sent are different 
   function handleSubTaskPreview(task: {
     title: string;
     id: string;
@@ -373,13 +428,10 @@ export default function Tasks({ userData, projectsTitleId, pageData }: { userDat
     stepPreview ? setStepPreview(false) : setStepPreview(true);
   }
 
-  const [navbarStatus, setNavbarStatus] = useState(false)
-// ! I've tidied the lines, don't use automation from prettier to make tidier
-
   return (
     <>
       <PageHead title="Tasks | Just Do List"/>
-      <Layout userData={userData} projectsTitleId={projectsTitleId} design={navbarStatus}>
+      <Layout userData={userData} projectsTitleId={projectsTitleId} search={search} handleResetSearch={handleResetSearch} handleSearch={handleSearch} design={navbarStatus}>
         <div className="flex flex-1">
           <div className="flex flex-col flex-1 py-[2vh] lg:p-[3.8vh] px-[3.4vh] gap-1">
       {/* // ! BACK SECTION FOR MOBILE */}
@@ -403,7 +455,7 @@ export default function Tasks({ userData, projectsTitleId, pageData }: { userDat
               id="no-scrollbar"
               >
               {/* // * div to loop through the created task list * */}
-              {tasks.map(
+              {filteredTasks.map(
                 (task) =>
                   !task.done && (
                     <div
@@ -484,7 +536,7 @@ export default function Tasks({ userData, projectsTitleId, pageData }: { userDat
 
       {/* // ! FINISHED SECTION   */}
         {/* // * The logic is that finished will appear if one of the task done is true */}
-              {tasks.some((task) => {
+              {filteredTasks.some((task) => {
                 return task.done === true;
               }) && (
                 <div
@@ -620,7 +672,7 @@ export default function Tasks({ userData, projectsTitleId, pageData }: { userDat
 
       {/* // ! STEP PREVIEW SECTION */}
            {/* <SubTask username={userData.username} design={stepPreview?"flex":"hidden"} taskData={stepTaskPreview} setTaskData = {setStepTaskPreview} allData={tasks} setAllData={setTasks} subtaskPreview={setStepPreview}/> */}
-           {stepPreview && <SubTask username={userData.username} design={stepPreview?"flex":"hidden"} taskData={stepTaskPreview} setTaskData = {setStepTaskPreview} allData={tasks} setAllData={setTasks} subtaskPreview={setStepPreview}/>}
+           {stepPreview && <SubTask username={userData.username} design={stepPreview?"flex":"hidden"} taskData={stepTaskPreview} setTaskData={setStepTaskPreview} allData={tasks} setAllData={setTasks} filteredTasks={filteredTasks} setFilteredTasks={setFilteredTasks} subtaskPreview={setStepPreview}/>}
         </div>
       </Layout>
     </>

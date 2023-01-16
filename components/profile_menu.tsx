@@ -77,7 +77,6 @@ export default function ProfileMenu({ userData }: { userData: typeUserData }) {
               </Link>
             </div>
           </div>
-        
       </div>
     </>
   );
