@@ -269,30 +269,29 @@ export default function SubTask( {username, taskData, subtaskPreview, setTaskDat
       stepDone: !stepDone
     })
     .then( () => {
-      // New array so no mutation
+      // New steps, tasks, and task.
       const newSteps = steps.map( (step) => {
         if (step.id === stepId) {
           return {...step, done: !step.done};
           } else {
             return {...step};
           }
-        })
-        // Update client side
-        setSteps(newSteps)
-        // update all data tasks
-        const newTasks = allData.map( (item:any) => {
-          if (item.id === taskData.id) {
-            return {...item, subtask: steps};
-          } else {
-            return {...item};
-          }
-        })
-        setAllData(newTasks)
-        // update task data passed on subtask
-        const newTask = {...taskData, subtask:steps};
-        setTaskData(newTask);
       });
-    }
+      const newTasks = allData.map( (item:any) => {
+        if (item.id === taskData.id) {
+          return {...item, subtask: newSteps};
+        } else {
+          return {...item};
+        }
+      })
+      const newTask = {...taskData, subtask: newSteps};
+
+      // Update client side
+      setSteps(newSteps);
+      setAllData(newTasks);
+      setTaskData(newTask);
+    });
+  }
     
   function handleSaveDate(){
     setDueDate(dueDate);
