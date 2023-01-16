@@ -161,26 +161,29 @@ export default function SubTask( {username, taskData, subtaskPreview, setTaskDat
         newStep: newStep
       })
         .then( () => {
-          // Update client-side
-          setStepEdit({ id: "", title: "", done: false });
-          setSteps([...steps, newStep]);
-          // update all data tasks
+          // New Steps
+          const newSteps = [...steps, newStep];
+          // New Tasks
           const newTasks = allData.map( (item:any) => {
             if (item.id === taskData.id) {
-              return {...item, subtask: steps};
+              return {...item, subtask: newSteps};
             } else {
               return {...item};
             }
           })
-          setAllData(newTasks)
-          // update task data passed on subtask
-          const newTask = {...taskData, subtask:steps};
+          // New Task
+          const newTask = {...taskData, subtask:newSteps};
+
+          // Update client-sde
+          setStepEdit({ id: "", title: "", done: false });
+          setSteps(newSteps);
+          setAllData(newTasks);
           setTaskData(newTask);
         });
       }
       setAddStepInputShow(!addStepInputShow);
-    setStepTitle("");
-  }
+      setStepTitle("");
+   }
   
   // Buat hapus subtask tertentu
   function handleDelete(stepId: string) {
@@ -503,7 +506,7 @@ export default function SubTask( {username, taskData, subtaskPreview, setTaskDat
               <div className="flex flex-col text-center cursor-pointer px-[1.8vh] sm:px-[2.6vh] py-[1.3vh] md:py-[2vh] text-[1.4vh] sm:text-[2.2vh] text-white">
                 <div className="text-black ">
                   {/* // ? Ini kenapakah padahal masih jalan aja pas gw debug */}
-                  <Datetime onChange={(date)=>{typeof date !== "string" && setDueDate(date._d.valueOf())}} inputProps={{ className: "text-white outline-none bg-transparent text-center", placeholder:"Click Me To Set" }} className="appearance-none shadow rounded" />
+                  <Datetime onChange={(date) => {typeof date !== "string" && setDueDate(date._d.valueOf())}} inputProps={{ className: "text-white outline-none bg-transparent text-center", placeholder:"Click Me To Set" }} className="appearance-none shadow rounded" />
                 </div>
               </div>
               <div className="flex">
