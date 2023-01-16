@@ -11,13 +11,13 @@ interface typeProjectsTitleId {
   title: string;
 }
 
-export default function Layout({ userData, projectsTitleId, children }: { userData: typeUserData, projectsTitleId: typeProjectsTitleId[], children: any }) {
+export default function Layout({ userData, projectsTitleId, children, design }: { userData: typeUserData, projectsTitleId: typeProjectsTitleId[], children: any, design: boolean }) {
   return (
     <>
       <Header />
       <div className="flex h-[94vh] md:h-[90.5vh]">
         <div className={`flex flex-auto max-h-full`}>
-          <NavbarMenu userData={userData} projectsTitleId={projectsTitleId} />
+          <NavbarMenu userData={userData} projectsTitleId={projectsTitleId} design={design}/>
           {children}
         </div>
       </div>

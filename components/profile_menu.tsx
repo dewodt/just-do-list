@@ -31,8 +31,8 @@ export default function ProfileMenu({ userData }: { userData: typeUserData }) {
             : setDropDownProfile(true);
         }}
       >
-        <div className="flex m-2 mx-4">
-          <div className="relative m-auto w-[3rem] h-[3rem] mr-3">
+        <div className="flex mx-4 mb-1">
+          <div className="relative m-auto w-[3rem] h-[3rem] mr-3 my-2">
             <Image
               src={"/sample.jpg"}
               layout="fill"
