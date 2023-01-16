@@ -212,6 +212,7 @@ export default function Tasks({ userData, projectsTitleId, pageData }: { userDat
       }
     })
     setFilteredTasks(newTasks);
+    setStepPreview(false);
   }
 
   // *  to add new task
