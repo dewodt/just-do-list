@@ -14,15 +14,15 @@ interface typeProjectTitleId {
   id: string;
 };
 
-export default function NavbarMenu({ userData, projectsTitleId }: { userData: typeUserData, projectsTitleId: typeProjectTitleId[] }) {
+export default function NavbarMenu({ userData, projectsTitleId, design }: { userData: typeUserData, projectsTitleId: typeProjectTitleId[], design:boolean}) {
   return (
-    <div className="hidden lg:flex flex-col bg-[#3D3C40] w-[19vw] border-r-[1px] border-[#959595] gap-2 rounded-[3px]">
+    <div className={`${design?"absolute z-20 ":"hidden sm:flex"} w-full sm:static sm:z-0 flex flex-col bg-[#3D3C40] sm:w-[30vw] lg:w-[19vw] border-r-[1px] border-[#959595] gap-2 rounded-[3px] h-[94vh] md:h-[90.5vh]`}>
       <ProfileMenu userData={userData} />
-      <span className="inline-block border-[0.6px] opacity-80 bg-white mx-auto w-[15vw] my-1" />
-      <Fitur />
-      <span className="inline-block opacity-80 border-[0.6px] bg-white mx-auto w-[15vw]" />
-      <Projects userData={userData} projectsTitleId={projectsTitleId} />
-      <span className="inline-block opacity-80 border-[0.6px] bg-white mx-auto w-[15vw]" />
+      <span className="flex items-center w-[70vw] border-[0.6px] opacity-80 bg-white mx-auto sm:w-[15vw] sm:my-1" />
+      <Fitur/>
+      <span className="flex items-center w-[70vw] opacity-80 border-[0.6px] bg-white mx-auto sm:w-[15vw] sm:my-1" />
+      <Projects userData={userData} projectsTitleId={projectsTitleId}/>
+      <span className="flex items-center w-[70vw] opacity-80 border-[0.6px] bg-white mx-auto sm:w-[15vw] sm:my-1 " />
       {/* Addition Menu */}
       <Link href="/about">
         <div className={`bg-[${useRouter().pathname === '/about' && '#464449'}] hover:bg-[#4D4B52] rounded-[0.5rem] py-2 flex flex-col mx-8 mt-2 mb-6 text-[0.87rem] gap-4`} role="button">
