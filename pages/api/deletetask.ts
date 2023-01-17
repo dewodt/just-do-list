@@ -1,11 +1,13 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { MongoClient } from "mongodb";
 import dotenv from "dotenv";
+import jwt from "jsonwebtoken";
 
 dotenv.config();
 
 const uri = process.env.MONGODB_URI as string;
 const dbname = process.env.DB_NAME;
+const secretJWT = process.env.SECRET_JWT as string;
 
 const client = new MongoClient(uri);
 
@@ -14,7 +16,13 @@ export default async function deleteTask(
   res: NextApiResponse
 ) {
   // Get req
-  const { username, menu, taskId } = req.body;
+  const { menu, taskId } = req.body;
+
+  // Get username from cookie
+  const cookie = req.headers.cookie as string;
+  const token = cookie.split("=")[1];
+  const decoded = jwt.verify(token, secretJWT) as jwt.JwtPayload;
+  const username = decoded.username
 
   // Connect MongoDB
   await client.connect();

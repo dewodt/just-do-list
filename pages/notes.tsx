@@ -155,7 +155,6 @@ export default function Notes({ userData, projectsTitleId, pageData }: { userDat
     if (title && description) {
       // Call api utk edit database
       axios.post("http://localhost:3000/api/addnote", {
-        username: userData.username, 
         newNote: newNote
       })
         .then( () => {
@@ -198,7 +197,6 @@ export default function Notes({ userData, projectsTitleId, pageData }: { userDat
   function handleDelete(noteId: string) {
     // Edit database
     axios.post("http://localhost:3000/api/deletenote", {
-      username: userData.username,
       noteId: noteId
     })
       .then( () => {
@@ -216,7 +214,6 @@ export default function Notes({ userData, projectsTitleId, pageData }: { userDat
     // to handle note's date that actually change
     if (title !== notes[updateIndex].title || description !== notes[updateIndex].description) {
       axios.post("http://localhost:3000/api/editnote", {
-        username: userData.username, 
         noteId: noteId,
         newTitle: title,
         newDesc: description,

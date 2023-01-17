@@ -247,7 +247,6 @@ export default function Tasks({ userData, projectsTitleId, pageData }: { userDat
     if (addTaskInputShow && taskTitle !== "") {
       // Update database
       axios.post("http://localhost:3000/api/addtask", {
-        username: userData.username, 
         menu: "tasks",
         newTask: newTask
       })
@@ -266,7 +265,6 @@ export default function Tasks({ userData, projectsTitleId, pageData }: { userDat
   function handleDelete(idTaskEdit: string) {
     // Update database
     axios.post("http://localhost:3000/api/deletetask", {
-      username: userData.username, 
       menu: "tasks",
       taskId: idTaskEdit
     })
@@ -306,7 +304,6 @@ export default function Tasks({ userData, projectsTitleId, pageData }: { userDat
   function handleSave(taskId: string) {
     // Update database
     axios.post("http://localhost:3000/api/edittask", {
-      username: userData.username, 
       menu: "tasks",
       taskId: taskId,
       newTaskTitle: taskTitle === "" ? "New Tasks" : taskTitle
@@ -348,7 +345,6 @@ export default function Tasks({ userData, projectsTitleId, pageData }: { userDat
   function handleDone(taskId: string, taskDone: boolean) {
     // Update database
     axios.post("http://localhost:3000/api/donetask", {
-      username: userData.username,
       menu: "tasks",
       taskId: taskId,
       taskDone: !taskDone
@@ -382,7 +378,6 @@ export default function Tasks({ userData, projectsTitleId, pageData }: { userDat
   function handleImportant(taskId: string, taskImportant: boolean) {
     // Update database
     axios.post("http://localhost:3000/api/importanttask", {
-      username: userData.username,
       menu: "tasks",
       taskId: taskId,
       taskImportant: !taskImportant

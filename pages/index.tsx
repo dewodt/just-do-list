@@ -1,4 +1,4 @@
-import { Inter } from "@next/font/google";
+import { Inter, Montserrat } from "@next/font/google";
 import PageHead from "../components/pagehead";
 import Link from "next/link";
 import Image from "next/image";
@@ -7,6 +7,7 @@ import Logo from "public/logo-app.png";
 import axios from 'axios';
 
 const inter = Inter({ subsets: ["latin"] });
+const montserrat = Montserrat({ subsets: ['latin'] });
 
 export default function Home() {
   const [loginPage, setLoginPage] = useState(true);
@@ -70,7 +71,7 @@ export default function Home() {
       <div className="flex flex-col justify-center py-[8vh] w-[100vw] min-h-[100vh] items-center sm:flex-row">
         <Image className="w-[50vw] sm:w-[35vw] lg:w-[25vw] xl:w-[20vw] sm:mr-[4vw]" src={Logo} alt="Logo Just Do List" />
         <div className="flex flex-col gap-y-4 lg:gap-y-8 w-[60vw] sm:w-[35vw] md:w-[30vw] lg:w-[25vw] xl:w-[20vw]">
-          <p className="font-bold text-[2rem] text-center font-['Montserrat']">Just Do List!</p>
+          <p className={`font-bold text-[2rem] text-center ${montserrat.className}`}>Just Do List!</p>
           <nav className="flex text-center font-[550] text-[1.17rem] justify-center">
             <div className={`w-[50%] pb-2 border-b-[2px] ${loginPage && "text-[#3182CE] border-b-[#3182CE]"}`}>
               <Link className="hover:text-[#3182CE]" href="/" onClick={handleLoginTab}>Log In</Link>
