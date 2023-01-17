@@ -45,6 +45,18 @@ export default function Tasks({ userData, projectsTitleId, pageData }: { userDat
     );
   };
 
+  const calendarIcon = (design:string) => {
+    return (
+      <svg
+        className={`fill-${design} opacity-80 w-[1vh] sm:w-[1.5vh] h-[1vh] sm:h-[1.5vh] m-auto`}
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 448 512"
+      >
+        <path d="M152 64H296V24C296 10.75 306.7 0 320 0C333.3 0 344 10.75 344 24V64H384C419.3 64 448 92.65 448 128V448C448 483.3 419.3 512 384 512H64C28.65 512 0 483.3 0 448V128C0 92.65 28.65 64 64 64H104V24C104 10.75 114.7 0 128 0C141.3 0 152 10.75 152 24V64zM48 448C48 456.8 55.16 464 64 464H384C392.8 464 400 456.8 400 448V192H48V448z" />
+      </svg>
+    );
+  };
+
   const starLineIcon = () => {
     return (
       <svg
@@ -436,6 +448,26 @@ export default function Tasks({ userData, projectsTitleId, pageData }: { userDat
     setTaskTitle("");
     stepPreview ? setStepPreview(false) : setStepPreview(true);
   }
+  const generateDate = (dateData:number) => {
+    if(dateData !== null){
+    return (new Date(dateData)).toLocaleDateString("en-UK", {
+      weekday:"short",
+        day: "numeric",
+        month: "short",
+        year: "numeric",
+    });}
+  };
+
+
+  // * to convert from dueDate number format to a time string
+  const generateTime = (dateData:number) => {
+    if(dateData !== null){
+    return (new Date(dateData)).toLocaleTimeString("en-GB", {
+      hour: "numeric",
+      minute: "numeric",
+    });}
+  };
+
 
   return (
     <>
@@ -471,12 +503,12 @@ export default function Tasks({ userData, projectsTitleId, pageData }: { userDat
                       key={task.id}
                       className="flex bg-[#424242] hover:opacity-80 duration-200 p-[1.4vh] cursor-pointer mb-[1.47vh] "
                     >
-                      <div className="flex flex-1 items-center justify-center mx-[1vw] gap-3">
+                      <div className="flex flex-1 items-center justify-center mx-[1vw] gap-2 sm:gap-3">
                         {/* // * Handle changes to the checkdone icon */}
                           <span
                             onClick={() => {handleDone(task.id, task.done);}}
                           >
-                            {circleIcon((task.dueDate < dueDate && task.dueDate !== null) ? " hover:fill-red-600":"hover:fill-[#54A1EA]")}
+                            {circleIcon((task.dueDate < dueDate && task.dueDate !== null) ? " hover:fill-red-500":"hover:fill-[#54A1EA]")}
                           </span>
                          {/* // * Handle changes when edited from paragraphs to input */}
                         {taskEdit === task ? (
@@ -496,12 +528,20 @@ export default function Tasks({ userData, projectsTitleId, pageData }: { userDat
                           </>
                         ) : (
                           <>
+                          <div className={`${(task.dueDate < dueDate && task.dueDate !== null) && "text-red-500"} flex flex-col flex-1`}>
                             <p
-                              className={` ${(task.dueDate < dueDate && task.dueDate !== null) && "text-red-600"} flex break-all flex-1 text-[1.5vh] sm:text-[2.25vh] text-justify`}
+                              className="flex break-all flex-1 text-[1.5vh] sm:text-[2.5vh] text-justify"
                               onClick={() => {handleSubTaskPreview(task)}}
                             >
                               {task.done ? <s className="opacity-50">{task.title} </s> : task.title}
                             </p>
+                            {task.dueDate !== null && 
+                            <div className="flex justify-start gap-x-1">
+                              {calendarIcon(task.dueDate < dueDate ? "red-500":"white")}
+                              <p className="text-[8px] sm:text-xs flex flex-1">{`${generateDate(task.dueDate) === generateDate(dueDate) ? "Today" : (generateDate(dueDate+86400000)===generateDate(task.dueDate)?"Tomorrow":generateDate(task.dueDate))} | ${generateTime(task.dueDate)}  `}</p>
+                            </div>}
+                          </div>
+                            
                             {/* // * Handle changes to starIcon Important */}
                             {!task.important ? (
                               <button
@@ -555,7 +595,7 @@ export default function Tasks({ userData, projectsTitleId, pageData }: { userDat
 
       {/* // ! TASK LIST DONE SECTION */}
               {/* // * div to loop through the created task list * */}
-              {tasks.map(
+              {filteredTasks.map(
                 (task) =>
                   task.done && (
                     <div
@@ -664,7 +704,6 @@ export default function Tasks({ userData, projectsTitleId, pageData }: { userDat
           </div>
 
       {/* // ! STEP PREVIEW SECTION */}
-           {/* <SubTask username={userData.username} design={stepPreview?"flex":"hidden"} taskData={stepTaskPreview} setTaskData = {setStepTaskPreview} allData={tasks} setAllData={setTasks} subtaskPreview={setStepPreview}/> */}
            {stepPreview && <SubTask username={userData.username} design={stepPreview?"flex":"hidden"} taskData={stepTaskPreview} setTaskData={setStepTaskPreview} allData={tasks} setAllData={setTasks} filteredTasks={filteredTasks} setFilteredTasks={setFilteredTasks} subtaskPreview={setStepPreview}/>}
         </div>
       </Layout>

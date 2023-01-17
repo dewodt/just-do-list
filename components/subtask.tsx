@@ -383,23 +383,24 @@ export default function SubTask( {username, taskData, subtaskPreview, setTaskDat
   
   // * to convert from dueDate number format to a date string
   const generateDate = (dateData:number) => {
-    return (new Date(dateData)).toLocaleDateString("en-GB", {
+    return (new Date(dateData)).toLocaleDateString("en-UK", {
+      weekday:"short",
       day: "numeric",
-      month: "long",
+      month: "short",
       year: "numeric",
     });
     };
 
   // * to convert from dueDate number format to a time string
   const generateTime = (dateData:number) => {
-    return (new Date(dateData)).toLocaleTimeString("en-GB", {
+    return (new Date(dateData)).toLocaleTimeString("en-UK", {
       hour: "numeric",
       minute: "numeric",
     });
   };
 
   return (
-    <div className={`${design} flex-col w-full absolute right-0 lg:relative h-[94vh] md:h-[90.5vh] z-10  lg:w-[24.4375vw] bg-[#323232]`}>
+    <div className={`${design} flex-col w-full absolute right-0 lg:relative h-[94vh] md:h-[90.5vh] z-10 lg:w-[24.4375vw] bg-[#323232]`}>
       <div className="flex flex-col flex-1 p-[2.421vh] gap-3">
         <div className="bg-[#424242] overflow-y-scroll" id="no-scrollbar">
           <div className="flex flex-col m-[3vh] gap-2">
@@ -558,11 +559,9 @@ export default function SubTask( {username, taskData, subtaskPreview, setTaskDat
               <div className="flex flex-col text-center cursor-pointer px-[1.8vh] sm:px-[2.6vh] py-[1.3vh] md:py-[2vh] text-[1.4vh] sm:text-[2.2vh] text-white">
                 <div className="text-black ">
                   {/* // ? Ini kenapakah padahal masih jalan aja pas gw debug */}
-                  <Datetime onClose={()=>{handleDueDate("custom")}} closeOnSelect={true} onChange={(date)=>{typeof date !== "string" && setDueDate(date._d.valueOf())}}  inputProps={{ className: "text-white outline-none bg-transparent text-center ", placeholder:"Click Me To Set" }} className="appearance-none shadow rounded w-[10vw]" />
+                  <Datetime onClose={()=>{handleDueDate("custom")}} closeOnSelect={true} onChange={(date)=>{typeof date !== "string" && setDueDate(date._d.valueOf())}}  inputProps={{ className: "text-white outline-none bg-transparent text-center ", placeholder:"Click To Set" }} className="appearance-none shadow rounded" />
                 </div>
               </div>
-             
-
               </>
             ) : (
               <div className="flex flex-col text-center">
@@ -587,18 +586,18 @@ export default function SubTask( {username, taskData, subtaskPreview, setTaskDat
             )}
           </div>
           <div className="flex p-[0.5vh] sm:p-[1vh] gap-4 justify-around items-center">
-            <div>{calendarIcon(taskData.dueDate !== null ? (taskData.dueDate < dueDateNow ? "fill-red-600" : "fill-[#6cb0ef]"):"")}</div>
+            <div>{calendarIcon(taskData.dueDate !== null ? (taskData.dueDate < dueDateNow ? "fill-red-500" : "fill-[#6cb0ef]"):"")}</div>
             <p onClick={() => {
             !dueDatePreview && setDueDatePreview(true);
-          }} className={`${taskData.dueDate !== null && (taskData.dueDate < dueDateNow ? "text-red-600" : "text-[#6cb0ef]")} flex-1 cursor-pointer text-[1.4vh] sm:text-[2.2vh]`}>
+          }} className={`${taskData.dueDate !== null && (taskData.dueDate < dueDateNow ? "text-red-500" : "text-[#6cb0ef]")} flex-1 cursor-pointer text-[1.4vh] text-center sm:text-[2vh]`}>
               {taskData.dueDate === null ? "Add Due Date" : generateDate(taskData.dueDate) + " " + "|" + " " + generateTime(taskData.dueDate)}
             </p>
-            {taskData.dueDate !== null && (<button onClick={()=>{handleDueDate("reset")}}>{plusIcon((taskData.dueDate < dueDateNow ? "fill-red-600 rotate-45" : "fill-[#6cb0ef] rotate-45"))}</button>)}
+            {taskData.dueDate !== null && (<button onClick={()=>{handleDueDate("reset")}}>{plusIcon((taskData.dueDate < dueDateNow ? "fill-red-500 rotate-45" : "fill-[#6cb0ef] rotate-45"))}</button>)}
           </div>
         </div>
       </div>
       <div className="flex justify-center items-center mb-[3vh]">
-        <p className="text-[1.4vh] sm:text-[2.2vh] font-medium">{`Created at ${(new Date(taskData.createdDate)).toLocaleString("en-UK", { dateStyle: "full" })}`}</p>
+        <p className="text-[1.4vh] sm:text-[2.2vh] font-medium text-center mx-7">{`Created at ${(new Date(taskData.createdDate)).toLocaleString("en-UK", { dateStyle: "full" })}`}</p>
       </div>
     </div>
   );
