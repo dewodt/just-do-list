@@ -60,7 +60,7 @@ export default function Tasks({ userData, projectsTitleId, pageData }: { userDat
   const starLineIcon = () => {
     return (
       <svg
-        className="fill-white w-[1.8vh] sm:w-[1.6vh] lg:w-[2.2vh] 2xl:w-[2.2vh] m-auto opacity-80 hover:fill-[#54A1EA]"
+        className="fill-white w-[1.9vh] sm:w-[1.8vh] lg:w-[2.4vh] 2xl:w-[2.5vh] m-auto opacity-80 hover:fill-[#54A1EA]"
         xmlns="http:// * www.w3.org/2000/svg"
         viewBox="0 0 576 512"
       >
@@ -72,7 +72,7 @@ export default function Tasks({ userData, projectsTitleId, pageData }: { userDat
   const starFullIcon = () => {
     return (
       <svg
-        className="fill-white  w-[1.8vh] sm:w-[1.6vh] lg:w-[2.2vh] 2xl:w-[2.2vh] m-auto opacity-80 hover:fill-[#54A1EA]"
+        className="fill-white  w-[1.9vh] sm:w-[1.8vh] lg:w-[2.4vh] 2xl:w-[2.5vh] m-auto opacity-80 hover:fill-[#54A1EA]"
         xmlns="http:// * www.w3.org/2000/svg"
         viewBox="0 0 576 512"
       >
@@ -515,7 +515,7 @@ export default function Tasks({ userData, projectsTitleId, pageData }: { userDat
                           <>
                             <input
                               type="text"
-                              className="outline-none bg-[#3d3d3d] bg-opacity-50 flex break-all flex-1 text-sm lg:text-base text-justify"
+                              className="outline-none bg-[#3d3d3d] bg-opacity-50 flex break-all flex-1 text-sm md:text-base xl:text-lg text-justify"
                               placeholder="New Task"
                               defaultValue={task.title}
                               onChange={(event) => {setTaskTitle(event.target.value)}}
@@ -530,7 +530,7 @@ export default function Tasks({ userData, projectsTitleId, pageData }: { userDat
                           <>
                           <div className={`${(task.dueDate < dueDate && task.dueDate !== null) && "text-red-500"} flex flex-col flex-1`}>
                             <p
-                              className="flex break-all flex-1 text-sm lg:text-base text-justify"
+                              className="flex break-all flex-1 text-sm md:text-base xl:text-lg text-justify"
                               onClick={() => {handleSubTaskPreview(task)}}
                             >
                               {task.done ? <s className="opacity-50">{task.title} </s> : task.title}
@@ -614,7 +614,7 @@ export default function Tasks({ userData, projectsTitleId, pageData }: { userDat
                           <>
                             <input
                               type="text"
-                              className="outline-none bg-[#3d3d3d] bg-opacity-50 flex break-all flex-1 text-sm lg:text-base text-justify"
+                              className="outline-none bg-[#3d3d3d] bg-opacity-50 flex break-all flex-1 text-sm md:text-base xl:text-lg text-justify"
                               placeholder="New Task"
                               defaultValue={task.title}
                               onChange={(event) => {setTaskTitle(event.target.value);}}
@@ -628,7 +628,7 @@ export default function Tasks({ userData, projectsTitleId, pageData }: { userDat
                         ) : (
                           <>
                             <p
-                              className="flex break-all flex-1 text-sm lg:text-base text-justify"
+                              className="flex break-all flex-1 text-sm md:text-base xl:text-lg text-justify"
                               onClick={() => {handleSubTaskPreview(task);}}
                             >
                               {task.done ? <s className="opacity-50">{task.title} </s> : task.title}
@@ -683,7 +683,7 @@ export default function Tasks({ userData, projectsTitleId, pageData }: { userDat
                     taskEdit.id !== "" &&
                     taskEdit.title !== "" &&
                     "caret-transparent cursor-not-allowed"
-                  } flex-1 outline-none w-[8vw] font-medium text-sm lg:text-base bg-transparent placeholder:text-white placeholder:opacity-70`}
+                  } flex-1 outline-none w-[8vw] font-medium text-sm md:text-base xl:text-lg bg-transparent placeholder:text-white placeholder:opacity-70`}
                   placeholder="Add New Task"
                   value={taskEdit.id === "" && taskEdit.title === "" ? taskTitle : ""}
                   onChange={(event) => {setTaskTitle(event.target.value);}}
