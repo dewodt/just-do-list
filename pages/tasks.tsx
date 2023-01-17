@@ -48,7 +48,7 @@ export default function Tasks({ userData, projectsTitleId, pageData }: { userDat
   const calendarIcon = (design:string) => {
     return (
       <svg
-        className={`fill-${design} opacity-80 w-[1vh] sm:w-[1.5vh] h-[1vh] sm:h-[1.5vh] m-auto`}
+        className={`fill-${design} opacity-80 w-[1vh] sm:w-[1.3vh] h-[1vh] sm:h-[1.3vh] m-auto`}
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 448 512"
       >
@@ -60,7 +60,7 @@ export default function Tasks({ userData, projectsTitleId, pageData }: { userDat
   const starLineIcon = () => {
     return (
       <svg
-        className="fill-white w-[1.8vh] sm:w-[2.45vh] m-auto opacity-80 hover:fill-[#54A1EA]"
+        className="fill-white w-[1.8vh] sm:w-[1.6vh] lg:w-[2.2vh] 2xl:w-[2.2vh] m-auto opacity-80 hover:fill-[#54A1EA]"
         xmlns="http:// * www.w3.org/2000/svg"
         viewBox="0 0 576 512"
       >
@@ -72,7 +72,7 @@ export default function Tasks({ userData, projectsTitleId, pageData }: { userDat
   const starFullIcon = () => {
     return (
       <svg
-        className="fill-white  w-[1.8vh] sm:w-[2.45vh] m-auto opacity-80 hover:fill-[#54A1EA]"
+        className="fill-white  w-[1.8vh] sm:w-[1.6vh] lg:w-[2.2vh] 2xl:w-[2.2vh] m-auto opacity-80 hover:fill-[#54A1EA]"
         xmlns="http:// * www.w3.org/2000/svg"
         viewBox="0 0 576 512"
       >
@@ -84,7 +84,7 @@ export default function Tasks({ userData, projectsTitleId, pageData }: { userDat
   const plusIcon = (rotate: string) => {
     return (
       <svg
-        className={`${rotate} fill-white opacity-80 w-[1.8vh] sm:w-[2.45vh] h-[1.8vh] sm:h-[2.45vh] m-auto cursor-pointer`}
+        className={`${rotate} fill-white opacity-80 w-[1.8vh] sm:w-[1.6vh] lg:w-[2.2vh] 2xl:w-[2.2vh] h-[1.8vh] sm:h-[2.45vh] m-auto cursor-pointer`}
         xmlns="http:// * www.w3.org/2000/svg"
         viewBox="0 0 448 512"
       >
@@ -97,7 +97,7 @@ export default function Tasks({ userData, projectsTitleId, pageData }: { userDat
     return (
       <svg
         xmlns="http:// * www.w3.org/2000/svg"
-        className="fill-white opacity-80 w-[1.8vh] sm:w-[2.45vh] hover:opacity-100"
+        className="fill-white opacity-80 w-[1.8vh] sm:w-[1.6vh] lg:w-[2.2vh] 2xl:w-[2.2vh] hover:opacity-100"
         viewBox="0 0 512 512"
       >
         <path d="M470.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L192 338.7 425.4 105.4c12.5-12.5 32.8-12.5 45.3 0z" />
@@ -108,7 +108,7 @@ export default function Tasks({ userData, projectsTitleId, pageData }: { userDat
   const circleCheckIcon = (design : string) => {
     return (
       <svg
-        className={`${design} fill-white opacity-80 w-[1.8vh] sm:w-[2.45vh] hover:fill-[#54A1EA]`}
+        className={`${design} fill-white opacity-80 w-[1.8vh] sm:w-[1.6vh] lg:w-[2.2vh] 2xl:w-[2.2vh] hover:fill-[#54A1EA]`}
         xmlns="http:// * www.w3.org/2000/svg"
         viewBox="0 0 512 512"
       >
@@ -120,7 +120,7 @@ export default function Tasks({ userData, projectsTitleId, pageData }: { userDat
   const circleIcon = (design: string) => {
     return (
       <svg
-        className={`fill-white opacity-80 w-[1.8vh] sm:w-[2.45vh] ${design}`}
+        className={`fill-white opacity-80 w-[1.8vh] sm:w-[1.6vh] lg:w-[2.2vh] 2xl:w-[2.2vh] ${design}`}
         xmlns="http:// * www.w3.org/2000/svg"
         viewBox="0 0 512 512"
       >
@@ -132,7 +132,7 @@ export default function Tasks({ userData, projectsTitleId, pageData }: { userDat
   const trashIcon = () => {
     return (
       <svg
-        className="fill-white opacity-80 w-[1.8vh] sm:w-[2.45vh] h-[1.8vh] sm:h-[2.45vh] m-auto hover:fill-[#54A1EA]"
+        className="fill-white opacity-80 w-[1.8vh] sm:w-[1.6vh] lg:w-[2.2vh] 2xl:w-[2.2vh] h-[1.8vh] sm:h-[2.45vh] m-auto hover:fill-[#54A1EA]"
         xmlns="http:// * www.w3.org/2000/svg"
         viewBox="0 0 448 512"
       >
@@ -144,7 +144,7 @@ export default function Tasks({ userData, projectsTitleId, pageData }: { userDat
   const renameIcon = () => {
     return (
       <svg
-        className="fill-white opacity-80 w-[1.8vh] sm:w-[2.45vh] h-[1.8vh] sm:h-[2.45vh] m-auto hover:fill-[#54A1EA]"
+        className="fill-white opacity-80 w-[1.8vh] sm:w-[1.6vh] lg:w-[2.2vh] 2xl:w-[2.2vh] h-[1.8vh] sm:h-[2.45vh] m-auto hover:fill-[#54A1EA]"
         xmlns="http:// * www.w3.org/2000/svg"
         viewBox="0 0 512 512"
       >
@@ -156,7 +156,7 @@ export default function Tasks({ userData, projectsTitleId, pageData }: { userDat
   const saveIcon = () => {
     return (
       <svg
-        className="fill-white opacity-80 w-[1.8vh] sm:w-[2.45vh] h-[1.8vh] sm:h-[2.45vh] m-auto hover:fill-[#54A1EA]"
+        className="fill-white opacity-80 w-[1.8vh] sm:w-[1.6vh] lg:w-[2.2vh] 2xl:w-[2.2vh] h-[1.8vh] sm:h-[2.45vh] m-auto hover:fill-[#54A1EA]"
         xmlns="http:// * www.w3.org/2000/svg"
         viewBox="0 0 448 512"
       >
@@ -454,7 +454,7 @@ export default function Tasks({ userData, projectsTitleId, pageData }: { userDat
       weekday:"short",
         day: "numeric",
         month: "short",
-        year: "numeric",
+        year: "2-digit",
     });}
   };
 
@@ -462,7 +462,7 @@ export default function Tasks({ userData, projectsTitleId, pageData }: { userDat
   // * to convert from dueDate number format to a time string
   const generateTime = (dateData:number) => {
     if(dateData !== null){
-    return (new Date(dateData)).toLocaleTimeString("en-GB", {
+    return (new Date(dateData)).toLocaleTimeString("en-UK", {
       hour: "numeric",
       minute: "numeric",
     });}
@@ -483,9 +483,9 @@ export default function Tasks({ userData, projectsTitleId, pageData }: { userDat
             </div>
 
       {/* // ! TITLE SECTION */}
-            <div className="flex  items-center gap-x-3">
+            <div className="flex  items-center gap-x-3 mt-2 lg:mt-0">
               <span>{homeIcon()}</span>
-              <p className="font-semibold text-[2.5vh] sm:text-[3.8vh]">
+              <p className="font-semibold text-xl sm:text-2xl">
                 Tasks{" "}
               </p>
             </div>
@@ -515,7 +515,7 @@ export default function Tasks({ userData, projectsTitleId, pageData }: { userDat
                           <>
                             <input
                               type="text"
-                              className="outline-none bg-[#3d3d3d] bg-opacity-50 flex break-all flex-1 text-[1.5vh] sm:text-[2.25vh] text-justify"
+                              className="outline-none bg-[#3d3d3d] bg-opacity-50 flex break-all flex-1 text-sm lg:text-base text-justify"
                               placeholder="New Task"
                               defaultValue={task.title}
                               onChange={(event) => {setTaskTitle(event.target.value)}}
@@ -530,15 +530,15 @@ export default function Tasks({ userData, projectsTitleId, pageData }: { userDat
                           <>
                           <div className={`${(task.dueDate < dueDate && task.dueDate !== null) && "text-red-500"} flex flex-col flex-1`}>
                             <p
-                              className="flex break-all flex-1 text-[1.5vh] sm:text-[2.5vh] text-justify"
+                              className="flex break-all flex-1 text-sm lg:text-base text-justify"
                               onClick={() => {handleSubTaskPreview(task)}}
                             >
                               {task.done ? <s className="opacity-50">{task.title} </s> : task.title}
                             </p>
                             {task.dueDate !== null && 
-                            <div className="flex justify-start gap-x-1">
+                            <div className="flex justify-start gap-x-1 mt-1">
                               {calendarIcon(task.dueDate < dueDate ? "red-500":"white")}
-                              <p className="text-[8px] sm:text-xs flex flex-1">{`${generateDate(task.dueDate) === generateDate(dueDate) ? "Today" : (generateDate(dueDate+86400000)===generateDate(task.dueDate)?"Tomorrow":generateDate(task.dueDate))} | ${generateTime(task.dueDate)}  `}</p>
+                              <p className="text-[0.7rem] sm:text-xs flex flex-1">{`${generateDate(task.dueDate) === generateDate(dueDate) ? "Today" : (generateDate(dueDate+86400000)===generateDate(task.dueDate)?"Tomorrow":generateDate(task.dueDate))} | ${generateTime(task.dueDate)}  `}</p>
                             </div>}
                           </div>
                             
@@ -587,7 +587,7 @@ export default function Tasks({ userData, projectsTitleId, pageData }: { userDat
                   <span>
                     {arrowIcon()}
                   </span>
-                  <p className="text-[1.6vh] font-medium sm:text-[2.3vh]">
+                  <p className="text-sm font-medium sm:text-base">
                     Finished
                   </p>
                 </div>
@@ -614,7 +614,7 @@ export default function Tasks({ userData, projectsTitleId, pageData }: { userDat
                           <>
                             <input
                               type="text"
-                              className="outline-none bg-[#3d3d3d] bg-opacity-50 flex break-all flex-1 text-[1.5vh] sm:text-[2.25vh] text-justify"
+                              className="outline-none bg-[#3d3d3d] bg-opacity-50 flex break-all flex-1 text-sm lg:text-base text-justify"
                               placeholder="New Task"
                               defaultValue={task.title}
                               onChange={(event) => {setTaskTitle(event.target.value);}}
@@ -628,7 +628,7 @@ export default function Tasks({ userData, projectsTitleId, pageData }: { userDat
                         ) : (
                           <>
                             <p
-                              className="flex break-all flex-1 text-[1.5vh] sm:text-[2.25vh] text-justify"
+                              className="flex break-all flex-1 text-sm lg:text-base text-justify"
                               onClick={() => {handleSubTaskPreview(task);}}
                             >
                               {task.done ? <s className="opacity-50">{task.title} </s> : task.title}
@@ -683,7 +683,7 @@ export default function Tasks({ userData, projectsTitleId, pageData }: { userDat
                     taskEdit.id !== "" &&
                     taskEdit.title !== "" &&
                     "caret-transparent cursor-not-allowed"
-                  } flex-1 outline-none w-[8vw] font-medium text-[1.5vh] sm:text-[2.2vh] bg-transparent placeholder:text-white placeholder:opacity-70`}
+                  } flex-1 outline-none w-[8vw] font-medium text-sm lg:text-base bg-transparent placeholder:text-white placeholder:opacity-70`}
                   placeholder="Add New Task"
                   value={taskEdit.id === "" && taskEdit.title === "" ? taskTitle : ""}
                   onChange={(event) => {setTaskTitle(event.target.value);}}

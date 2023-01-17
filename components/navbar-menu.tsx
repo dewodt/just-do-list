@@ -29,7 +29,7 @@ export default function NavbarMenu({ userData, projectsTitleId, design }: { user
           <div className="flex mx-8">
             <div>
               <svg
-                className="fill-white opacity-80 w-[1.1rem]"
+                className="fill-white opacity-80 w-[1.1rem] m-auto"
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 512 512"
               >
