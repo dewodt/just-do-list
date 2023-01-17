@@ -549,7 +549,7 @@ export default function Tasks({ userData, projectsTitleId, pageData }: { userDat
 
       {/* // ! TASK LIST DONE SECTION */}
               {/* // * div to loop through the created task list * */}
-              {tasks.map(
+              {filteredTasks.map(
                 (task) =>
                   task.done && (
                     <div

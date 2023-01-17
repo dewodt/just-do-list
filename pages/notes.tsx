@@ -2,6 +2,7 @@ import axios from "axios";
 import { useState } from "react";
 import Layout from "../components/layout";
 import getUserData from "../lib/getUserData";
+import PageHead from "../components/pagehead";
 
 interface typeUserData {
   username: string;
@@ -126,6 +127,10 @@ export default function Notes({ userData, projectsTitleId, pageData }: { userDat
   const [editingDate, setEditingDate] = useState(Date.now())  // store the state of date that's being edited
   const [notes, setNotes] = useState<typeTask[]>(pageData);   // TODO : notes dataset should be saved to the database     
 
+  const [search, setSearch] = useState("");
+  const [filteredNotes, setFilteredNotes] = useState(pageData);
+  const [navbarStatus, setNavbarStatus] = useState(false);
+
   // * to convert from dateCreated number format to date string
   const generateDateNow = (numDate: number) => {
     return (new Date(numDate)).toLocaleDateString("en-GB", {
@@ -142,6 +147,23 @@ export default function Notes({ userData, projectsTitleId, pageData }: { userDat
       minute: "numeric",
     });
   };
+
+  function handleSearch(search: string) {
+    setSearch(search);
+    const newNotes = notes.filter( (note) => {
+      if (note.title.toLocaleLowerCase().includes(search.toLocaleLowerCase())) {
+        return true;
+      } else {
+        return false;
+      }
+    })
+    setFilteredNotes(newNotes);
+  }
+
+  function handleResetSearch() {
+    setSearch("");
+    setFilteredNotes(notes);
+  }
 
   // * function to add new notes
   function addNotes() {
@@ -162,6 +184,8 @@ export default function Notes({ userData, projectsTitleId, pageData }: { userDat
           setNotes([...notes, newNote]);
         });
     }
+    setSearch("");
+    setFilteredNotes(notes);
     setTitle("");
     setDescription("");
     setSubNotesPreviewMode("back");
@@ -169,6 +193,8 @@ export default function Notes({ userData, projectsTitleId, pageData }: { userDat
 
   // * function to return to the main display mode without making changes
   function backMenuNote() {
+    setSearch("");
+    setFilteredNotes(notes);
     setTitle("");
     setDescription("");
     setEditingId("");
@@ -201,11 +227,14 @@ export default function Notes({ userData, projectsTitleId, pageData }: { userDat
     })
       .then( () => {
         // Update client side
-          setNotes(notes.filter( (note) => { return note.id !== noteId;}));
-          setTitle("");
-          setDescription("");
-          setSubNotesPreviewMode("back");
-        });
+        const newNotes = notes.filter( (note) => { return note.id !== noteId;});
+        setTitle("");
+        setDescription("");
+        setSearch("");
+        setNotes(newNotes);
+        setFilteredNotes(newNotes);
+        setSubNotesPreviewMode("back");
+      });
   }
 
   // *  to save changes after editing
@@ -230,6 +259,8 @@ export default function Notes({ userData, projectsTitleId, pageData }: { userDat
             }
           })
           setNotes(newNotes);
+          setFilteredNotes(newNotes);
+          setSearch("")
         })
     }
     setTitle("");
@@ -240,7 +271,8 @@ export default function Notes({ userData, projectsTitleId, pageData }: { userDat
 
   return (
     <>
-      <Layout userData={userData} projectsTitleId={projectsTitleId}>
+      <PageHead title="Notes | Just Do List"/>
+      <Layout userData={userData} projectsTitleId={projectsTitleId} search={search} handleResetSearch={handleResetSearch} handleSearch={handleSearch} design={navbarStatus}>
         <div className="flex flex-1">
           <div className="flex flex-col flex-1 pt-[2vh] lg:px-[3.8vh] lg:pt-[3.8vh] px-[3.4vh] ">
 
@@ -257,7 +289,7 @@ export default function Notes({ userData, projectsTitleId, pageData }: { userDat
               className="notes grid min-[250px]:grid-cols-2 xl:grid-cols-3 mt-8 overflow-y-scroll m-auto gap-x-[8.71vw] gap-y-[2.97vh] xl:gap-x-[4.31vw] sm:gap-y-[6vh]"
               id="no-scrollbar"
             >
-              {notes.map((note) => (
+              {filteredNotes.map((note) => (
                 <>
                   <div
                     role="button"
