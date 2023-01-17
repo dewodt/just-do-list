@@ -49,13 +49,10 @@ export default function About({
   projectsTitleId: typeProjectsTitleId[];
 }) {
   const [navbarStatus, setNavbarStatus] = useState(false);
+
   return (
     <>
-      <Layout
-        userData={userData}
-        projectsTitleId={projectsTitleId}
-        design={navbarStatus}
-      >
+      <Layout userData={userData} projectsTitleId={projectsTitleId} search={""} handleResetSearch={null} handleSearch={null} design={navbarStatus}>
         <div className="flex flex-1">
           <div className="flex flex-col flex-1 py-[3vh] lg:px-[17vh] md:px-[10vh] px-[3.4vh] gap-1">
             {/* // ! BACK SECTION FOR MOBILE */}

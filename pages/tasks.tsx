@@ -1,6 +1,6 @@
 import Layout from "../components/layout";
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import SubTask from "../components/subtask";
 import getUserData from "../lib/getUserData";
 import PageHead from "../components/pagehead";
@@ -93,10 +93,10 @@ export default function Tasks({ userData, projectsTitleId, pageData }: { userDat
     );
   };
 
-  const circleCheckIcon = () => {
+  const circleCheckIcon = (design : string) => {
     return (
       <svg
-        className="fill-white opacity-80 w-[1.8vh] sm:w-[2.45vh] hover:fill-[#54A1EA]"
+        className={`${design} fill-white opacity-80 w-[1.8vh] sm:w-[2.45vh] hover:fill-[#54A1EA]`}
         xmlns="http:// * www.w3.org/2000/svg"
         viewBox="0 0 512 512"
       >
@@ -105,10 +105,10 @@ export default function Tasks({ userData, projectsTitleId, pageData }: { userDat
     );
   };
 
-  const circleIcon = (colorHover: string) => {
+  const circleIcon = (design: string) => {
     return (
       <svg
-        className={`fill-white opacity-80 w-[1.8vh] sm:w-[2.45vh] hover:fill-[${colorHover}]`}
+        className={`fill-white opacity-80 w-[1.8vh] sm:w-[2.45vh] ${design}`}
         xmlns="http:// * www.w3.org/2000/svg"
         viewBox="0 0 512 512"
       >
@@ -213,6 +213,14 @@ export default function Tasks({ userData, projectsTitleId, pageData }: { userDat
   const [search, setSearch] = useState("");
   const [filteredTasks, setFilteredTasks] = useState(pageData);
   const [navbarStatus, setNavbarStatus] = useState(false);
+  const [dueDate, setDueDate] = useState (new Date().valueOf());
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setDueDate(new Date().valueOf());
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
 
   function handleSearch(search: string) {
     setSearch(search);
@@ -334,6 +342,7 @@ export default function Tasks({ userData, projectsTitleId, pageData }: { userDat
         setFilteredTasks(newFilteredTasks);
         setTaskEdit({ id: "", title: "", done: false, important: false, createdDate: null, dueDate: null, subtask: [] });
         setTaskTitle("");
+        setStepPreview(false);
 
         // handle bug when clicking edit mode in stepPreview mode
         const taskData = tasks.filter(function (task) {
@@ -464,19 +473,11 @@ export default function Tasks({ userData, projectsTitleId, pageData }: { userDat
                     >
                       <div className="flex flex-1 items-center justify-center mx-[1vw] gap-3">
                         {/* // * Handle changes to the checkdone icon */}
-                        {task.done ? (
                           <span
                             onClick={() => {handleDone(task.id, task.done);}}
                           >
-                            {circleCheckIcon()}
+                            {circleIcon((task.dueDate < dueDate && task.dueDate !== null) ? " hover:fill-red-600":"hover:fill-[#54A1EA]")}
                           </span>
-                        ) : (
-                          <span
-                            onClick={() => {handleDone(task.id, task.done);}}
-                          >
-                            {circleIcon("#54A1EA")}
-                          </span>
-                        )}
                          {/* // * Handle changes when edited from paragraphs to input */}
                         {taskEdit === task ? (
                           <>
@@ -496,7 +497,7 @@ export default function Tasks({ userData, projectsTitleId, pageData }: { userDat
                         ) : (
                           <>
                             <p
-                              className="flex break-all flex-1 text-[1.5vh] sm:text-[2.25vh] text-justify"
+                              className={` ${(task.dueDate < dueDate && task.dueDate !== null) && "text-red-600"} flex break-all flex-1 text-[1.5vh] sm:text-[2.25vh] text-justify`}
                               onClick={() => {handleSubTaskPreview(task)}}
                             >
                               {task.done ? <s className="opacity-50">{task.title} </s> : task.title}
@@ -563,19 +564,11 @@ export default function Tasks({ userData, projectsTitleId, pageData }: { userDat
                     >
                       <div className="flex flex-1 items-center justify-center mx-[1vw] gap-3">
                         {/* // * Handle changes to the icon done checklist */}
-                        {task.done ? (
                           <span
                             onClick={() => {handleDone(task.id, task.done);}}
                           >
-                            {circleCheckIcon()}
+                            {circleCheckIcon("")}
                           </span>
-                        ) : (
-                          <span
-                            onClick={() => {handleDone(task.id, task.done);}}
-                          >
-                            {circleIcon("#54A1EA")}
-                          </span>
-                        )}
                         {/* // * Handle input changes when in edit mode */}
                         {taskEdit === task ? (
                           <>
@@ -641,7 +634,7 @@ export default function Tasks({ userData, projectsTitleId, pageData }: { userDat
             >
               <div className="flex flex-1 px-[1.5vw] gap-4">
                 <div className="m-auto">
-                  {addTaskInputShow && taskEdit.id === "" && taskEdit.title === "" ? circleIcon("none")
+                  {addTaskInputShow && taskEdit.id === "" && taskEdit.title === "" ? circleIcon("")
                     :
                     plusIcon(`rotate-0 cursor-${taskEdit.id !== "" && taskEdit.title !== "" ? "not-allowed" : "default"}`)}
                 </div>

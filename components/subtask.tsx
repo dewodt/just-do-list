@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import Datetime from "react-datetime"
@@ -79,10 +79,10 @@ export default function SubTask( {username, taskData, subtaskPreview, setTaskDat
     );
   };
 
-  const calendarIcon = () => {
+  const calendarIcon = (design : string) => {
     return (
       <svg
-        className={`${taskData.dueDate !== null && "fill-[#6cb0ef]"} fill-white opacity-80 w-[1.5vh] sm:w-[2vh] h-[1.5vh] sm:h-[2vh] m-auto`}
+        className={`${design} fill-white opacity-80 w-[1.5vh] sm:w-[2vh] h-[1.5vh] sm:h-[2vh] m-auto`}
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 448 512"
       >
@@ -146,6 +146,14 @@ export default function SubTask( {username, taskData, subtaskPreview, setTaskDat
     id: "",
     done: false,
   });
+  const [dueDateNow, setDueDateNow] = useState (new Date().valueOf());
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setDueDateNow(new Date().valueOf());
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
 
   // Buat nambahin subtask/step baru
   function addStep() {
@@ -369,6 +377,7 @@ export default function SubTask( {username, taskData, subtaskPreview, setTaskDat
         setAllData(newTasks);
         setTaskData(updateData);
         setDueDatePreview(false);
+        setCalendarStatus(false);  
       })
   }
   
@@ -390,7 +399,7 @@ export default function SubTask( {username, taskData, subtaskPreview, setTaskDat
   };
 
   return (
-    <div className={`${design} flex-col w-[70vw] absolute right-0 lg:relative h-[94vh] md:h-[90.5vh] z-10 sm:w-[45vw] lg:w-[24.4375vw] bg-[#323232]`}>
+    <div className={`${design} flex-col w-full absolute right-0 lg:relative h-[94vh] md:h-[90.5vh] z-10  lg:w-[24.4375vw] bg-[#323232]`}>
       <div className="flex flex-col flex-1 p-[2.421vh] gap-3">
         <div className="bg-[#424242] overflow-y-scroll" id="no-scrollbar">
           <div className="flex flex-col m-[3vh] gap-2">
@@ -539,44 +548,27 @@ export default function SubTask( {username, taskData, subtaskPreview, setTaskDat
           className="bg-[#424242] px-2.5 py-2 relative flex justify-center hover:bg-[#4b4b4b]"
           
         >
-          <div
+        <div
             className={`${
               dueDatePreview ? "flex" : "hidden"
-            } flex-col flex-1 text-sm absolute z-20 -top-[130px] sm:-top-[125px] md:-top-[225px] lg:-top-[145px] xl:-top-[165px] min-w-[40vw] lg:min-w-[12vw] sm:min-w-[30vw] mx-[2vw] bg-[#313131]`}
-          >
+            } flex-col flex-1 text-sm absolute z-20 min-w-[50vw] lg:min-w-[12vw] sm:min-w-[30vw] bg-[#313131]`}>
             {/* // TODO: set due date */}
             {calendarStatus ? (
               <>
               <div className="flex flex-col text-center cursor-pointer px-[1.8vh] sm:px-[2.6vh] py-[1.3vh] md:py-[2vh] text-[1.4vh] sm:text-[2.2vh] text-white">
                 <div className="text-black ">
                   {/* // ? Ini kenapakah padahal masih jalan aja pas gw debug */}
-                  <Datetime onChange={(date) => {typeof date !== "string" && setDueDate(date._d.valueOf())}} inputProps={{ className: "text-white outline-none bg-transparent text-center", placeholder:"Click Me To Set" }} className="appearance-none shadow rounded" />
+                  <Datetime onClose={()=>{handleDueDate("custom")}} closeOnSelect={true} onChange={(date)=>{typeof date !== "string" && setDueDate(date._d.valueOf())}}  inputProps={{ className: "text-white outline-none bg-transparent text-center ", placeholder:"Click Me To Set" }} className="appearance-none shadow rounded w-[10vw]" />
                 </div>
               </div>
-              <div className="flex">
-                  <button
-                    onClick={() => {
-                      setCalendarStatus(false);
-                      setDueDatePreview(false);
-                    }}
-                    className="flex  items-center justify-center w-1/2 hover:bg-[#4b4b4b] cursor-pointer px-[1.8vh] sm:px-[2.6vh] py-[1.3vh] md:py-[2vh] text-[1.4vh] sm:text-[2.2vh] "
-                  > 
-                    {plusIcon("rotate-45")}
-                  </button>
-                  <button
-                    onClick={() => {
-                      handleDueDate("custom")
-                    }}
-                    className="w-1/2  flex items-center justify-center hover:bg-[#4b4b4b] cursor-pointer px-[1.8vh] sm:px-[2.6vh] py-[1.3vh] md:py-[2vh] text-[1.4vh] sm:text-[2.2vh] "
-                  > 
-                    {checkIcon()}
-                  </button>
-              </div>
+             
 
               </>
             ) : (
               <div className="flex flex-col text-center">
-                {}
+                <div onClick={()=>{setDueDatePreview(false)}} className="hover:bg-[#4b4b4b] cursor-pointer px-[1.8vh] sm:px-[2.6vh] py-[1.3vh] md:py-[2vh] text-[1.4vh] sm:text-[2.2vh] ">
+                  {plusIcon("rotate-45")}
+                </div>
                 <div onClick={()=>{handleDueDate("today")}} className="hover:bg-[#4b4b4b] cursor-pointer px-[1.8vh] sm:px-[2.6vh] py-[1.3vh] md:py-[2vh] text-[1.4vh] sm:text-[2.2vh] ">
                   Today
                 </div>
@@ -591,21 +583,17 @@ export default function SubTask( {username, taskData, subtaskPreview, setTaskDat
                 >
                   Set Due Date
                 </div>
-                <div onClick={()=>{setDueDatePreview(false)}} className="hover:bg-[#4b4b4b] cursor-pointer px-[1.8vh] sm:px-[2.6vh] py-[1.3vh] md:py-[2vh] text-[1.4vh] sm:text-[2.2vh] ">
-                  {plusIcon("rotate-45")}
-                </div>
               </div>
             )}
           </div>
           <div className="flex p-[0.5vh] sm:p-[1vh] gap-4 justify-around items-center">
-            <div>{calendarIcon()}</div>
+            <div>{calendarIcon(taskData.dueDate !== null ? (taskData.dueDate < dueDateNow ? "fill-red-600" : "fill-[#6cb0ef]"):"")}</div>
             <p onClick={() => {
             !dueDatePreview && setDueDatePreview(true);
-          }} className={`${taskData.dueDate !== null && "text-[#6cb0ef]"} flex-1 cursor-pointer text-[1.4vh] sm:text-[2.2vh]`}>
+          }} className={`${taskData.dueDate !== null && (taskData.dueDate < dueDateNow ? "text-red-600" : "text-[#6cb0ef]")} flex-1 cursor-pointer text-[1.4vh] sm:text-[2.2vh]`}>
               {taskData.dueDate === null ? "Add Due Date" : generateDate(taskData.dueDate) + " " + "|" + " " + generateTime(taskData.dueDate)}
             </p>
-            
-            {taskData.dueDate !== null && (<button onClick={()=>{handleDueDate("reset")}}>{plusIcon("rotate-45 fill-[#6cb0ef]")}</button>)}
+            {taskData.dueDate !== null && (<button onClick={()=>{handleDueDate("reset")}}>{plusIcon((taskData.dueDate < dueDateNow ? "fill-red-600 rotate-45" : "fill-[#6cb0ef] rotate-45"))}</button>)}
           </div>
         </div>
       </div>
