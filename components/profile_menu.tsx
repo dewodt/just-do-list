@@ -12,9 +12,7 @@ export default function ProfileMenu({ userData }: { userData: typeUserData }) {
   const [dropDownProfile, setDropDownProfile] = useState(false);
 
   function handleLogout() {
-    axios.post("http://localhost:3000/api/logout", {
-      username: userData.username
-    })
+    axios.post("http://localhost:3000/api/logout", {})
       .then(() => {
         window.location.href = "http://localhost:3000/";
       });

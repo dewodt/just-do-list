@@ -13,7 +13,7 @@ export default async function logIn(
   if (userFound) {
     const token = sign(
       {
-        exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 30,
+        exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 7,
         username: username,
       },
       secretJWT
@@ -23,7 +23,7 @@ export default async function logIn(
       httpOnly: true,
       secure: process.env.NODE_ENV !== "development",
       sameSite: "strict",
-      maxAge: 60 * 60 * 24 * 30,
+      maxAge: 60 * 60 * 24 * 7,
       path: "/",
     });
 
