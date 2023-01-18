@@ -22,16 +22,10 @@ body {
   background: rgba(40, 40, 40, 0.99);
 }
 
-
-
 a {
   color: inherit;
   text-decoration: none;
 }
-
-/* div{
-  @apply border-2 border-rose-500;
-} */
 
 #circle{
   width: 12vw;
@@ -47,12 +41,6 @@ a {
 #no-scrollbar {
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;  /* Firefox */
-}
-
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
-  }
 }
 
 @media only screen and (min-width: 500px) {
