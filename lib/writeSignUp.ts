@@ -24,9 +24,6 @@ export default async function writeSignUp(name: string, username: string, passwo
     username: username,
     password: password,
     tasks: [],
-    today: [],
-    important: [],
-    planned: [],
     notes: [],
     projects: []
   }
