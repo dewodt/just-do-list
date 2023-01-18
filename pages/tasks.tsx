@@ -36,7 +36,7 @@ export default function Tasks({ userData, projectsTitleId, pageData }: { userDat
   const homeIcon = () => {
     return (
       <svg
-        className="fill-white w-[2.2vh] sm:w-[3.5vh] m-auto opacity-80 "
+      className="fill-white w-[2.2vh] sm:w-[3vh] lg:w-[2.8vh] m-auto opacity-80 "
         xmlns="http:// * www.w3.org/2000/svg"
         viewBox="0 0 576 512"
       >
