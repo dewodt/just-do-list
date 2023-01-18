@@ -187,7 +187,7 @@ export default function Projects( { userData, projectsTitleId }: { userData: typ
               </svg>
             )}
           </div>
-          <div className="text-[0.7rem] font-semibold flex-1 m-auto">
+          <div className="text-[1.5vh] 2xl:text-[1.6vh] font-semibold flex-1 m-auto">
             PROJECTS
           </div>
         </div>
@@ -215,7 +215,7 @@ export default function Projects( { userData, projectsTitleId }: { userData: typ
                   onClick={addProjects}
                 >
                   <div className="flex flex-1 mx-3">
-                    <div className="flex-1 m-auto text-[0.67rem] indent-0">
+                    <div className="flex-1 m-auto text-[1.5vh] 2xl:text-[1.6vh] indent-0">
                       Add New Project
                     </div>
                     <div className="py-1.5">
@@ -237,7 +237,7 @@ export default function Projects( { userData, projectsTitleId }: { userData: typ
                 <>
                   <li
                     key={project.id}
-                    className="ml-4 mr-2 flex w-full py-1 text-xs text-gray-400 dark:text-gray-200 dark:hover:bg-gray-600 rounded-[3px] "
+                    className="ml-4 mr-2 flex w-full py-1 text-[1.5vh] 2xl:text-[1.6vh] text-gray-400 dark:text-gray-200 dark:hover:bg-gray-600 rounded-[3px] "
                   >
                     <div className="m-auto flex">
                       <button disabled={true} className="py-1.5">
@@ -265,7 +265,7 @@ export default function Projects( { userData, projectsTitleId }: { userData: typ
                 </>
               ) : (
                 <>
-                  <li className="ml-4 mr-2 flex py-1 text-xs text-gray-400 dark:text-gray-200 dark:hover:bg-gray-600 rounded-[3px] ">
+                  <li className="ml-4 mr-2 flex py-1 text-[1.5vh] 2xl:text-[1.6vh] text-gray-400 dark:text-gray-200 dark:hover:bg-gray-600 rounded-[3px] ">
                     <div className="m-auto flex flex-1">
                       <button disabled={true} className="py-1.5">
                         {projectIcon()}

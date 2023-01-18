@@ -39,8 +39,8 @@ export default function ProfileMenu({ userData }: { userData: typeUserData }) {
             />
           </div>
           <div className="flex flex-col flex-1 m-auto">
-            <div className="font-semibold">{userData.name}</div>
-            <div className="text-xs">{userData.username}</div>
+            <div className="font-semibold text-[2.2vh] 2xl:text-[2.5vh]">{userData.name}</div>
+            <div className="text-[1.7vh] 2xl:text-[1.9vh]">{userData.username}</div>
           </div>
           <div className="m-auto">
             <svg
@@ -68,7 +68,7 @@ export default function ProfileMenu({ userData }: { userData: typeUserData }) {
             <div className="py-1.5 text-xs text-gray-400 dark:text-gray-200 dark:hover:bg-gray-600 rounded-[8px]">
               <Link
                 href="/"
-                className="block px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                className="block text-[1.7vh] 2xl:text-[2vh] px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
                 onClick={handleLogout}
               >
                 Log Out
