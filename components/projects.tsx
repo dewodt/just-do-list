@@ -1,5 +1,4 @@
 import axios from "axios";
-import Link from "next/link";
 import { useState } from "react";
 
 interface typeUserData {
@@ -92,8 +91,7 @@ export default function Projects( { userData, projectsTitleId }: { userData: typ
 
     if (showInput && title !== "") {
       // Edit database
-      axios.post("api/addproject", {
-        username: userData.username,
+      axios.post("/api/addproject", {
         newProject: newProject,
       }).then( () => {
         // Edit client side
@@ -106,8 +104,7 @@ export default function Projects( { userData, projectsTitleId }: { userData: typ
 
   function handleSave(projectId: string) {
     // Edit database
-    axios.post("api/editproject", {
-        username: userData.username,
+    axios.post("/api/editproject", {
         projectId: projectId,
         newTitle: title ? title : "New Project",
       }).then( () => {
@@ -135,8 +132,7 @@ export default function Projects( { userData, projectsTitleId }: { userData: typ
 
   function handleDelete(projectId: string) {
     // Edit database
-    axios.post("api/deleteproject", {
-      username: userData.username,
+    axios.post("/api/deleteproject", {
       projectId: projectId,
     })
       .then( () => {
@@ -271,18 +267,13 @@ export default function Projects( { userData, projectsTitleId }: { userData: typ
                         {projectIcon()}
                       </button>
                       <div className="my-auto flex-1 w-[7vw]" key={project.id}>
-                        <Link
-                          href={{
-                            pathname: "/projects/[slug]",
-                            query: { slug: project.id },
-                          }}
-                        >
+                        <button onClick={() => (window.location.href=`/projects/${project.id}`)}>
                           <div
                             className="mx-4 indent-0 break-all cursor-pointer"
                           >
                             {project.title}{" "}
                           </div>
-                        </Link>
+                        </button>
                       </div>
                       <button
                         className="text- py-1 mr-2"

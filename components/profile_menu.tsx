@@ -40,8 +40,8 @@ export default function ProfileMenu({ userData }: { userData: typeUserData }) {
             />
           </div>
           <div className="flex flex-col flex-1 m-auto">
-            <div className="font-semibold text-lg md:text-xl xl:text-2xl">{userData.name}</div>
-            <div className="text-base md:text-lg xl:text-xl">{userData.username}</div>
+            <div className="font-semibold text-lg md:text-xl xl:text-2xl line-clamp-1">{userData.name}</div>
+            <div className="text-base md:text-lg xl:text-xl line-clamp-1">{userData.username}</div>
           </div>
           <div className="m-auto">
             <svg

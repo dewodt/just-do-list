@@ -1,6 +1,6 @@
-import Link from "next/link";
 import Layout from "../components/layout";
 import getUserData from "../lib/getUserData";
+import PageHead from "../components/pagehead";
 
 import React, { useState } from "react";
 interface typeUserData {
@@ -52,6 +52,7 @@ export default function About({
 
   return (
     <>
+      <PageHead title="About | Just Do List"/>
       <Layout userData={userData} projectsTitleId={projectsTitleId} search={""} handleResetSearch={null} handleSearch={null} design={navbarStatus}>
         <div className="flex flex-1">
           <div className="flex flex-col flex-1 py-[3vh] lg:px-[17vh] md:px-[10vh] px-[3.4vh] gap-1">
@@ -112,7 +113,7 @@ export default function About({
 
                   <li className="text-lg font-semibold">PLANNED</li>
                   <p className="text-justify text-sm lg:text-base">
-                    This is for the BIG PICTURE tasks that you've already
+                    This is for the BIG PICTURE tasks that you&apos;ve already
                     planned. If the tasks was the smaller pieces of your plan,
                     then this section is the combination of those pieces in one
                     GOAL! You can also use this section to note something that

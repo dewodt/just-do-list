@@ -185,7 +185,7 @@ export default function Notes({ userData, projectsTitleId, pageData }: { userDat
         });
     }
     setSearch("");
-    setFilteredNotes(notes);
+    setFilteredNotes([...notes, newNote]);
     setTitle("");
     setDescription("");
     setSubNotesPreviewMode("back");

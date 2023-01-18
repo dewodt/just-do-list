@@ -1,12 +1,12 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import Datetime from "react-datetime"
 import "react-datetime/css/react-datetime.css"; 
 
 interface SubtaskInterface {
-  username: string;
+  menu: string;
+  projectId: string;
   taskData: any;
   setTaskData: any;
   filteredTasks: any;
@@ -17,7 +17,7 @@ interface SubtaskInterface {
   setAllData: any;
 }
 
-export default function SubTask( {username, taskData, subtaskPreview, setTaskData, filteredTasks, setFilteredTasks, design, allData, setAllData}: SubtaskInterface ) {
+export default function SubTask( { menu, projectId, taskData, subtaskPreview, setTaskData, filteredTasks, setFilteredTasks, design, allData, setAllData }: SubtaskInterface ) {
   // Khusus bagian icon
   const plusIcon = (design: string) => {
     return (
@@ -164,9 +164,9 @@ export default function SubTask( {username, taskData, subtaskPreview, setTaskDat
     };
     if (addStepInputShow && stepTitle !== "") {
       // Edit DB
-      axios.post("api/addstep", {
-
-        menu: "tasks",
+      axios.post("/api/addstep", {
+        menu: menu,
+        projectId: projectId,
         taskId: taskData.id,
         newStep: newStep
       })
@@ -207,8 +207,9 @@ export default function SubTask( {username, taskData, subtaskPreview, setTaskDat
   // Buat hapus subtask tertentu
   function handleDelete(stepId: string) {
     // Update database
-    axios.post("api/deletestep", {
-      menu: "tasks",
+    axios.post("/api/deletestep", {
+      menu: menu,
+      projectId: projectId,
       taskId: taskData.id,
       stepId: stepId,
     })
@@ -249,8 +250,9 @@ export default function SubTask( {username, taskData, subtaskPreview, setTaskDat
   // Buat save abis diedit
   function handleSave(stepId: string) {
     // Update database
-    axios.post("api/editstep", { 
-      menu: "tasks",
+    axios.post("/api/editstep", { 
+      menu: menu,
+      projectId: projectId,
       taskId: taskData.id,
       stepId: stepId,
       newStepTitle: stepTitle === "" ? "New Step" : stepTitle
@@ -294,8 +296,9 @@ export default function SubTask( {username, taskData, subtaskPreview, setTaskDat
   // Buat ganti status done
   function handleDone(stepId: string, stepDone: boolean) {
     // Update database
-    axios.post("api/donestep", { 
-      menu: "tasks",
+    axios.post("/api/donestep", { 
+      menu: menu,
+      projectId: projectId,
       taskId: taskData.id,
       stepId: stepId,
       stepDone: !stepDone
@@ -344,8 +347,9 @@ export default function SubTask( {username, taskData, subtaskPreview, setTaskDat
       newDueDate = null;
     }
     // Update database
-    axios.post("api/editduedate", {
-      menu: "tasks",
+    axios.post("/api/editduedate", {
+      menu: menu,
+      projectId: projectId,
       taskId: taskData.id,
       newDueDate: newDueDate,
     })

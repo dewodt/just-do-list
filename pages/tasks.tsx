@@ -182,6 +182,7 @@ export default function Tasks({ userData, projectsTitleId, pageData }: { userDat
       </svg>
     );
   };
+  
   const backIcon = () => {
     return (
       <svg
@@ -699,7 +700,7 @@ export default function Tasks({ userData, projectsTitleId, pageData }: { userDat
           </div>
 
       {/* // ! STEP PREVIEW SECTION */}
-           {stepPreview && <SubTask username={userData.username} design={stepPreview?"flex":"hidden"} taskData={stepTaskPreview} setTaskData={setStepTaskPreview} allData={tasks} setAllData={setTasks} filteredTasks={filteredTasks} setFilteredTasks={setFilteredTasks} subtaskPreview={setStepPreview}/>}
+           {stepPreview && <SubTask menu="tasks" projectId="" design={stepPreview?"flex":"hidden"} taskData={stepTaskPreview} setTaskData={setStepTaskPreview} allData={tasks} setAllData={setTasks} filteredTasks={filteredTasks} setFilteredTasks={setFilteredTasks} subtaskPreview={setStepPreview}/>}
         </div>
       </Layout>
     </>
