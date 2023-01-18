@@ -290,25 +290,24 @@ export default function Notes({ userData, projectsTitleId, pageData }: { userDat
               id="no-scrollbar"
             >
               {filteredNotes.map((note) => (
-                <>
-                  <div
-                    role="button"
-                    onClick={() => {handleEdit(note.id);}}
-                    className="flex bg-[#424242] rounded-[10px] sm:rounded-[20px] h-[17.83vh] w-[50.411vw] min-[250px]:h-[20.83vh] min-[250px]:w-[30.411vw] lg:w-[20.83vw] sm:h-[30.411vh] hover:opacity-80 px-[2vw] py-[1.8vh] cursor-pointer "
-                  >
-                    <div className="flex flex-col flex-1 justify-center my-[0.9vh] mx-[2vw] sm:my-[1.6vh] sm:mx-[1.3vw]">
-                      <p className="font-semibold mb-auto text-[2vh] sm:text-[2.9vh] break-all line-clamp-1  lg:mt-1">
-                        {note.title}
-                      </p>
-                      <p className="flex break-all text-[1.3vh] sm:text-[2.1vh] text-justify text-[#CECECE] line-clamp-3">
-                        {note.description}
-                      </p>
-                      <p className="mt-auto text-[1vh] sm:text-[1.6vh] text-[#CECECE]">
-                        {generateDateNow(note.dateCreated)}
-                      </p>
-                    </div>
+                <div
+                  role="button"
+                  onClick={() => {handleEdit(note.id);}}
+                  className="flex bg-[#424242] rounded-[10px] sm:rounded-[20px] h-[17.83vh] w-[50.411vw] min-[250px]:h-[20.83vh] min-[250px]:w-[30.411vw] lg:w-[20.83vw] sm:h-[30.411vh] hover:opacity-80 px-[2vw] py-[1.8vh] cursor-pointer"
+                  key={note.id}
+                >
+                  <div className="flex flex-col flex-1 justify-center my-[0.9vh] mx-[2vw] sm:my-[1.6vh] sm:mx-[1.3vw]">
+                    <p className="font-semibold mb-auto text-[2vh] sm:text-[2.9vh] break-all line-clamp-1  lg:mt-1">
+                      {note.title}
+                    </p>
+                    <p className="flex break-all text-[1.3vh] sm:text-[2.1vh] text-justify text-[#CECECE] line-clamp-3">
+                      {note.description}
+                    </p>
+                    <p className="mt-auto text-[1vh] sm:text-[1.6vh] text-[#CECECE]">
+                      {generateDateNow(note.dateCreated)}
+                    </p>
                   </div>
-                </>
+                </div>
               ))}
             </div>
           </div>
