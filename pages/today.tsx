@@ -1,7 +1,9 @@
 import Layout from "../components/layout";
-import getUserData from "../lib/getUserData";
+import axios from "axios";
 import React, { useEffect, useState } from "react";
 import SubTask from "../components/subtask";
+import getUserData from "../lib/getUserData";
+import PageHead from "../components/pagehead";
 
 interface typeUserData {
   username: string;
@@ -13,6 +15,9 @@ interface typeTask {
   id: string;
   done: boolean;
   important: boolean;
+  createdDate: any,
+  dueDate: any,
+  subtask: never[]
 };
 
 interface typeProjects {
@@ -31,7 +36,7 @@ export default function Today({ userData, projectsTitleId, pageData }: { userDat
   const titleIcon = () => {
     return (
       <svg
-      className="fill-white w-[2.2vh] sm:w-[3.2vh] m-auto opacity-80 "
+      className="fill-white w-[2.2vh] sm:w-[3vh] lg:w-[2.8vh] m-auto opacity-80 "
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 512 512"
     >
@@ -40,10 +45,22 @@ export default function Today({ userData, projectsTitleId, pageData }: { userDat
     );
   };
 
+  const calendarIcon = (design:string) => {
+    return (
+      <svg
+        className={`fill-${design} opacity-80 w-[1vh] sm:w-[1.3vh] h-[1vh] sm:h-[1.3vh] m-auto`}
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 448 512"
+      >
+        <path d="M152 64H296V24C296 10.75 306.7 0 320 0C333.3 0 344 10.75 344 24V64H384C419.3 64 448 92.65 448 128V448C448 483.3 419.3 512 384 512H64C28.65 512 0 483.3 0 448V128C0 92.65 28.65 64 64 64H104V24C104 10.75 114.7 0 128 0C141.3 0 152 10.75 152 24V64zM48 448C48 456.8 55.16 464 64 464H384C392.8 464 400 456.8 400 448V192H48V448z" />
+      </svg>
+    );
+  };
+
   const starLineIcon = () => {
     return (
       <svg
-        className="fill-white w-[1.8vh] sm:w-[2.45vh] m-auto opacity-80 hover:fill-[#54A1EA]"
+        className="fill-white w-[1.9vh] sm:w-[1.8vh] lg:w-[2.4vh] 2xl:w-[2.5vh] m-auto opacity-80 hover:fill-[#54A1EA]"
         xmlns="http:// * www.w3.org/2000/svg"
         viewBox="0 0 576 512"
       >
@@ -55,7 +72,7 @@ export default function Today({ userData, projectsTitleId, pageData }: { userDat
   const starFullIcon = () => {
     return (
       <svg
-        className="fill-white  w-[1.8vh] sm:w-[2.45vh] m-auto opacity-80 hover:fill-[#54A1EA]"
+        className="fill-white  w-[1.9vh] sm:w-[1.8vh] lg:w-[2.4vh] 2xl:w-[2.5vh] m-auto opacity-80 hover:fill-[#54A1EA]"
         xmlns="http:// * www.w3.org/2000/svg"
         viewBox="0 0 576 512"
       >
@@ -67,7 +84,7 @@ export default function Today({ userData, projectsTitleId, pageData }: { userDat
   const plusIcon = (rotate: string) => {
     return (
       <svg
-        className={`${rotate} fill-white opacity-80 w-[1.8vh] sm:w-[2.45vh] h-[1.8vh] sm:h-[2.45vh] m-auto cursor-pointer`}
+        className={`${rotate} fill-white opacity-80 w-[1.8vh] sm:w-[1.6vh] lg:w-[2.2vh] 2xl:w-[2.2vh] h-[1.8vh] sm:h-[2.45vh] m-auto cursor-pointer`}
         xmlns="http:// * www.w3.org/2000/svg"
         viewBox="0 0 448 512"
       >
@@ -80,7 +97,7 @@ export default function Today({ userData, projectsTitleId, pageData }: { userDat
     return (
       <svg
         xmlns="http:// * www.w3.org/2000/svg"
-        className="fill-white opacity-80 w-[1.8vh] sm:w-[2.45vh] hover:opacity-100"
+        className="fill-white opacity-80 w-[1.8vh] sm:w-[1.6vh] lg:w-[2.2vh] 2xl:w-[2.2vh] hover:opacity-100"
         viewBox="0 0 512 512"
       >
         <path d="M470.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L192 338.7 425.4 105.4c12.5-12.5 32.8-12.5 45.3 0z" />
@@ -88,10 +105,10 @@ export default function Today({ userData, projectsTitleId, pageData }: { userDat
     );
   };
 
-  const circleCheckIcon = () => {
+  const circleCheckIcon = (design : string) => {
     return (
       <svg
-        className="fill-white opacity-80 w-[1.8vh] sm:w-[2.45vh] hover:fill-[#54A1EA]"
+        className={`${design} fill-white opacity-80 w-[1.8vh] sm:w-[1.6vh] lg:w-[2.2vh] 2xl:w-[2.2vh] hover:fill-[#54A1EA]`}
         xmlns="http:// * www.w3.org/2000/svg"
         viewBox="0 0 512 512"
       >
@@ -100,10 +117,10 @@ export default function Today({ userData, projectsTitleId, pageData }: { userDat
     );
   };
 
-  const circleIcon = (colorHover: string) => {
+  const circleIcon = (design: string) => {
     return (
       <svg
-        className={`fill-white opacity-80 w-[1.8vh] sm:w-[2.45vh] hover:fill-[${colorHover}]`}
+        className={`fill-white opacity-80 w-[1.8vh] sm:w-[1.6vh] lg:w-[2.2vh] 2xl:w-[2.2vh] ${design}`}
         xmlns="http:// * www.w3.org/2000/svg"
         viewBox="0 0 512 512"
       >
@@ -115,7 +132,7 @@ export default function Today({ userData, projectsTitleId, pageData }: { userDat
   const trashIcon = () => {
     return (
       <svg
-        className="fill-white opacity-80 w-[1.8vh] sm:w-[2.45vh] h-[1.8vh] sm:h-[2.45vh] m-auto hover:fill-[#54A1EA]"
+        className="fill-white opacity-80 w-[1.8vh] sm:w-[1.6vh] lg:w-[2.2vh] 2xl:w-[2.2vh] h-[1.8vh] sm:h-[2.45vh] m-auto hover:fill-[#54A1EA]"
         xmlns="http:// * www.w3.org/2000/svg"
         viewBox="0 0 448 512"
       >
@@ -127,7 +144,7 @@ export default function Today({ userData, projectsTitleId, pageData }: { userDat
   const renameIcon = () => {
     return (
       <svg
-        className="fill-white opacity-80 w-[1.8vh] sm:w-[2.45vh] h-[1.8vh] sm:h-[2.45vh] m-auto hover:fill-[#54A1EA]"
+        className="fill-white opacity-80 w-[1.8vh] sm:w-[1.6vh] lg:w-[2.2vh] 2xl:w-[2.2vh] h-[1.8vh] sm:h-[2.45vh] m-auto hover:fill-[#54A1EA]"
         xmlns="http:// * www.w3.org/2000/svg"
         viewBox="0 0 512 512"
       >
@@ -139,7 +156,7 @@ export default function Today({ userData, projectsTitleId, pageData }: { userDat
   const saveIcon = () => {
     return (
       <svg
-        className="fill-white opacity-80 w-[1.8vh] sm:w-[2.45vh] h-[1.8vh] sm:h-[2.45vh] m-auto hover:fill-[#54A1EA]"
+        className="fill-white opacity-80 w-[1.8vh] sm:w-[1.6vh] lg:w-[2.2vh] 2xl:w-[2.2vh] h-[1.8vh] sm:h-[2.45vh] m-auto hover:fill-[#54A1EA]"
         xmlns="http:// * www.w3.org/2000/svg"
         viewBox="0 0 448 512"
       >
@@ -166,58 +183,129 @@ export default function Today({ userData, projectsTitleId, pageData }: { userDat
     );
   };
 
-// ! I've tidied the lines, don't use automation from prettier to make tidier
+  const backIcon = () => {
+    return (
+      <svg
+      className="fill-white opacity-80 w-[2.2vh] sm:w-[3.7vh] h-[2.2vh] sm:h-[3.7vh] hover:opacity-100"
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 448 512"
+    >
+      <path d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.2 288 416 288c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0L214.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z" />
+    </svg>
+    );
+  };
+
   // *  VARIABLE INITIALIZATION
   const uniqid = require("uniqid");                                 // * to generate id from npm
-  const [addTaskInputShow, setAddTaskInputShow] = useState(false);  // * to popup input
-  const [stepPreview, setStepPreview] = useState(false);            // * open subtask
+  const [addTaskInputShow, setAddTaskInputShow] = useState(false);  // * to popup input new task
+  const [stepPreview, setStepPreview] = useState(false);            // * open subtask of a task
   const [dropDownFinished, setDropDownFinished] = useState(false);  // * make dropdown finished popup
   const [taskTitle, setTaskTitle] = useState("");                   // * the value input to state and submit on data changes
-  const [tasks, setTasks] = useState<typeTask[]>([]);             // TODO : task dataset should be saved to the database
-  const [taskEdit, setTaskEdit] = useState<typeTask>({            // * contains the task that is being renamed or edited
+  const [tasks, setTasks] = useState<typeTask[]>(pageData);         // * array of all task
+  const [taskEdit, setTaskEdit] = useState<typeTask>({              // * contains the task that is being renamed or edited
     title: "",
     id: "",
     done: false,
     important: false,
+    createdDate: null,
+    dueDate: null,
+    subtask: []
   });
 
-  const [stepTaskPreview, setTaskPreview] = useState<typeTask>({  // * contains the task that the step wants to display
+  const [stepTaskPreview, setStepTaskPreview] = useState<typeTask>({  // * contains the task that the step wants to display
     title: "",
     id: "",
     done: false,
     important: false,
+    createdDate: null,
+    dueDate: null,
+    subtask: []
+    
   });
 
-  // *  FUNCTION ACTION ONCLICK
+  const [search, setSearch] = useState("");
+  const [filteredTasks, setFilteredTasks] = useState(pageData);
+  const [navbarStatus, setNavbarStatus] = useState(false);
+  const [dueDate, setDueDate] = useState (new Date().valueOf());
 
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setDueDate(new Date().valueOf());
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  function handleSearch(search: string) {
+    setSearch(search);
+    const newTasks = tasks.filter( (task) => {
+      if (task.title.toLocaleLowerCase().includes(search.toLocaleLowerCase())) {
+        return true;
+      } else {
+        return false;
+      }
+    })
+    setFilteredTasks(newTasks);
+    setStepPreview(false);
+  }
+
+  function handleResetSearch() {
+    setSearch("");
+    setFilteredTasks(tasks);
+  }
+  
   // *  to add new task
   function addTask() {
-    if (addTaskInputShow) {
-      (taskTitle !== "") && 
-      setTasks([
-        ...tasks,
-          {
-            id: uniqid("task_"),
-            title: taskTitle,
-            done: false,
-            important: false,
-          },
-        ]);
-      setTaskTitle("");
-      setAddTaskInputShow(false);
-      } else {
-      setAddTaskInputShow(true);
-      setTaskTitle("");
+    const newTask = {
+      id: uniqid("task_"),
+      title: taskTitle,
+      done: false,
+      important: false,
+      createdDate: Date.now(),
+      dueDate: null,
+      subtask: []
     }
+    
+    if (addTaskInputShow && taskTitle !== "") {
+      // Update database
+      axios.post("http://localhost:3000/api/addtask", {
+        username: userData.username, 
+        menu: "tasks",
+        newTask: newTask
+      })
+        .then( () => {
+          // Update client-side
+          setTasks([...tasks, newTask]);
+          setFilteredTasks([...tasks, newTask]);
+          setSearch("")
+        });
+    }
+    setTaskTitle("");
+    setAddTaskInputShow(!addTaskInputShow);
   }
 
   // *  to delete certain task
   function handleDelete(idTaskEdit: string) {
-    setTasks(
-      tasks.filter(function (task) {
-        return task.id != idTaskEdit;
-      })
-    );
+    // Update database
+    axios.post("http://localhost:3000/api/deletetask", {
+      username: userData.username, 
+      menu: "tasks",
+      taskId: idTaskEdit
+    })
+      .then( () => {
+        // New Tasks
+        const newTasks = tasks.filter(function (task) {
+          return task.id != idTaskEdit;
+        });
+
+        const newFilteredTasks = filteredTasks.filter(function (task) {
+          return task.id != idTaskEdit;
+        });
+
+        // Update client side
+        setTasks(newTasks);
+        setFilteredTasks(newFilteredTasks);
+        setStepPreview(false);
+      });
   }
 
   // *  to set which task is being edited
@@ -226,6 +314,9 @@ export default function Today({ userData, projectsTitleId, pageData }: { userDat
     id: string;
     done: boolean;
     important: boolean;
+    createdDate: any;
+    dueDate: any;
+    subtask:never[]
   }) {
     setTaskEdit(task);
     setAddTaskInputShow(false);
@@ -233,124 +324,234 @@ export default function Today({ userData, projectsTitleId, pageData }: { userDat
   }
 
   // *  to save changes after editing
-  function handleSave(i: number) {
-    if (taskTitle == "") {
-      tasks[i].title = "New Task";
-    } else {
-      tasks[i].title = taskTitle;
-    }
-    setTasks([...tasks]);
-    setTaskEdit({ id: "", title: "", done: false, important: false });
-    setTaskTitle("");
-    setAddTaskInputShow(false);
+  function handleSave(taskId: string) {
+    // Update database
+    axios.post("http://localhost:3000/api/edittask", {
+      username: userData.username, 
+      menu: "tasks",
+      taskId: taskId,
+      newTaskTitle: taskTitle === "" ? "New Tasks" : taskTitle
+    })
+      .then( () => {
+        // Create new array (no mutation)
+        const newTasks = tasks.map( (item) => {
+          if (item.id === taskId) {
+            return {...item, title: taskTitle === "" ? "New Tasks" : taskTitle};
+          } else {
+            return {...item};
+          }
+        })
+
+        const newFilteredTasks = newTasks.filter( (task) => {
+          if (task.title.toLocaleLowerCase().includes(search.toLocaleLowerCase())) {
+            return true;
+          } else {
+            return false;
+          }
+        })
+
+        // Update client side
+        setTasks(newTasks);
+        setFilteredTasks(newFilteredTasks);
+        setTaskEdit({ id: "", title: "", done: false, important: false, createdDate: null, dueDate: null, subtask: [] });
+        setTaskTitle("");
+        setStepPreview(false);
+
+        // handle bug when clicking edit mode in stepPreview mode
+        const taskData = tasks.filter(function (task) {
+          return task.id === taskId;
+        });
+        setStepTaskPreview(taskData[0])
+        setAddTaskInputShow(false);
+      });
   }
 
   // *  to change done status of task
-  function handleDone(i: number) {
-    tasks[i].done ? (tasks[i].done = false) : (tasks[i].done = true);
-    setTasks([...tasks]);
+  function handleDone(taskId: string, taskDone: boolean) {
+    // Update database
+    axios.post("http://localhost:3000/api/donetask", {
+      username: userData.username,
+      menu: "tasks",
+      taskId: taskId,
+      taskDone: !taskDone
+    })
+    .then( () => {
+      // Create new array (no mutation)
+      const newTasks = tasks.map( (item) => {
+        if (item.id === taskId) {
+          return {...item, done: !item.done};
+        } else {
+          return {...item};
+        }
+      })
+
+      // Create new array for filtered data
+      const newFilteredTasks = filteredTasks.map( (item) => {
+        if (item.id === taskId) {
+          return {...item, done: !item.done};
+        } else {
+          return {...item};
+        }
+      })
+
+      // Update client side
+      setTasks(newTasks);
+      setFilteredTasks(newFilteredTasks);
+    });
   }
 
   // *  to change important status of task
-  function handleImportant(i: number) {
-    tasks[i].important
-      ? (tasks[i].important = false)
-      : (tasks[i].important = true);
-    setTasks([...tasks]);
+  function handleImportant(taskId: string, taskImportant: boolean) {
+    // Update database
+    axios.post("http://localhost:3000/api/importanttask", {
+      username: userData.username,
+      menu: "tasks",
+      taskId: taskId,
+      taskImportant: !taskImportant
+    })
+    .then( () => {
+        // Create new array (no mutation)
+        const newTasks = tasks.map( (item) => {
+          if (item.id === taskId) {
+            return {...item, important: !item.important};
+          } else {
+            return {...item};
+          }
+        })
+
+        // Create new array for filtered case
+        const newFilteredTasks = filteredTasks.map( (item) => {
+          if (item.id === taskId) {
+            return {...item, important: !item.important};
+          } else {
+            return {...item};
+          }
+        })
+
+        // Update client side
+        setTasks(newTasks);
+        setFilteredTasks(newFilteredTasks)
+      });
   }
 
   // * to handle change step preview popup
-  //? add logic to overcome when clicked by a div that clicks to open the step it will be closed, while if not it will still be opened but the parameters sent are different 
   function handleSubTaskPreview(task: {
     title: string;
     id: string;
     done: boolean;
     important: boolean;
+    createdDate: any;
+    dueDate: any;
+    subtask:never[]
   }) {
-    setTaskPreview(task);
+    setStepTaskPreview(task);
     setAddTaskInputShow(false);
-    setTaskTitle("")
-    stepPreview ? setStepPreview(false) :  setStepPreview(true);
+    setTaskTitle("");
+    stepPreview ? setStepPreview(false) : setStepPreview(true);
   }
+  const generateDate = (dateData:number) => {
+    if(dateData !== null){
+    return (new Date(dateData)).toLocaleDateString("en-UK", {
+      weekday:"short",
+        day: "numeric",
+        month: "short",
+        year: "2-digit",
+    });}
+  };
 
-// ! I've tidied the lines, don't use automation from prettier to make tidier
+
+  // * to convert from dueDate number format to a time string
+  const generateTime = (dateData:number) => {
+    if(dateData !== null){
+    return (new Date(dateData)).toLocaleTimeString("en-UK", {
+      hour: "numeric",
+      minute: "numeric",
+    });}
+  };
 
   return (
     <>
-      <Layout userData={userData} projectsTitleId={projectsTitleId}>
+      <PageHead title="Today | Just Do List"/>
+      <Layout userData={userData} projectsTitleId={projectsTitleId} search={search} handleResetSearch={handleResetSearch} handleSearch={handleSearch} design={navbarStatus}>
         <div className="flex flex-1">
           <div className="flex flex-col flex-1 py-[2vh] lg:p-[3.8vh] px-[3.4vh] gap-1">
+      {/* // ! BACK SECTION FOR MOBILE */}
+            <div className="flex sm:hidden">
+              <button onClick={()=>{navbarStatus ? setNavbarStatus(false) : setNavbarStatus(true)}}>
+                 {backIcon()}
+              </button>
+            </div>
 
       {/* // ! TITLE SECTION */}
-            <div className="flex  items-center gap-x-3">
+            <div className="flex  items-center gap-x-3 mt-2 lg:mt-0">
               <span>{titleIcon()}</span>
-              <p className="font-semibold text-[2.5vh] sm:text-[3.8vh]">
-                Today{" "}
+              <p className="font-semibold text-xl sm:text-2xl">
+                Today
               </p>
             </div>
-      {/* Tinggal pasang logic kalo duedate dari data sama kek datenow bakal di show  */}
+            
       {/* // ! TASK LIST UNDONE SECTION */}
             <div
               className="flex flex-1 flex-col my-3 overflow-y-scroll"
               id="no-scrollbar"
               >
               {/* // * div to loop through the created task list * */}
-              {tasks.map(
-                (task, index) =>
-                  !task.done && (
+              {filteredTasks.map(
+                (task) =>
+                  !task.done && (task.dueDate!==null && generateDate(task.dueDate) === generateDate(dueDate)) && (
                     <div
                       key={task.id}
                       className="flex bg-[#424242] hover:opacity-80 duration-200 p-[1.4vh] cursor-pointer mb-[1.47vh] "
                     >
-                      <div className="flex flex-1 items-center justify-center mx-[1vw] gap-3">
+                      <div className="flex flex-1 items-center justify-center mx-[1vw] gap-2 sm:gap-3">
                         {/* // * Handle changes to the checkdone icon */}
-                        {task.done ? (
                           <span
-                            onClick={() => {handleDone(index);}}
+                            onClick={() => {handleDone(task.id, task.done);}}
                           >
-                            {circleCheckIcon()}
+                            {circleIcon((task.dueDate < dueDate && task.dueDate !== null) ? " hover:fill-red-500":"hover:fill-[#54A1EA]")}
                           </span>
-                        ) : (
-                          <span
-                            onClick={() => {handleDone(index);}}
-                          >
-                            {circleIcon("#54A1EA")}
-                          </span>
-                        )}
                          {/* // * Handle changes when edited from paragraphs to input */}
-                        {taskEdit === task && !stepPreview ? (
+                        {taskEdit === task ? (
                           <>
                             <input
                               type="text"
-                              className="outline-none bg-[#3d3d3d] bg-opacity-50 flex break-all flex-1 text-[1.5vh] sm:text-[2.25vh] text-justify"
+                              className="outline-none bg-[#3d3d3d] bg-opacity-50 flex break-all flex-1 text-sm md:text-base xl:text-lg text-justify"
                               placeholder="New Task"
                               defaultValue={task.title}
                               onChange={(event) => {setTaskTitle(event.target.value)}}
                             />
                             <button
-                              onClick={() => {handleSave(index);}}
+                              onClick={() => {handleSave(task.id);}}
                             >
                               {saveIcon()}
                             </button>
                           </>
                         ) : (
                           <>
+                          <div className={`${(task.dueDate < dueDate && task.dueDate !== null) && "text-red-500"} flex flex-col flex-1`}>
                             <p
-                              className="flex break-all flex-1 text-[1.5vh] sm:text-[2.25vh] text-justify"
+                              className="flex break-all flex-1 text-sm md:text-base xl:text-lg text-justify"
                               onClick={() => {handleSubTaskPreview(task)}}
                             >
                               {task.done ? <s className="opacity-50">{task.title} </s> : task.title}
                             </p>
+                            {task.dueDate !== null && 
+                            <div className="flex justify-start gap-x-1 mt-1">
+                              {calendarIcon(task.dueDate < dueDate ? "red-500":"white")}
+                              <p className="text-[0.7rem] sm:text-xs flex flex-1">{`${generateDate(task.dueDate) === generateDate(dueDate) ? "Today" : (generateDate(dueDate+86400000)===generateDate(task.dueDate)?"Tomorrow":generateDate(task.dueDate))} | ${generateTime(task.dueDate)}  `}</p>
+                            </div>}
+                          </div>
+                            
                             {/* // * Handle changes to starIcon Important */}
                             {!task.important ? (
                               <button
-                                onClick={() => {handleImportant(index)}}
+                                onClick={() => {handleImportant(task.id, task.important)}}
                               >
                                 {starLineIcon()}
                               </button>
                             ) : (
                               <button
-                                onClick={() => {handleImportant(index)}}
+                                onClick={() => {handleImportant(task.id, task.important)}}
                               >
                                 {starFullIcon()}
                               </button>
@@ -375,9 +576,9 @@ export default function Today({ userData, projectsTitleId, pageData }: { userDat
               )}
 
       {/* // ! FINISHED SECTION   */}
-        {/* // * The logic is that finished will appear if one of the task.done is true */}
-              {tasks.some((task) => {
-                return task.done === true;
+        {/* // * The logic is that finished will appear if one of the task done is true */}
+              {filteredTasks.some((task) => {
+                return task.done === true && (task.dueDate!==null && generateDate(task.dueDate) === generateDate(dueDate));
               }) && (
                 <div
                   onClick={() => {dropDownFinished? setDropDownFinished(false): setDropDownFinished(true)}}
@@ -386,7 +587,7 @@ export default function Today({ userData, projectsTitleId, pageData }: { userDat
                   <span>
                     {arrowIcon()}
                   </span>
-                  <p className="text-[1.6vh] font-medium sm:text-[2.3vh]">
+                  <p className="text-sm font-medium md:text-base xl:text-lg">
                     Finished
                   </p>
                 </div>
@@ -394,40 +595,32 @@ export default function Today({ userData, projectsTitleId, pageData }: { userDat
 
       {/* // ! TASK LIST DONE SECTION */}
               {/* // * div to loop through the created task list * */}
-              {tasks.map(
-                (task, index) =>
-                  task.done && (
+              {filteredTasks.map(
+                (task) =>
+                  task.done && (task.dueDate!==null && generateDate(task.dueDate) === generateDate(dueDate)) && (
                     <div
                       key={task.id}
                       className={`${dropDownFinished ? "flex" : "hidden"} bg-[#424242] hover:opacity-80 duration-200 p-[1.4vh] cursor-pointer mb-[1.47vh] `}
                     >
                       <div className="flex flex-1 items-center justify-center mx-[1vw] gap-3">
                         {/* // * Handle changes to the icon done checklist */}
-                        {task.done ? (
                           <span
-                            onClick={() => {handleDone(index);}}
+                            onClick={() => {handleDone(task.id, task.done);}}
                           >
-                            {circleCheckIcon()}
+                            {circleCheckIcon("")}
                           </span>
-                        ) : (
-                          <span
-                            onClick={() => {handleDone(index);}}
-                          >
-                            {circleIcon("#54A1EA")}
-                          </span>
-                        )}
                         {/* // * Handle input changes when in edit mode */}
                         {taskEdit === task ? (
                           <>
                             <input
                               type="text"
-                              className="outline-none bg-[#3d3d3d] bg-opacity-50 flex break-all flex-1 text-[1.5vh] sm:text-[2.25vh] text-justify"
+                              className="outline-none bg-[#3d3d3d] bg-opacity-50 flex break-all flex-1 text-sm md:text-base xl:text-lg text-justify"
                               placeholder="New Task"
                               defaultValue={task.title}
                               onChange={(event) => {setTaskTitle(event.target.value);}}
                             />
                             <button
-                              onClick={() => {handleSave(index);}}
+                              onClick={() => {handleSave(task.id);}}
                             >
                               {saveIcon()}
                             </button>
@@ -435,7 +628,7 @@ export default function Today({ userData, projectsTitleId, pageData }: { userDat
                         ) : (
                           <>
                             <p
-                              className="flex break-all flex-1 text-[1.5vh] sm:text-[2.25vh] text-justify"
+                              className="flex break-all flex-1 text-sm md:text-base xl:text-lg text-justify"
                               onClick={() => {handleSubTaskPreview(task);}}
                             >
                               {task.done ? <s className="opacity-50">{task.title} </s> : task.title}
@@ -443,13 +636,13 @@ export default function Today({ userData, projectsTitleId, pageData }: { userDat
                             {/* //* Handle icon important changes */}
                             {!task.important ? (
                               <button
-                                onClick={() => {handleImportant(index);}}
+                                onClick={() => {handleImportant(task.id, task.important);}}
                               >
                                 {starLineIcon()}
                               </button>
                             ) : (
                               <button
-                                onClick={() => {handleImportant(index);}}
+                                onClick={() => {handleImportant(task.id, task.important);}}
                               >
                                 {starFullIcon()}
                               </button>
@@ -479,9 +672,9 @@ export default function Today({ userData, projectsTitleId, pageData }: { userDat
               className={`${(taskEdit.id !== "" && taskEdit.title !== "") && "cursor-not-allowed"} bg-[#424242] opacity-100 flex p-[1.5vh] hover:opacity-80 `}
               onClick={() => {!addTaskInputShow && setAddTaskInputShow(true);}}
             >
-              <div className="flex flex-1 px-[1.5vw] gap-4 ">
+              <div className="flex flex-1 px-[1.5vw] gap-4">
                 <div className="m-auto">
-                  {addTaskInputShow && taskEdit.id === "" && taskEdit.title === "" ? circleIcon("none")
+                  {addTaskInputShow && taskEdit.id === "" && taskEdit.title === "" ? circleIcon("")
                     :
                     plusIcon(`rotate-0 cursor-${taskEdit.id !== "" && taskEdit.title !== "" ? "not-allowed" : "default"}`)}
                 </div>
@@ -490,7 +683,7 @@ export default function Today({ userData, projectsTitleId, pageData }: { userDat
                     taskEdit.id !== "" &&
                     taskEdit.title !== "" &&
                     "caret-transparent cursor-not-allowed"
-                  } flex-1 outline-none w-[8vw] font-medium text-[1.5vh] sm:text-[2.2vh] bg-transparent placeholder:text-white placeholder:opacity-70`}
+                  } flex-1 outline-none w-[8vw] font-medium text-sm md:text-base xl:text-lg bg-transparent placeholder:text-white placeholder:opacity-70`}
                   placeholder="Add New Task"
                   value={taskEdit.id === "" && taskEdit.title === "" ? taskTitle : ""}
                   onChange={(event) => {setTaskTitle(event.target.value);}}
@@ -511,7 +704,7 @@ export default function Today({ userData, projectsTitleId, pageData }: { userDat
           </div>
 
       {/* // ! STEP PREVIEW SECTION */}
-          {stepPreview && <SubTask username={userData.username} taskData={stepTaskPreview} subtaskPreview={setStepPreview}/>}
+           {stepPreview && <SubTask username={userData.username} design={stepPreview?"flex":"hidden"} taskData={stepTaskPreview} setTaskData={setStepTaskPreview} allData={tasks} setAllData={setTasks} filteredTasks={filteredTasks} setFilteredTasks={setFilteredTasks} subtaskPreview={setStepPreview}/>}
         </div>
       </Layout>
     </>
@@ -533,7 +726,7 @@ export async function getServerSideProps(ctx: any) {
   const projectsTitleId = data.projects.map( (proj: typeProjects ) => { return {id: proj.id, title: proj.title} })
 
   // Tasks data
-  const pageData = data.today;
+  const pageData = data.tasks;
 
   return {
     props: { userData, projectsTitleId, pageData }
