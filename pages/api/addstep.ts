@@ -16,7 +16,7 @@ export default async function addStep(
   res: NextApiResponse
 ) {
   // Get req
-  const { menu, taskId, newStep } = req.body;
+  const { menu, projectId, taskId, newStep } = req.body;
 
   // Get username from cookie
   const cookie = req.headers.cookie as string;
@@ -30,10 +30,18 @@ export default async function addStep(
   const coll = db.collection(username);
 
   // Add newStep data
-  await coll.updateOne(
-    { username: username, [`${menu}.id`]: taskId },
-    { $push: { [`${menu}.$.subtask`]: newStep } }
-  )
+  if (menu !== "projects") {
+    await coll.updateOne(
+      { username: username, [`${menu}.id`]: taskId },
+      { $push: { [`${menu}.$.subtask`]: newStep } }
+    )
+  } else {
+    await coll.updateOne(
+      { username: username, "projects.id": projectId, "projects.tasks.id": taskId },
+      { $push: { "projects.$[project].tasks.$[task].subtask": newStep } },
+      { arrayFilters: [ { "project.id": projectId }, { "task.id": taskId } ] }
+    )
+  }
   
   // Tutup DB
   await client.close();

@@ -16,7 +16,7 @@ export default async function editStep(
   res: NextApiResponse
 ) {
   // Get req
-  const { menu, taskId, stepId, newStepTitle } = req.body;
+  const { menu, projectId, taskId, stepId, newStepTitle } = req.body;
 
   // Get username from cookie
   const cookie = req.headers.cookie as string;
@@ -30,11 +30,19 @@ export default async function editStep(
   const coll = db.collection(username);
 
   // Edit the title
-  await coll.updateOne(
-    { username: username, [`${menu}.id`]: taskId, [`${menu}.subtask.id`]: stepId },
-    { $set: { [`${menu}.$[task].subtask.$[step].title`]: newStepTitle } },
-    { arrayFilters: [ { "task.id": taskId }, { "step.id": stepId } ] }
-  )
+  if (menu !== "projects") {
+    await coll.updateOne(
+      { username: username, [`${menu}.id`]: taskId, [`${menu}.subtask.id`]: stepId },
+      { $set: { [`${menu}.$[task].subtask.$[step].title`]: newStepTitle } },
+      { arrayFilters: [ { "task.id": taskId }, { "step.id": stepId } ] }
+    )
+  } else {
+    await coll.updateOne(
+      { username: username, "projects.id": projectId, "projects.tasks.id": taskId, "projects.tasks.subtask.id": stepId },
+      { $set: { "projects.$[project].tasks.$[task].subtask.$[step].title": newStepTitle } },
+      { arrayFilters: [ { "project.id": projectId }, { "task.id": taskId }, { "step.id": stepId } ] }
+    )
+  }
 
   // Tutup DB
   await client.close();

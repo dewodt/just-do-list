@@ -66,7 +66,7 @@ export default function Home() {
 
   return (
     <>
-      <PageHead title="Login / Signup" />
+      <PageHead title="Login / Signup | Just Do List" />
       <div className="flex flex-col justify-center py-[8vh] w-[100vw] min-h-[100vh] items-center sm:flex-row">
         <Image className="w-[50vw] sm:w-[35vw] lg:w-[25vw] xl:w-[20vw] sm:mr-[4vw]" src={Logo} alt="Logo Just Do List" />
         <div className="flex flex-col gap-y-4 lg:gap-y-8 w-[60vw] sm:w-[35vw] md:w-[30vw] lg:w-[25vw] xl:w-[20vw]">

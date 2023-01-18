@@ -1,5 +1,4 @@
 import axios from "axios";
-import Link from "next/link";
 import { useState } from "react";
 
 interface typeUserData {
@@ -92,8 +91,7 @@ export default function Projects( { userData, projectsTitleId }: { userData: typ
 
     if (showInput && title !== "") {
       // Edit database
-      axios.post("api/addproject", {
-        username: userData.username,
+      axios.post("/api/addproject", {
         newProject: newProject,
       }).then( () => {
         // Edit client side
@@ -106,8 +104,7 @@ export default function Projects( { userData, projectsTitleId }: { userData: typ
 
   function handleSave(projectId: string) {
     // Edit database
-    axios.post("api/editproject", {
-        username: userData.username,
+    axios.post("/api/editproject", {
         projectId: projectId,
         newTitle: title ? title : "New Project",
       }).then( () => {
@@ -135,8 +132,7 @@ export default function Projects( { userData, projectsTitleId }: { userData: typ
 
   function handleDelete(projectId: string) {
     // Edit database
-    axios.post("api/deleteproject", {
-      username: userData.username,
+    axios.post("/api/deleteproject", {
       projectId: projectId,
     })
       .then( () => {
@@ -234,71 +230,65 @@ export default function Projects( { userData, projectsTitleId }: { userData: typ
             {/* New project when clicking */}
             {projects.map((project) =>
               editProject === project && showInput === false ? (
-                <>
-                  <li
-                    key={project.id}
-                    className="ml-4 mr-2 flex w-full py-1 text-xs xl:text-base lg:text-sm text-gray-400 dark:text-gray-200 dark:hover:bg-gray-600 rounded-[3px] "
-                  >
-                    <div className="flex">
-                      <button disabled={true} className="py-1.5">
-                        {projectIcon()}
-                      </button>
-                      <div className="my-auto flex-1 indent-0 mx-3.5">
-                        <input
-                          type="text"
-                          className="w-[40vw] sm:w-[10vw] md:w-[14vw] lg:w-[4vw] xl:w-[8.15vw] outline-none"
-                          placeholder="Project Name"
-                          defaultValue={project.title}
-                          onChange={(event) => {
-                            setTitle(event.target.value);
-                          }}
-                        />
-                      </div>
-                      <button
-                        className="py-1"
-                        onClick={() => handleSave(project.id)}
-                      >
-                        {checkIcon()}
-                      </button>
+                <li
+                  key={project.id}
+                  className="ml-4 mr-2 flex w-full py-1 text-xs xl:text-base lg:text-sm text-gray-400 dark:text-gray-200 dark:hover:bg-gray-600 rounded-[3px] "
+                >
+                  <div className="flex">
+                    <button disabled={true} className="py-1.5">
+                      {projectIcon()}
+                    </button>
+                    <div className="my-auto flex-1 indent-0 mx-3.5">
+                      <input
+                        type="text"
+                        className="w-[40vw] sm:w-[10vw] md:w-[14vw] lg:w-[4vw] xl:w-[8.15vw] outline-none"
+                        placeholder="Project Name"
+                        defaultValue={project.title}
+                        onChange={(event) => {
+                          setTitle(event.target.value);
+                        }}
+                      />
                     </div>
-                  </li>
-                </>
+                    <button
+                      className="py-1"
+                      onClick={() => handleSave(project.id)}
+                    >
+                      {checkIcon()}
+                    </button>
+                  </div>
+                </li>
               ) : (
-                <>
-                  <li className="ml-4 mr-2 flex py-1 text-xs xl:text-base lg:text-sm text-gray-400 dark:text-gray-200 dark:hover:bg-gray-600 rounded-[3px] ">
-                    <div className="m-auto flex flex-1">
-                      <button disabled={true} className="py-1.5">
-                        {projectIcon()}
-                      </button>
-                      <div className="my-auto flex-1 w-[7vw]" key={project.id}>
-                        <Link
-                          href={{
-                            pathname: "/projects/[slug]",
-                            query: { slug: project.id },
-                          }}
+                <li 
+                  key={project.id}
+                  className="ml-4 mr-2 flex py-1 text-xs xl:text-base lg:text-sm text-gray-400 dark:text-gray-200 dark:hover:bg-gray-600 rounded-[3px]"
+                >
+                  <div className="m-auto flex flex-1">
+                    <button disabled={true} className="py-1.5">
+                      {projectIcon()}
+                    </button>
+                    <div className="my-auto flex-1 w-[7vw]" key={project.id}>
+                      <button onClick={() => (window.location.href=`/projects/${project.id}`)}>
+                        <div
+                          className="mx-4 indent-0 break-all cursor-pointer"
                         >
-                          <div
-                            className="mx-4 indent-0 break-all cursor-pointer"
-                          >
-                            {project.title}{" "}
-                          </div>
-                        </Link>
-                      </div>
-                      <button
-                        className="text- py-1 mr-2"
-                        onClick={() => handleEditProject(project)}
-                      >
-                        {renameIcon()}
-                      </button>
-                      <button
-                        className="py-1"
-                        onClick={() => handleDelete(project.id)}
-                      >
-                        {deleteIcon()}
+                          {project.title}{" "}
+                        </div>
                       </button>
                     </div>
-                  </li>
-                </>
+                    <button
+                      className="text- py-1 mr-2"
+                      onClick={() => handleEditProject(project)}
+                    >
+                      {renameIcon()}
+                    </button>
+                    <button
+                      className="py-1"
+                      onClick={() => handleDelete(project.id)}
+                    >
+                      {deleteIcon()}
+                    </button>
+                  </div>
+                </li>
               )
             )}
           </div>

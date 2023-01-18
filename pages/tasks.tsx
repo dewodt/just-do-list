@@ -175,13 +175,14 @@ export default function Tasks({ userData, projectsTitleId, pageData }: { userDat
         xmlns="http:// * www.w3.org/2000/svg"
         >
         <path
-          fill-rule="evenodd"
+          fillRule="evenodd"
           d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-          clip-rule="evenodd"
+          clipRule="evenodd"
         ></path>
       </svg>
     );
   };
+  
   const backIcon = () => {
     return (
       <svg
@@ -699,7 +700,7 @@ export default function Tasks({ userData, projectsTitleId, pageData }: { userDat
           </div>
 
       {/* // ! STEP PREVIEW SECTION */}
-           {stepPreview && <SubTask username={userData.username} design={stepPreview?"flex":"hidden"} taskData={stepTaskPreview} setTaskData={setStepTaskPreview} allData={tasks} setAllData={setTasks} filteredTasks={filteredTasks} setFilteredTasks={setFilteredTasks} subtaskPreview={setStepPreview}/>}
+           {stepPreview && <SubTask menu="tasks" projectId="" design={stepPreview?"flex":"hidden"} taskData={stepTaskPreview} setTaskData={setStepTaskPreview} allData={tasks} setAllData={setTasks} filteredTasks={filteredTasks} setFilteredTasks={setFilteredTasks} subtaskPreview={setStepPreview}/>}
         </div>
       </Layout>
     </>
