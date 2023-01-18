@@ -257,7 +257,7 @@ export default function ProjectDetails( { userData, projectsTitleId, pageData }:
     }
     if (addTaskInputShow && taskTitle !== "") {
       // Update database
-      axios.post("../api/addtask", {
+      axios.post("/api/addtask", {
         menu: "projects",
         projectId: projectId,
         newTask: newTask
@@ -276,8 +276,9 @@ export default function ProjectDetails( { userData, projectsTitleId, pageData }:
   // *  to delete certain task
   function handleDelete(idTaskEdit: string) {
     // Update database
-    axios.post("api/deletetask", {
-      menu: "tasks",
+    axios.post("/api/deletetask", {
+      menu: "projects",
+      projectId: projectId,
       taskId: idTaskEdit
     })
       .then( () => {
@@ -315,8 +316,9 @@ export default function ProjectDetails( { userData, projectsTitleId, pageData }:
   // *  to save changes after editing
   function handleSave(taskId: string) {
     // Update database
-    axios.post("api/edittask", {
-      menu: "tasks",
+    axios.post("/api/edittask", {
+      menu: "projects",
+      projectId: projectId,
       taskId: taskId,
       newTaskTitle: taskTitle === "" ? "New Tasks" : taskTitle
     })
@@ -357,8 +359,9 @@ export default function ProjectDetails( { userData, projectsTitleId, pageData }:
   // *  to change done status of task
   function handleDone(taskId: string, taskDone: boolean) {
     // Update database
-    axios.post("api/donetask", {
-      menu: "tasks",
+    axios.post("/api/donetask", {
+      menu: "projects",
+      projectId: projectId,
       taskId: taskId,
       taskDone: !taskDone
     })
@@ -390,8 +393,9 @@ export default function ProjectDetails( { userData, projectsTitleId, pageData }:
   // *  to change important status of task
   function handleImportant(taskId: string, taskImportant: boolean) {
     // Update database
-    axios.post("api/importanttask", {
-      menu: "tasks",
+    axios.post("/api/importanttask", {
+      menu: "projects",
+      projectId: projectId,
       taskId: taskId,
       taskImportant: !taskImportant
     })
