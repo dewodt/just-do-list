@@ -130,6 +130,7 @@ export default function Notes({ userData, projectsTitleId, pageData }: { userDat
   const [search, setSearch] = useState("");
   const [filteredNotes, setFilteredNotes] = useState(pageData);
   const [navbarStatus, setNavbarStatus] = useState(false);
+  
 
   // * to convert from dateCreated number format to date string
   const generateDateNow = (numDate: number) => {
@@ -275,7 +276,12 @@ export default function Notes({ userData, projectsTitleId, pageData }: { userDat
       <Layout userData={userData} projectsTitleId={projectsTitleId} search={search} handleResetSearch={handleResetSearch} handleSearch={handleSearch} design={navbarStatus}>
         <div className="flex flex-1">
           <div className="flex flex-col flex-1 pt-[2vh] lg:px-[3.8vh] lg:pt-[3.8vh] px-[3.4vh] ">
-
+            {/* // ! BACK SECTION FOR MOBILE */}
+            <div className="flex sm:hidden">
+              <button onClick={()=>{navbarStatus ? setNavbarStatus(false) : setNavbarStatus(true)}}>
+                 {backIcon()}
+              </button>
+            </div>
             {/* // ! HEADER NOTES SECTION */}
             <div className="flex  items-center gap-x-2">
               <span>{notesIcon()}</span>
