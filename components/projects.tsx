@@ -16,7 +16,7 @@ export default function Projects( { userData, projectsTitleId }: { userData: typ
   const projectIcon = () => {
     return (
       <svg
-        className="fill-white opacity-80 w-[0.6rem] h-[0.6rem] m-auto"
+        className="fill-white opacity-80 w-[0.8rem] h-[0.8rem] xl:w-[0.9rem] xl:h-[0.9rem] m-auto"
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 448 512"
       >
@@ -27,7 +27,7 @@ export default function Projects( { userData, projectsTitleId }: { userData: typ
   const deleteIcon = () => {
     return (
       <svg
-        className="fill-white opacity-80 w-[0.6rem] h-[0.6rem] m-auto hover:fill-zinc-400"
+        className="fill-white opacity-80 w-[0.8rem] h-[0.8rem] xl:w-[0.9rem] xl:h-[0.9rem] m-auto hover:fill-zinc-400"
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 448 512"
       >
@@ -39,7 +39,7 @@ export default function Projects( { userData, projectsTitleId }: { userData: typ
   const checkIcon = () => {
     return (
       <svg
-        className="fill-white opacity-80 w-[0.8rem] h-[0.8rem] m-auto hover:fill-zinc-400"
+        className="fill-white opacity-80 w-[0.8rem] h-[0.8rem] xl:w-[0.9rem] xl:h-[0.9rem] m-auto hover:fill-zinc-400"
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 512 512"
       >
@@ -50,7 +50,7 @@ export default function Projects( { userData, projectsTitleId }: { userData: typ
   const crossIcon = () => {
     return (
       <svg
-        className="fill-white opacity-80 w-[0.8rem] h-[0.8rem] m-auto hover:fill-zinc-400"
+        className="fill-white opacity-80 w-[0.8rem] h-[0.8rem] xl:w-[0.9rem] xl:h-[0.9rem] m-auto hover:fill-zinc-400"
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 512 512"
       >
@@ -61,7 +61,7 @@ export default function Projects( { userData, projectsTitleId }: { userData: typ
   const renameIcon = () => {
     return (
       <svg
-        className="fill-white opacity-80 w-[0.8rem] h-[0.8rem] m-auto hover:fill-zinc-400"
+        className="fill-white opacity-80 w-[0.8rem] h-[0.8rem] xl:w-[0.9rem] xl:h-[0.9rem] m-auto hover:fill-zinc-400"
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 512 512"
       >
@@ -157,7 +157,7 @@ export default function Projects( { userData, projectsTitleId }: { userData: typ
     >
       <div
         id="no-scrollbar"
-        className=" bg-[#464449] hover:bg-[#4D4B52] bg-opacity-50 gap-1 my-2 mx-10 indent-4 rounded-[0.8rem] text-[0.87rem] overflow-auto"
+        className=" bg-[#464449] p-1 hover:bg-[#4D4B52] bg-opacity-50 gap-1 my-2 mx-10 indent-4 rounded-[0.8rem] text-[0.87rem] overflow-auto"
       >
         <div
           className=" rounded-[0.3rem] hover:bg-[#4D4B52] flex cursor-pointer h-[2rem] my-1"
@@ -187,7 +187,7 @@ export default function Projects( { userData, projectsTitleId }: { userData: typ
               </svg>
             )}
           </div>
-          <div className="text-[1.5vh] 2xl:text-[1.6vh] font-semibold flex-1 m-auto">
+          <div className="text-sm xl:text-base font-semibold flex-1 m-auto">
             PROJECTS
           </div>
         </div>
@@ -202,7 +202,7 @@ export default function Projects( { userData, projectsTitleId }: { userData: typ
                     onChange={(event) => {
                       setTitle(event.target.value);
                     }}
-                    className="text-black w-[9vw] flex-1 text-xs outline-none rounded-[3px] bg-white placeholder:indent-3"
+                    className="text-black w-[9vw] flex-1 text-xs outline-none rounded-[3px] my-1 xl:my-2 bg-white placeholder:indent-3"
                   />
                   <div className="m-auto" role="button" onClick={addProjects}>
                     {title === "" ? crossIcon() : checkIcon()}
@@ -210,12 +210,12 @@ export default function Projects( { userData, projectsTitleId }: { userData: typ
                 </div>
               ) : (
                 <div
-                  className="flex mx-2 gap-2 flex-1  rounded-[3px]"
+                  className="flex mx-2 gap-2 flex-1 my-1 xl:my-2 rounded-[3px]"
                   role="button"
                   onClick={addProjects}
                 >
                   <div className="flex flex-1 mx-3">
-                    <div className="flex-1 m-auto text-[1.5vh] 2xl:text-[1.6vh] indent-0">
+                    <div className="flex-1 m-auto text-xs xl:text-[0.95rem] indent-0">
                       Add New Project
                     </div>
                     <div className="py-1.5">
@@ -237,7 +237,7 @@ export default function Projects( { userData, projectsTitleId }: { userData: typ
                 <>
                   <li
                     key={project.id}
-                    className="ml-4 mr-2 flex w-full py-1 text-[1.5vh] 2xl:text-[1.6vh] text-gray-400 dark:text-gray-200 dark:hover:bg-gray-600 rounded-[3px] "
+                    className="ml-4 mr-2 flex w-full py-1 text-xs xl:text-base lg:text-sm text-gray-400 dark:text-gray-200 dark:hover:bg-gray-600 rounded-[3px] "
                   >
                     <div className="flex">
                       <button disabled={true} className="py-1.5">
@@ -246,7 +246,7 @@ export default function Projects( { userData, projectsTitleId }: { userData: typ
                       <div className="my-auto flex-1 indent-0 mx-3.5">
                         <input
                           type="text"
-                          className="w-[15vh] lg:w-[8.15vw] outline-none"
+                          className="w-[40vw] sm:w-[10vw] md:w-[14vw] lg:w-[4vw] xl:w-[8.15vw] outline-none"
                           placeholder="Project Name"
                           defaultValue={project.title}
                           onChange={(event) => {
@@ -265,7 +265,7 @@ export default function Projects( { userData, projectsTitleId }: { userData: typ
                 </>
               ) : (
                 <>
-                  <li className="ml-4 mr-2 flex py-1 text-[1.5vh] 2xl:text-[1.6vh] text-gray-400 dark:text-gray-200 dark:hover:bg-gray-600 rounded-[3px] ">
+                  <li className="ml-4 mr-2 flex py-1 text-xs xl:text-base lg:text-sm text-gray-400 dark:text-gray-200 dark:hover:bg-gray-600 rounded-[3px] ">
                     <div className="m-auto flex flex-1">
                       <button disabled={true} className="py-1.5">
                         {projectIcon()}
