@@ -1,7 +1,5 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import Calendar from "react-calendar";
-import "react-calendar/dist/Calendar.css";
 import Datetime from "react-datetime"
 import "react-datetime/css/react-datetime.css"; 
 
@@ -554,7 +552,7 @@ export default function SubTask( {username, taskData, subtaskPreview, setTaskDat
               <div className="flex flex-col text-center cursor-pointer px-[1.8vh] sm:px-[2.6vh] py-[1.3vh] md:py-[2vh] text-[1.4vh] sm:text-[2.2vh] text-white">
                 <div className="text-black">
                   {/* // ? Ini kenapakah padahal masih jalan aja pas gw debug */}
-                  <Datetime onClose={()=>{handleDueDate("custom")}} closeOnSelect={true} onChange={(date)=>{typeof date !== "string" && setDueDate(date._d.valueOf())}}  inputProps={{ className: "text-white outline-none bg-transparent text-center ", placeholder:"Click To Set" }} />
+                  <Datetime onClose={()=>{handleDueDate("custom")}} closeOnSelect={true} onChange={(date)=>{typeof date !== "string" && setDueDate(date.valueOf())}}  inputProps={{ className: "text-white outline-none bg-transparent text-center ", placeholder:"Click To Set" }} />
                 </div>
               </div>
               </>
