@@ -383,9 +383,8 @@ export default function SubTask( {username, taskData, subtaskPreview, setTaskDat
       weekday:"short",
       day: "numeric",
       month: "short",
-      year: "numeric",
-    });
-    };
+      year: "2-digit",
+    })};
 
   // * to convert from dueDate number format to a time string
   const generateTime = (dateData:number) => {
@@ -542,7 +541,7 @@ export default function SubTask( {username, taskData, subtaskPreview, setTaskDat
           </div>
         </div>
         <div
-          className="bg-[#424242] px-2.5 py-2 relative flex justify-center hover:bg-[#4b4b4b]"
+          className="bg-[#424242] px-2.5 py-2 relative flex justify-start calendar hover:bg-[#4b4b4b]"
           
         >
         <div
@@ -553,9 +552,9 @@ export default function SubTask( {username, taskData, subtaskPreview, setTaskDat
             {calendarStatus ? (
               <>
               <div className="flex flex-col text-center cursor-pointer px-[1.8vh] sm:px-[2.6vh] py-[1.3vh] md:py-[2vh] text-[1.4vh] sm:text-[2.2vh] text-white">
-                <div className="text-black ">
+                <div className="text-black">
                   {/* // ? Ini kenapakah padahal masih jalan aja pas gw debug */}
-                  <Datetime onClose={()=>{handleDueDate("custom")}} closeOnSelect={true} onChange={(date)=>{typeof date !== "string" && setDueDate(date._d.valueOf())}}  inputProps={{ className: "text-white outline-none bg-transparent text-center ", placeholder:"Click To Set" }} className="appearance-none shadow rounded" />
+                  <Datetime onClose={()=>{handleDueDate("custom")}} closeOnSelect={true} onChange={(date)=>{typeof date !== "string" && setDueDate(date._d.valueOf())}}  inputProps={{ className: "text-white outline-none bg-transparent text-center ", placeholder:"Click To Set" }} />
                 </div>
               </div>
               </>
@@ -593,7 +592,13 @@ export default function SubTask( {username, taskData, subtaskPreview, setTaskDat
         </div>
       </div>
       <div className="flex justify-center items-center mb-[3vh]">
-        <p className="text-[1.4vh] sm:text-[2.2vh] font-medium text-center mx-7">{`Created at ${(new Date(taskData.createdDate)).toLocaleString("en-UK", { dateStyle: "full" })}`}</p>
+        <p className="text-[1.4vh] sm:text-[2.2vh] font-medium text-center mx-7">
+          {`Created at ${(new Date(taskData.createdDate)).toLocaleString("en-UK", {weekday:"short",
+            day: "numeric",
+            month: "short",
+            year: "numeric", 
+          })}`}
+        </p>
       </div>
     </div>
   );
