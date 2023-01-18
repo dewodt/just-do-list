@@ -266,7 +266,7 @@ export default function Tasks({ userData, projectsTitleId, pageData }: { userDat
     
     if (addTaskInputShow && taskTitle !== "") {
       // Update database
-      axios.post("http://localhost:3000/api/addtask", {
+      axios.post("api/addtask", {
         menu: "tasks",
         newTask: newTask
       })
@@ -284,7 +284,7 @@ export default function Tasks({ userData, projectsTitleId, pageData }: { userDat
   // *  to delete certain task
   function handleDelete(idTaskEdit: string) {
     // Update database
-    axios.post("http://localhost:3000/api/deletetask", {
+    axios.post("api/deletetask", {
       menu: "tasks",
       taskId: idTaskEdit
     })
@@ -323,7 +323,7 @@ export default function Tasks({ userData, projectsTitleId, pageData }: { userDat
   // *  to save changes after editing
   function handleSave(taskId: string) {
     // Update database
-    axios.post("http://localhost:3000/api/edittask", {
+    axios.post("api/edittask", {
       menu: "tasks",
       taskId: taskId,
       newTaskTitle: taskTitle === "" ? "New Tasks" : taskTitle
@@ -365,7 +365,7 @@ export default function Tasks({ userData, projectsTitleId, pageData }: { userDat
   // *  to change done status of task
   function handleDone(taskId: string, taskDone: boolean) {
     // Update database
-    axios.post("http://localhost:3000/api/donetask", {
+    axios.post("api/donetask", {
       menu: "tasks",
       taskId: taskId,
       taskDone: !taskDone
@@ -398,7 +398,7 @@ export default function Tasks({ userData, projectsTitleId, pageData }: { userDat
   // *  to change important status of task
   function handleImportant(taskId: string, taskImportant: boolean) {
     // Update database
-    axios.post("http://localhost:3000/api/importanttask", {
+    axios.post("api/importanttask", {
       menu: "tasks",
       taskId: taskId,
       taskImportant: !taskImportant

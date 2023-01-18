@@ -92,7 +92,7 @@ export default function Projects( { userData, projectsTitleId }: { userData: typ
 
     if (showInput && title !== "") {
       // Edit database
-      axios.post("http://localhost:3000/api/addproject", {
+      axios.post("api/addproject", {
         username: userData.username,
         newProject: newProject,
       }).then( () => {
@@ -106,7 +106,7 @@ export default function Projects( { userData, projectsTitleId }: { userData: typ
 
   function handleSave(projectId: string) {
     // Edit database
-    axios.post("http://localhost:3000/api/editproject", {
+    axios.post("api/editproject", {
         username: userData.username,
         projectId: projectId,
         newTitle: title ? title : "New Project",
@@ -135,7 +135,7 @@ export default function Projects( { userData, projectsTitleId }: { userData: typ
 
   function handleDelete(projectId: string) {
     // Edit database
-    axios.post("http://localhost:3000/api/deleteproject", {
+    axios.post("api/deleteproject", {
       username: userData.username,
       projectId: projectId,
     })

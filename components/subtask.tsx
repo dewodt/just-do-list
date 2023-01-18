@@ -164,7 +164,7 @@ export default function SubTask( {username, taskData, subtaskPreview, setTaskDat
     };
     if (addStepInputShow && stepTitle !== "") {
       // Edit DB
-      axios.post("http://localhost:3000/api/addstep", {
+      axios.post("api/addstep", {
 
         menu: "tasks",
         taskId: taskData.id,
@@ -207,7 +207,7 @@ export default function SubTask( {username, taskData, subtaskPreview, setTaskDat
   // Buat hapus subtask tertentu
   function handleDelete(stepId: string) {
     // Update database
-    axios.post("http://localhost:3000/api/deletestep", {
+    axios.post("api/deletestep", {
       menu: "tasks",
       taskId: taskData.id,
       stepId: stepId,
@@ -249,7 +249,7 @@ export default function SubTask( {username, taskData, subtaskPreview, setTaskDat
   // Buat save abis diedit
   function handleSave(stepId: string) {
     // Update database
-    axios.post("http://localhost:3000/api/editstep", { 
+    axios.post("api/editstep", { 
       menu: "tasks",
       taskId: taskData.id,
       stepId: stepId,
@@ -294,7 +294,7 @@ export default function SubTask( {username, taskData, subtaskPreview, setTaskDat
   // Buat ganti status done
   function handleDone(stepId: string, stepDone: boolean) {
     // Update database
-    axios.post("http://localhost:3000/api/donestep", { 
+    axios.post("api/donestep", { 
       menu: "tasks",
       taskId: taskData.id,
       stepId: stepId,
@@ -344,7 +344,7 @@ export default function SubTask( {username, taskData, subtaskPreview, setTaskDat
       newDueDate = null;
     }
     // Update database
-    axios.post("http://localhost:3000/api/editduedate", {
+    axios.post("api/editduedate", {
       menu: "tasks",
       taskId: taskData.id,
       newDueDate: newDueDate,

@@ -1,4 +1,4 @@
-import { Inter, Montserrat } from "@next/font/google";
+import { Montserrat } from "@next/font/google";
 import PageHead from "../components/pagehead";
 import Link from "next/link";
 import Image from "next/image";
@@ -6,7 +6,6 @@ import { useState } from "react";
 import Logo from "public/logo-app.png";
 import axios from 'axios';
 
-const inter = Inter({ subsets: ["latin"] });
 const montserrat = Montserrat({ subsets: ['latin'] });
 
 export default function Home() {
@@ -34,7 +33,7 @@ export default function Home() {
   }
 
   function handleLogin() {
-    axios.post("http://localhost:3000/api/login", {
+    axios.post(`/api/login`, {
       username: username,
       password: password,
     })
@@ -42,13 +41,13 @@ export default function Home() {
         setPopUp(res.data.msg);
         setPopUpSuccess(res.data.success)
         if (res.data.success) {
-          window.location.href = "http://localhost:3000/tasks"
+          window.location.href = "/tasks"
         }
       })
   }
 
   function handleSignUp() {
-    axios.post("http://localhost:3000/api/signup", {
+    axios.post("/api/signup", {
       name: name,
       username: username,
       password: password,
