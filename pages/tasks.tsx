@@ -582,7 +582,7 @@ export default function Tasks({ userData, projectsTitleId, pageData }: { userDat
                   <span>
                     {arrowIcon()}
                   </span>
-                  <p className="text-sm font-medium sm:text-base">
+                  <p className="text-sm font-medium md:text-base xl:text-lg">
                     Finished
                   </p>
                 </div>

@@ -32,15 +32,16 @@ export default function ProfileMenu({ userData }: { userData: typeUserData }) {
         <div className="flex mx-4 mb-1">
           <div className="relative m-auto w-[3rem] h-[3rem] mr-3 my-2">
             <Image
-              src={"/sample.jpg"}
-              layout="fill"
+              src={"/profile.png"}
+              width="400"
+              height="400"
               alt="gambar"
               className="rounded-full  max-w-full h-auto align-middle border-none"
             />
           </div>
           <div className="flex flex-col flex-1 m-auto">
-            <div className="font-semibold text-[2.2vh] 2xl:text-[2.5vh]">{userData.name}</div>
-            <div className="text-[1.7vh] 2xl:text-[1.9vh]">{userData.username}</div>
+            <div className="font-semibold text-lg md:text-xl xl:text-2xl">{userData.name}</div>
+            <div className="text-base md:text-lg xl:text-xl">{userData.username}</div>
           </div>
           <div className="m-auto">
             <svg
