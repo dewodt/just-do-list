@@ -261,7 +261,7 @@ export default function Today({ userData, projectsTitleId, pageData }: { userDat
       done: false,
       important: false,
       createdDate: Date.now(),
-      dueDate: null,
+      dueDate: (new Date()).setHours(23,59,59,0),
       subtask: []
     }
     

@@ -259,7 +259,7 @@ export default function Important({ userData, projectsTitleId, pageData }: { use
       id: uniqid("task_"),
       title: taskTitle,
       done: false,
-      important: false,
+      important: true,
       createdDate: Date.now(),
       dueDate: null,
       subtask: []
