@@ -239,14 +239,14 @@ export default function Projects( { userData, projectsTitleId }: { userData: typ
                     key={project.id}
                     className="ml-4 mr-2 flex w-full py-1 text-[1.5vh] 2xl:text-[1.6vh] text-gray-400 dark:text-gray-200 dark:hover:bg-gray-600 rounded-[3px] "
                   >
-                    <div className="m-auto flex">
+                    <div className="flex">
                       <button disabled={true} className="py-1.5">
                         {projectIcon()}
                       </button>
                       <div className="my-auto flex-1 indent-0 mx-3.5">
                         <input
                           type="text"
-                          className="w-[5.15vw] outline-none"
+                          className="w-[15vh] lg:w-[8.15vw] outline-none"
                           placeholder="Project Name"
                           defaultValue={project.title}
                           onChange={(event) => {
