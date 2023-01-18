@@ -29,8 +29,8 @@ export default function ProfileMenu({ userData }: { userData: typeUserData }) {
             : setDropDownProfile(true);
         }}
       >
-        <div className="flex mx-4 mb-1">
-          <div className="relative m-auto w-[3rem] h-[3rem] mr-3 my-2">
+        <div className="flex mx-4 mb-1 ">
+          <div className="flex items-center justify-center relative m-auto w-[3rem] h-[3rem] mr-3 my-2">
             <Image
               src={"/profile.png"}
               width="400"
@@ -40,8 +40,8 @@ export default function ProfileMenu({ userData }: { userData: typeUserData }) {
             />
           </div>
           <div className="flex flex-col flex-1 m-auto">
-            <div className="font-semibold text-lg md:text-xl xl:text-2xl line-clamp-1">{userData.name}</div>
-            <div className="text-base md:text-lg xl:text-xl line-clamp-1">{userData.username}</div>
+            <div className="font-semibold text-lg  line-clamp-1">{userData.name}</div>
+            <div className="text-base  line-clamp-1">{userData.username}</div>
           </div>
           <div className="m-auto">
             <svg
@@ -69,7 +69,7 @@ export default function ProfileMenu({ userData }: { userData: typeUserData }) {
             <div className="py-1.5 text-xs text-gray-400 dark:text-gray-200 dark:hover:bg-gray-600 rounded-[8px]">
               <Link
                 href="/"
-                className="block text-[1.7vh] 2xl:text-[2vh] px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                className="block text-base px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
                 onClick={handleLogout}
               >
                 Log Out
