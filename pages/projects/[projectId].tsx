@@ -1,8 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Layout from "../../components/layout";
 import { useRouter } from "next/router";
+import axios from "axios";
 import SubTask from "../../components/subtask";
 import getUserData from "../../lib/getUserData";
+import PageHead from "../../components/pagehead";
 
 interface typeUserData {
   username: string;
@@ -19,12 +21,15 @@ interface typeTask {
   id: string;
   done: boolean;
   important: boolean;
+  createdDate: any,
+  dueDate: any,
+  subtask: never[]
 };
 
 interface typePageData {
   title: string;
   id: string;
-  task: typeTask[];
+  tasks: typeTask[];
 };
 
 export default function ProjectDetails( { userData, projectsTitleId, pageData }: { userData: typeUserData, projectsTitleId: typeProjectsTitleId[], pageData: typePageData } ) {
@@ -77,10 +82,10 @@ export default function ProjectDetails( { userData, projectsTitleId, pageData }:
     );
   };
 
-  const circleCheckIcon = () => {
+  const circleCheckIcon = (design : string) => {
     return (
       <svg
-        className="fill-white opacity-80 w-[1.8vh] sm:w-[2.45vh] hover:fill-[#54A1EA]"
+        className={`${design} fill-white opacity-80 w-[1.8vh] sm:w-[1.6vh] lg:w-[2.2vh] 2xl:w-[2.2vh] hover:fill-[#54A1EA]`}
         xmlns="http:// * www.w3.org/2000/svg"
         viewBox="0 0 512 512"
       >
@@ -154,61 +159,142 @@ export default function ProjectDetails( { userData, projectsTitleId, pageData }:
       </svg>
     );
   };
+
+  const backIcon = () => {
+    return (
+      <svg
+      className="fill-white opacity-80 w-[2.2vh] sm:w-[3.7vh] h-[2.2vh] sm:h-[3.7vh] hover:opacity-100"
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 448 512"
+    >
+      <path d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.2 288 416 288c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0L214.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z" />
+    </svg>
+    );
+  };
+
+  const calendarIcon = (design:string) => {
+    return (
+      <svg
+        className={`fill-${design} opacity-80 w-[1vh] sm:w-[1.3vh] h-[1vh] sm:h-[1.3vh] m-auto`}
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 448 512"
+      >
+        <path d="M152 64H296V24C296 10.75 306.7 0 320 0C333.3 0 344 10.75 344 24V64H384C419.3 64 448 92.65 448 128V448C448 483.3 419.3 512 384 512H64C28.65 512 0 483.3 0 448V128C0 92.65 28.65 64 64 64H104V24C104 10.75 114.7 0 128 0C141.3 0 152 10.75 152 24V64zM48 448C48 456.8 55.16 464 64 464H384C392.8 464 400 456.8 400 448V192H48V448z" />
+      </svg>
+    );
+  };
   
 // ! I've tidied the lines, don't use automation from prettier to make tidier
   // *  VARIABLE INITIALIZATION
   const router = useRouter();
   const { projectId } = router.query;
   const uniqid = require("uniqid");                                 // * to generate id from npm
-  const [addTaskInputShow, setAddTaskInputShow] = useState(false);  // * to popup input
-  const [stepPreview, setStepPreview] = useState(false);            // * open subtask
+  const [addTaskInputShow, setAddTaskInputShow] = useState(false);  // * to popup input new task
+  const [stepPreview, setStepPreview] = useState(false);            // * open subtask of a task
   const [dropDownFinished, setDropDownFinished] = useState(false);  // * make dropdown finished popup
   const [taskTitle, setTaskTitle] = useState("");                   // * the value input to state and submit on data changes
-  const [tasks, setTasks] = useState<typeTask[]>([]);             // TODO : task dataset should be saved to the database
-  const [taskEdit, setTaskEdit] = useState<typeTask>({            // * contains the task that is being renamed or edited
+  const [tasks, setTasks] = useState<typeTask[]>(pageData.tasks);         // * array of all task
+  const [taskEdit, setTaskEdit] = useState<typeTask>({              // * contains the task that is being renamed or edited
     title: "",
     id: "",
     done: false,
     important: false,
+    createdDate: null,
+    dueDate: null,
+    subtask: []
   });
 
-  const [stepTaskPreview, setTaskPreview] = useState<typeTask>({  // * contains the task that the step wants to display
+  const [stepTaskPreview, setStepTaskPreview] = useState<typeTask>({  // * contains the task that the step wants to display
     title: "",
     id: "",
     done: false,
     important: false,
+    createdDate: null,
+    dueDate: null,
+    subtask: []
   });
 
-  // *  FUNCTION ACTION ONCLICK
+  const [search, setSearch] = useState("");
+  const [filteredTasks, setFilteredTasks] = useState(pageData.tasks);
+  const [navbarStatus, setNavbarStatus] = useState(false);
+  const [dueDate, setDueDate] = useState (new Date().valueOf());
 
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setDueDate(new Date().valueOf());
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  function handleSearch(search: string) {
+    setSearch(search);
+    const newTasks = tasks.filter( (task) => {
+      if (task.title.toLocaleLowerCase().includes(search.toLocaleLowerCase())) {
+        return true;
+      } else {
+        return false;
+      }
+    })
+    setFilteredTasks(newTasks);
+    setStepPreview(false);
+  }
+
+  function handleResetSearch() {
+    setSearch("");
+    setFilteredTasks(tasks);
+  }
+  
   // *  to add new task
   function addTask() {
-    if (addTaskInputShow) {
-      (taskTitle !== "") && 
-      setTasks([
-        ...tasks,
-          {
-            id: uniqid("task_"),
-            title: taskTitle,
-            done: false,
-            important: false,
-          },
-        ]);
-      setTaskTitle("");
-      setAddTaskInputShow(false);
-      } else {
-      setAddTaskInputShow(true);
-      setTaskTitle("");
+    const newTask = {
+      id: uniqid("task_"),
+      title: taskTitle,
+      done: false,
+      important: false,
+      createdDate: Date.now(),
+      dueDate: null,
+      subtask: []
     }
+    if (addTaskInputShow && taskTitle !== "") {
+      // Update database
+      axios.post("../api/addtask", {
+        menu: "projects",
+        projectId: projectId,
+        newTask: newTask
+      })
+        .then( () => {
+          // Update client-side
+          setTasks([...tasks, newTask]);
+          setFilteredTasks([...tasks, newTask]);
+          setSearch("")
+        });
+    }
+    setTaskTitle("");
+    setAddTaskInputShow(!addTaskInputShow);
   }
 
   // *  to delete certain task
   function handleDelete(idTaskEdit: string) {
-    setTasks(
-      tasks.filter(function (task) {
-        return task.id != idTaskEdit;
-      })
-    );
+    // Update database
+    axios.post("api/deletetask", {
+      menu: "tasks",
+      taskId: idTaskEdit
+    })
+      .then( () => {
+        // New Tasks
+        const newTasks = tasks.filter(function (task) {
+          return task.id != idTaskEdit;
+        });
+
+        const newFilteredTasks = filteredTasks.filter(function (task) {
+          return task.id != idTaskEdit;
+        });
+
+        // Update client side
+        setTasks(newTasks);
+        setFilteredTasks(newFilteredTasks);
+        setStepPreview(false);
+      });
   }
 
   // *  to set which task is being edited
@@ -217,6 +303,9 @@ export default function ProjectDetails( { userData, projectsTitleId, pageData }:
     id: string;
     done: boolean;
     important: boolean;
+    createdDate: any;
+    dueDate: any;
+    subtask:never[]
   }) {
     setTaskEdit(task);
     setAddTaskInputShow(false);
@@ -224,288 +313,388 @@ export default function ProjectDetails( { userData, projectsTitleId, pageData }:
   }
 
   // *  to save changes after editing
-  function handleSave(i: number) {
-    if (taskTitle == "") {
-      tasks[i].title = "New Task";
-    } else {
-      tasks[i].title = taskTitle;
-    }
-    setTasks([...tasks]);
-    setTaskEdit({ id: "", title: "", done: false, important: false });
-    setTaskTitle("");
-    setAddTaskInputShow(false);
+  function handleSave(taskId: string) {
+    // Update database
+    axios.post("api/edittask", {
+      menu: "tasks",
+      taskId: taskId,
+      newTaskTitle: taskTitle === "" ? "New Tasks" : taskTitle
+    })
+      .then( () => {
+        // Create new array (no mutation)
+        const newTasks = tasks.map( (item) => {
+          if (item.id === taskId) {
+            return {...item, title: taskTitle === "" ? "New Tasks" : taskTitle};
+          } else {
+            return {...item};
+          }
+        })
+
+        const newFilteredTasks = newTasks.filter( (task) => {
+          if (task.title.toLocaleLowerCase().includes(search.toLocaleLowerCase())) {
+            return true;
+          } else {
+            return false;
+          }
+        })
+
+        // Update client side
+        setTasks(newTasks);
+        setFilteredTasks(newFilteredTasks);
+        setTaskEdit({ id: "", title: "", done: false, important: false, createdDate: null, dueDate: null, subtask: [] });
+        setTaskTitle("");
+        setStepPreview(false);
+
+        // handle bug when clicking edit mode in stepPreview mode
+        const taskData = tasks.filter(function (task) {
+          return task.id === taskId;
+        });
+        setStepTaskPreview(taskData[0])
+        setAddTaskInputShow(false);
+      });
   }
 
   // *  to change done status of task
-  function handleDone(i: number) {
-    tasks[i].done ? (tasks[i].done = false) : (tasks[i].done = true);
-    setTasks([...tasks]);
+  function handleDone(taskId: string, taskDone: boolean) {
+    // Update database
+    axios.post("api/donetask", {
+      menu: "tasks",
+      taskId: taskId,
+      taskDone: !taskDone
+    })
+    .then( () => {
+      // Create new array (no mutation)
+      const newTasks = tasks.map( (item) => {
+        if (item.id === taskId) {
+          return {...item, done: !item.done};
+        } else {
+          return {...item};
+        }
+      })
+
+      // Create new array for filtered data
+      const newFilteredTasks = filteredTasks.map( (item) => {
+        if (item.id === taskId) {
+          return {...item, done: !item.done};
+        } else {
+          return {...item};
+        }
+      })
+
+      // Update client side
+      setTasks(newTasks);
+      setFilteredTasks(newFilteredTasks);
+    });
   }
 
   // *  to change important status of task
-  function handleImportant(i: number) {
-    tasks[i].important
-      ? (tasks[i].important = false)
-      : (tasks[i].important = true);
-    setTasks([...tasks]);
+  function handleImportant(taskId: string, taskImportant: boolean) {
+    // Update database
+    axios.post("api/importanttask", {
+      menu: "tasks",
+      taskId: taskId,
+      taskImportant: !taskImportant
+    })
+    .then( () => {
+        // Create new array (no mutation)
+        const newTasks = tasks.map( (item) => {
+          if (item.id === taskId) {
+            return {...item, important: !item.important};
+          } else {
+            return {...item};
+          }
+        })
+
+        // Create new array for filtered case
+        const newFilteredTasks = filteredTasks.map( (item) => {
+          if (item.id === taskId) {
+            return {...item, important: !item.important};
+          } else {
+            return {...item};
+          }
+        })
+
+        // Update client side
+        setTasks(newTasks);
+        setFilteredTasks(newFilteredTasks)
+      });
   }
 
   // * to handle change step preview popup
-  //? add logic to overcome when clicked by a div that clicks to open the step it will be closed, while if not it will still be opened but the parameters sent are different 
   function handleSubTaskPreview(task: {
     title: string;
     id: string;
     done: boolean;
     important: boolean;
+    createdDate: any;
+    dueDate: any;
+    subtask:never[]
   }) {
-    setTaskPreview(task);
+    setStepTaskPreview(task);
     setAddTaskInputShow(false);
-    setTaskTitle("")
-    stepPreview ? setStepPreview(false) :  setStepPreview(true);
+    setTaskTitle("");
+    stepPreview ? setStepPreview(false) : setStepPreview(true);
   }
+  const generateDate = (dateData:number) => {
+    if(dateData !== null){
+    return (new Date(dateData)).toLocaleDateString("en-UK", {
+      weekday:"short",
+        day: "numeric",
+        month: "short",
+        year: "2-digit",
+    });}
+  };
+
+  // * to convert from dueDate number format to a time string
+  const generateTime = (dateData:number) => {
+    if(dateData !== null){
+    return (new Date(dateData)).toLocaleTimeString("en-UK", {
+      hour: "numeric",
+      minute: "numeric",
+    });}
+  };
 
 // ! I've tidied the lines, don't use automation from prettier to make tidier
 
-  return (
-    <>
-      <Layout userData={userData} projectsTitleId={projectsTitleId}>
-        <div className="flex flex-1">
-          <div className="flex flex-col flex-1 py-[2vh] lg:p-[3.8vh] px-[3.4vh] gap-1">
-
-      {/* // ! TITLE SECTION */}
-            <div className="flex  items-center gap-x-3">
-              <p className="font-semibold text-[2.5vh] sm:text-[3.8vh]">
-                {pageData.title}
-              </p>
-            </div>
-
-      {/* // ! TASK LIST UNDONE SECTION */}
-            <div
-              className="flex flex-1 flex-col my-3 overflow-y-scroll"
-              id="no-scrollbar"
-              >
-              {/* // * div to loop through the created task list * */}
-              {tasks.map(
-                (task, index) =>
-                  !task.done && (
-                    <div
-                      key={task.id}
-                      className="flex bg-[#424242] hover:opacity-80 duration-200 p-[1.4vh] cursor-pointer mb-[1.47vh] "
-                    >
-                      <div className="flex flex-1 items-center justify-center mx-[1vw] gap-3">
-                        {/* // * Handle changes to the checkdone icon */}
-                        {task.done ? (
-                          <span
-                            onClick={() => {handleDone(index);}}
-                          >
-                            {circleCheckIcon()}
-                          </span>
-                        ) : (
-                          <span
-                            onClick={() => {handleDone(index);}}
-                          >
-                            {circleIcon("#54A1EA")}
-                          </span>
-                        )}
-                         {/* // * Handle changes when edited from paragraphs to input */}
-                        {taskEdit === task && !stepPreview ? (
-                          <>
-                            <input
-                              type="text"
-                              className="outline-none bg-[#3d3d3d] bg-opacity-50 flex break-all flex-1 text-[1.5vh] sm:text-[2.25vh] text-justify"
-                              placeholder="New Task"
-                              defaultValue={task.title}
-                              onChange={(event) => {setTaskTitle(event.target.value)}}
-                            />
-                            <button
-                              onClick={() => {handleSave(index);}}
-                            >
-                              {saveIcon()}
-                            </button>
-                          </>
-                        ) : (
-                          <>
-                            <p
-                              className="flex break-all flex-1 text-[1.5vh] sm:text-[2.25vh] text-justify"
-                              onClick={() => {handleSubTaskPreview(task)}}
-                            >
-                              {task.done ? <s className="opacity-50">{task.title} </s> : task.title}
-                            </p>
-                            {/* // * Handle changes to starIcon Important */}
-                            {!task.important ? (
-                              <button
-                                onClick={() => {handleImportant(index)}}
-                              >
-                                {starLineIcon()}
-                              </button>
-                            ) : (
-                              <button
-                                onClick={() => {handleImportant(index)}}
-                              >
-                                {starFullIcon()}
-                              </button>
-                            )}
-                            {/* // * Handle button to edit rename task */}
-                            <button
-                              onClick={() => {handleEdit(task)}}
-                            >
-                              {renameIcon()}
-                            </button>
-                            {/* // * Handle button to delete task */}
-                            <button
-                              onClick={() => {handleDelete(task.id)}}
-                            >
-                              {trashIcon()}
-                            </button>
-                          </>
-                        )}
-                      </div>
-                    </div>
-                  )
-              )}
-
-      {/* // ! FINISHED SECTION   */}
-        {/* // * The logic is that finished will appear if one of the task.done is true */}
-              {tasks.some((task) => {
-                return task.done === true;
-              }) && (
-                <div
-                  onClick={() => {dropDownFinished? setDropDownFinished(false): setDropDownFinished(true)}}
-                  className="flex items-center gap-1 bg-[#424242] hover:opacity-80 w-fit pl-[0.6vw] pr-[1vw] py-[0.3vh] cursor-pointer my-[1.7vh]"
-                >
-                  <span>
-                    {arrowIcon()}
-                  </span>
-                  <p className="text-[1.6vh] font-medium sm:text-[2.3vh]">
-                    Finished
-                  </p>
-                </div>
-              )}
-
-      {/* // ! TASK LIST DONE SECTION */}
-              {/* // * div to loop through the created task list * */}
-              {tasks.map(
-                (task, index) =>
-                  task.done && (
-                    <div
-                      key={task.id}
-                      className={`${dropDownFinished ? "flex" : "hidden"} bg-[#424242] hover:opacity-80 duration-200 p-[1.4vh] cursor-pointer mb-[1.47vh] `}
-                    >
-                      <div className="flex flex-1 items-center justify-center mx-[1vw] gap-3">
-                        {/* // * Handle changes to the icon done checklist */}
-                        {task.done ? (
-                          <span
-                            onClick={() => {handleDone(index);}}
-                          >
-                            {circleCheckIcon()}
-                          </span>
-                        ) : (
-                          <span
-                            onClick={() => {handleDone(index);}}
-                          >
-                            {circleIcon("#54A1EA")}
-                          </span>
-                        )}
-                        {/* // * Handle input changes when in edit mode */}
-                        {taskEdit === task ? (
-                          <>
-                            <input
-                              type="text"
-                              className="outline-none bg-[#3d3d3d] bg-opacity-50 flex break-all flex-1 text-[1.5vh] sm:text-[2.25vh] text-justify"
-                              placeholder="New Task"
-                              defaultValue={task.title}
-                              onChange={(event) => {setTaskTitle(event.target.value);}}
-                            />
-                            <button
-                              onClick={() => {handleSave(index);}}
-                            >
-                              {saveIcon()}
-                            </button>
-                          </>
-                        ) : (
-                          <>
-                            <p
-                              className="flex break-all flex-1 text-[1.5vh] sm:text-[2.25vh] text-justify"
-                              onClick={() => {handleSubTaskPreview(task);}}
-                            >
-                              {task.done ? <s className="opacity-50">{task.title} </s> : task.title}
-                            </p>
-                            {/* //* Handle icon important changes */}
-                            {!task.important ? (
-                              <button
-                                onClick={() => {handleImportant(index);}}
-                              >
-                                {starLineIcon()}
-                              </button>
-                            ) : (
-                              <button
-                                onClick={() => {handleImportant(index);}}
-                              >
-                                {starFullIcon()}
-                              </button>
-                            )}
-                            {/* //* Handle edit mode */}
-                            <button
-                              onClick={() => {handleEdit(task);}}
-                              >
-                              {renameIcon()}
-                            </button>
-                            {/* //* Handle delete mode */}
-                            <button
-                              onClick={() => {handleDelete(task.id);}}
-                            >
-                              {trashIcon()}
-                            </button>
-                          </>
-                        )}
-                      </div>
-                    </div>
-                  )
-              )}
-            </div>
-
-      {/* // ! ADD NEW TASK SECTION  */}
-            <div
-              className={`${(taskEdit.id !== "" && taskEdit.title !== "") && "cursor-not-allowed"} bg-[#424242] opacity-100 flex p-[1.5vh] hover:opacity-80 `}
-              onClick={() => {!addTaskInputShow && setAddTaskInputShow(true);}}
-            >
-              <div className="flex flex-1 px-[1.5vw] gap-4 ">
-                <div className="m-auto">
-                  {addTaskInputShow && taskEdit.id === "" && taskEdit.title === "" ? circleIcon("none")
-                    :
-                    plusIcon(`rotate-0 cursor-${taskEdit.id !== "" && taskEdit.title !== "" ? "not-allowed" : "default"}`)}
-                </div>
-                <input
-                  className={`${
-                    taskEdit.id !== "" &&
-                    taskEdit.title !== "" &&
-                    "caret-transparent cursor-not-allowed"
-                  } flex-1 outline-none w-[8vw] font-medium text-[1.5vh] sm:text-[2.2vh] bg-transparent placeholder:text-white placeholder:opacity-70`}
-                  placeholder="Add New Task"
-                  value={taskEdit.id === "" && taskEdit.title === "" ? taskTitle : ""}
-                  onChange={(event) => {setTaskTitle(event.target.value);}}
-                />
-                {addTaskInputShow &&
-                  taskEdit.id === "" &&
-                  taskEdit.title === "" && (
-                    // TODO ? it's better when the user presses input then setEdit is filled with blank
-                    <div
-                      className="m-auto cursor-pointer"
-                      onClick={() => {addTask();}}
-                    >
-                      {taskTitle === "" ? plusIcon("rotate-45 hover:opacity-100") : checkIcon()}
-                    </div>
-                  )}
-              </div>
-            </div>
+return (
+  <>
+    <PageHead title={`${pageData.title} | Just Do List`}/>
+    <Layout userData={userData} projectsTitleId={projectsTitleId} search={search} handleResetSearch={handleResetSearch} handleSearch={handleSearch} design={navbarStatus}>
+      <div className="flex flex-1">
+        <div className="flex flex-col flex-1 py-[2vh] lg:p-[3.8vh] px-[3.4vh] gap-1">
+    {/* // ! BACK SECTION FOR MOBILE */}
+          <div className="flex sm:hidden">
+            <button onClick={()=>{navbarStatus ? setNavbarStatus(false) : setNavbarStatus(true)}}>
+               {backIcon()}
+            </button>
           </div>
 
-      {/* // ! STEP PREVIEW SECTION */}
-          {stepPreview && <SubTask username={userData.username} taskData={stepTaskPreview} subtaskPreview={setStepPreview}/>}
+    {/* // ! TITLE SECTION */}
+          <div className="flex  items-center gap-x-3 mt-2 lg:mt-0">
+            <p className="font-semibold text-xl sm:text-2xl">
+              {pageData.title}
+            </p>
+          </div>
+          
+    {/* // ! TASK LIST UNDONE SECTION */}
+          <div
+            className="flex flex-1 flex-col my-3 overflow-y-scroll"
+            id="no-scrollbar"
+            >
+            {/* // * div to loop through the created task list * */}
+            {filteredTasks.map(
+              (task) =>
+                !task.done && (
+                  <div
+                    key={task.id}
+                    className="flex bg-[#424242] hover:opacity-80 duration-200 p-[1.4vh] cursor-pointer mb-[1.47vh] "
+                  >
+                    <div className="flex flex-1 items-center justify-center mx-[1vw] gap-2 sm:gap-3">
+                      {/* // * Handle changes to the checkdone icon */}
+                        <span
+                          onClick={() => {handleDone(task.id, task.done);}}
+                        >
+                          {circleIcon((task.dueDate < dueDate && task.dueDate !== null) ? " hover:fill-red-500":"hover:fill-[#54A1EA]")}
+                        </span>
+                       {/* // * Handle changes when edited from paragraphs to input */}
+                      {taskEdit === task ? (
+                        <>
+                          <input
+                            type="text"
+                            className="outline-none bg-[#3d3d3d] bg-opacity-50 flex break-all flex-1 text-sm md:text-base xl:text-lg text-justify"
+                            placeholder="New Task"
+                            defaultValue={task.title}
+                            onChange={(event) => {setTaskTitle(event.target.value)}}
+                          />
+                          <button
+                            onClick={() => {handleSave(task.id);}}
+                          >
+                            {saveIcon()}
+                          </button>
+                        </>
+                      ) : (
+                        <>
+                        <div className={`${(task.dueDate < dueDate && task.dueDate !== null) && "text-red-500"} flex flex-col flex-1`}>
+                          <p
+                            className="flex break-all flex-1 text-sm md:text-base xl:text-lg text-justify"
+                            onClick={() => {handleSubTaskPreview(task)}}
+                          >
+                            {task.done ? <s className="opacity-50">{task.title} </s> : task.title}
+                          </p>
+                          {task.dueDate !== null && 
+                          <div className="flex justify-start gap-x-1 mt-1">
+                            {calendarIcon(task.dueDate < dueDate ? "red-500":"white")}
+                            <p className="text-[0.7rem] sm:text-xs flex flex-1">{`${generateDate(task.dueDate) === generateDate(dueDate) ? "Today" : (generateDate(dueDate+86400000)===generateDate(task.dueDate)?"Tomorrow":generateDate(task.dueDate))} | ${generateTime(task.dueDate)}  `}</p>
+                          </div>}
+                        </div>
+                          
+                          {/* // * Handle changes to starIcon Important */}
+                          {!task.important ? (
+                            <button
+                              onClick={() => {handleImportant(task.id, task.important)}}
+                            >
+                              {starLineIcon()}
+                            </button>
+                          ) : (
+                            <button
+                              onClick={() => {handleImportant(task.id, task.important)}}
+                            >
+                              {starFullIcon()}
+                            </button>
+                          )}
+                          {/* // * Handle button to edit rename task */}
+                          <button
+                            onClick={() => {handleEdit(task)}}
+                          >
+                            {renameIcon()}
+                          </button>
+                          {/* // * Handle button to delete task */}
+                          <button
+                            onClick={() => {handleDelete(task.id)}}
+                          >
+                            {trashIcon()}
+                          </button>
+                        </>
+                      )}
+                    </div>
+                  </div>
+                )
+            )}
+
+    {/* // ! FINISHED SECTION   */}
+      {/* // * The logic is that finished will appear if one of the task done is true */}
+            {filteredTasks.some((task) => {
+              return task.done === true;
+            }) && (
+              <div
+                onClick={() => {dropDownFinished? setDropDownFinished(false): setDropDownFinished(true)}}
+                className="flex items-center gap-1 bg-[#424242] hover:opacity-80 w-fit pl-[0.6vw] pr-[1vw] py-[0.3vh] cursor-pointer my-[1.7vh]"
+              >
+                <span>
+                  {arrowIcon()}
+                </span>
+                <p className="text-sm font-medium md:text-base xl:text-lg">
+                  Finished
+                </p>
+              </div>
+            )}
+
+    {/* // ! TASK LIST DONE SECTION */}
+            {/* // * div to loop through the created task list * */}
+            {filteredTasks.map(
+              (task) =>
+                task.done && (
+                  <div
+                    key={task.id}
+                    className={`${dropDownFinished ? "flex" : "hidden"} bg-[#424242] hover:opacity-80 duration-200 p-[1.4vh] cursor-pointer mb-[1.47vh] `}
+                  >
+                    <div className="flex flex-1 items-center justify-center mx-[1vw] gap-3">
+                      {/* // * Handle changes to the icon done checklist */}
+                        <span
+                          onClick={() => {handleDone(task.id, task.done);}}
+                        >
+                          {circleCheckIcon("")}
+                        </span>
+                      {/* // * Handle input changes when in edit mode */}
+                      {taskEdit === task ? (
+                        <>
+                          <input
+                            type="text"
+                            className="outline-none bg-[#3d3d3d] bg-opacity-50 flex break-all flex-1 text-sm md:text-base xl:text-lg text-justify"
+                            placeholder="New Task"
+                            defaultValue={task.title}
+                            onChange={(event) => {setTaskTitle(event.target.value);}}
+                          />
+                          <button
+                            onClick={() => {handleSave(task.id);}}
+                          >
+                            {saveIcon()}
+                          </button>
+                        </>
+                      ) : (
+                        <>
+                          <p
+                            className="flex break-all flex-1 text-sm md:text-base xl:text-lg text-justify"
+                            onClick={() => {handleSubTaskPreview(task);}}
+                          >
+                            {task.done ? <s className="opacity-50">{task.title} </s> : task.title}
+                          </p>
+                          {/* //* Handle icon important changes */}
+                          {!task.important ? (
+                            <button
+                              onClick={() => {handleImportant(task.id, task.important);}}
+                            >
+                              {starLineIcon()}
+                            </button>
+                          ) : (
+                            <button
+                              onClick={() => {handleImportant(task.id, task.important);}}
+                            >
+                              {starFullIcon()}
+                            </button>
+                          )}
+                          {/* //* Handle edit mode */}
+                          <button
+                            onClick={() => {handleEdit(task);}}
+                            >
+                            {renameIcon()}
+                          </button>
+                          {/* //* Handle delete mode */}
+                          <button
+                            onClick={() => {handleDelete(task.id);}}
+                          >
+                            {trashIcon()}
+                          </button>
+                        </>
+                      )}
+                    </div>
+                  </div>
+                )
+            )}
+          </div>
+
+    {/* // ! ADD NEW TASK SECTION  */}
+          <div
+            className={`${(taskEdit.id !== "" && taskEdit.title !== "") && "cursor-not-allowed"} bg-[#424242] opacity-100 flex p-[1.5vh] hover:opacity-80 `}
+            onClick={() => {!addTaskInputShow && setAddTaskInputShow(true);}}
+          >
+            <div className="flex flex-1 px-[1.5vw] gap-4">
+              <div className="m-auto">
+                {addTaskInputShow && taskEdit.id === "" && taskEdit.title === "" ? circleIcon("")
+                  :
+                  plusIcon(`rotate-0 cursor-${taskEdit.id !== "" && taskEdit.title !== "" ? "not-allowed" : "default"}`)}
+              </div>
+              <input
+                className={`${
+                  taskEdit.id !== "" &&
+                  taskEdit.title !== "" &&
+                  "caret-transparent cursor-not-allowed"
+                } flex-1 outline-none w-[8vw] font-medium text-sm md:text-base xl:text-lg bg-transparent placeholder:text-white placeholder:opacity-70`}
+                placeholder="Add New Task"
+                value={taskEdit.id === "" && taskEdit.title === "" ? taskTitle : ""}
+                onChange={(event) => {setTaskTitle(event.target.value);}}
+              />
+              {addTaskInputShow &&
+                taskEdit.id === "" &&
+                taskEdit.title === "" && (
+                  // TODO ? it's better when the user presses input then setEdit is filled with blank
+                  <div
+                    className="m-auto cursor-pointer"
+                    onClick={() => {addTask();}}
+                  >
+                    {taskTitle === "" ? plusIcon("rotate-45 hover:opacity-100") : checkIcon()}
+                  </div>
+                )}
+            </div>
+          </div>
         </div>
-      </Layout>
-    </>
-  );
+
+    {/* // ! STEP PREVIEW SECTION */}
+         {stepPreview && <SubTask username={userData.username} design={stepPreview?"flex":"hidden"} taskData={stepTaskPreview} setTaskData={setStepTaskPreview} allData={tasks} setAllData={setTasks} filteredTasks={filteredTasks} setFilteredTasks={setFilteredTasks} subtaskPreview={setStepPreview}/>}
+      </div>
+    </Layout>
+  </>
+);
 }
 
 export async function getServerSideProps(ctx: any) {

@@ -16,7 +16,7 @@ export default async function addTask(
   res: NextApiResponse
 ) {
   // Get menu and new Task
-  const { menu, newTask } = req.body;
+  const { menu, projectId, newTask } = req.body;
 
   // Get username from cookie
   const cookie = req.headers.cookie as string;
@@ -30,10 +30,19 @@ export default async function addTask(
   const coll = db.collection(username);
 
   // Add newTask data
-  await coll.updateOne(
-    { username: username },
-    { $push: { [menu]: newTask} }
-  )
+  if (menu !== "projects") {
+    // Not menu projects
+    await coll.updateOne(
+      { username: username },
+      { $push: { [menu]: newTask} }
+    )
+  } else {
+    // Menu projects
+    await coll.updateOne(
+      { username: username, "projects.id": projectId },
+      { $push: { "projects.$.tasks": newTask} }
+    )
+  }
   
   // Tutup DB
   await client.close();
