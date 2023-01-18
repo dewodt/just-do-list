@@ -16,7 +16,7 @@ export default async function editTask(
   res: NextApiResponse
 ) {
   // Get req
-  const { menu, taskId, newDueDate } = req.body;
+  const { menu, projectId, taskId, newDueDate } = req.body;
 
   // Get username from cookie
   const cookie = req.headers.cookie as string;
@@ -30,10 +30,18 @@ export default async function editTask(
   const coll = db.collection(username);
 
   // Edit the title
-  await coll.updateOne(
-    { username: username, [`${menu}.id`]: taskId },
-    { $set: { [`${menu}.$.dueDate`]: newDueDate } }
-  )
+  if (menu !== "projects") {
+    await coll.updateOne(
+      { username: username, [`${menu}.id`]: taskId },
+      { $set: { [`${menu}.$.dueDate`]: newDueDate } }
+    )
+  } else {
+    await coll.updateOne(
+      { username: username, "projects.id": projectId, "projects.tasks.id": taskId },
+      { $set: { "projects.$[project].tasks.$[task].dueDate": newDueDate } },
+      { arrayFilters: [ { "project.id": projectId }, { "task.id": taskId } ] }
+    )
+  }
 
   // Tutup DB
   await client.close();

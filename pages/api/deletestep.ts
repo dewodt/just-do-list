@@ -16,7 +16,7 @@ export default async function deleteTask(
   res: NextApiResponse
 ) {
   // Get req
-  const { menu, taskId, stepId } = req.body;
+  const { menu, projectId, taskId, stepId } = req.body;
 
   // Get username from cookie
   const cookie = req.headers.cookie as string;
@@ -29,11 +29,19 @@ export default async function deleteTask(
   const db = client.db(dbname);
   const coll = db.collection(username);
 
-  // Delete a task
-  await coll.updateOne(
-    { username: username, [`${menu}.id`]: taskId },
-    { $pull: { [`${menu}.$.subtask`]: {id: stepId} } }
-  )
+  // Delete a step
+  if (menu !== "projects") {
+    await coll.updateOne(
+      { username: username, [`${menu}.id`]: taskId },
+      { $pull: { [`${menu}.$.subtask`]: {id: stepId} } }
+    )
+  } else {
+    await coll.updateOne(
+      { username: username, "projects.id": projectId, "projects.tasks.id": taskId },
+      { $pull: { "projects.$[project].tasks.$[task].subtask": {id: stepId} } },
+      { arrayFilters: [ { "project.id": projectId }, { "task.id": taskId } ] }
+    )
+  }
 
   // Tutup DB
   await client.close();

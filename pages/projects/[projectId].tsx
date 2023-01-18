@@ -187,7 +187,7 @@ export default function ProjectDetails( { userData, projectsTitleId, pageData }:
 // ! I've tidied the lines, don't use automation from prettier to make tidier
   // *  VARIABLE INITIALIZATION
   const router = useRouter();
-  const { projectId } = router.query;
+  const projectId = router.query.projectId as string;
   const uniqid = require("uniqid");                                 // * to generate id from npm
   const [addTaskInputShow, setAddTaskInputShow] = useState(false);  // * to popup input new task
   const [stepPreview, setStepPreview] = useState(false);            // * open subtask of a task
@@ -694,7 +694,7 @@ return (
         </div>
 
     {/* // ! STEP PREVIEW SECTION */}
-         {stepPreview && <SubTask username={userData.username} design={stepPreview?"flex":"hidden"} taskData={stepTaskPreview} setTaskData={setStepTaskPreview} allData={tasks} setAllData={setTasks} filteredTasks={filteredTasks} setFilteredTasks={setFilteredTasks} subtaskPreview={setStepPreview}/>}
+         {stepPreview && <SubTask menu="projects" projectId={projectId} design={stepPreview?"flex":"hidden"} taskData={stepTaskPreview} setTaskData={setStepTaskPreview} allData={tasks} setAllData={setTasks} filteredTasks={filteredTasks} setFilteredTasks={setFilteredTasks} subtaskPreview={setStepPreview}/>}
       </div>
     </Layout>
   </>
