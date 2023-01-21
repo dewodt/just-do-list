@@ -18,14 +18,14 @@ export default function NavbarMenu({ userData, projectsTitleId, design }: { user
   return (
     <div className={`${design?"absolute z-20 ":"hidden sm:flex"} w-full sm:static sm:z-0 flex flex-col bg-[#3D3C40] sm:w-[35vw] lg:w-[19vw] border-r-[1px] border-[#959595] gap-2 rounded-[3px] h-[94vh] md:h-[90.5vh]`}>
       <ProfileMenu userData={userData} />
-      <span className="flex items-center w-[70vw] border-[0.6px] opacity-80 bg-white mx-auto sm:w-[15vw] sm:my-1" />
+      <span className="flex items-center w-[70vw] border-[0.6px] opacity-80 bg-white mx-auto sm:w-[15vw] my-2 sm:my-1" />
       <Fitur/>
       <span className="flex items-center w-[70vw] opacity-80 border-[0.6px] bg-white mx-auto sm:w-[15vw] sm:my-1" />
       <Projects userData={userData} projectsTitleId={projectsTitleId}/>
       <span className="flex items-center w-[70vw] opacity-80 border-[0.6px] bg-white mx-auto sm:w-[15vw] sm:my-1 " />
       {/* Addition Menu */}
       <Link href="/about">
-        <div className={`bg-[${useRouter().pathname === '/about' && '#464449'}] hover:bg-[#4D4B52] rounded-[0.5rem] py-2 flex flex-col mx-8 my-1 md:mb-4 text-[0.87rem]`} role="button">
+        <div className={`bg-[${useRouter().pathname === '/about' && '#464449'}] hover:bg-[#4D4B52] rounded-[0.5rem] py-2 flex flex-col mx-8 my-1 mb-2 md:mb-4 text-[0.87rem]`} role="button">
           <div className="flex mx-8">
             <div className="flex justify-center">
               <svg

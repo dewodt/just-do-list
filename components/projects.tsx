@@ -164,7 +164,7 @@ export default function Projects( { userData, projectsTitleId }: { userData: typ
               : setDropDownProjects(true);
           }}
         >
-          <div className="ml-4 py-1.5 ">
+          <div className="ml-4 m-auto">
             {dropDownProjects ? (
               <svg
                 className="fill-white opacity-80 w-[1rem] h-[1rem] m-auto "
@@ -183,12 +183,12 @@ export default function Projects( { userData, projectsTitleId }: { userData: typ
               </svg>
             )}
           </div>
-          <div className="text-sm xl:text-base font-semibold flex-1 m-auto">
+          <div className="text-sm xl:text-[0.84rem] font-semibold flex-1 m-auto">
             PROJECTS
           </div>
         </div>
         {dropDownProjects && (
-          <div className="mb-2 ">
+          <div className="mb-2">
             <div className="mx-2 dark:hover:text-white rounded-[0.3rem] flex mb-1 dark:hover:bg-gray-600">
               {showInput ? (
                 <div className="flex p-1 gap-2 mx-4 flex-1">
@@ -198,7 +198,7 @@ export default function Projects( { userData, projectsTitleId }: { userData: typ
                     onChange={(event) => {
                       setTitle(event.target.value);
                     }}
-                    className="text-black w-[9vw] flex-1 text-xs outline-none rounded-[3px] my-1 xl:my-2 bg-white placeholder:indent-3"
+                    className="text-black w-[9vw] flex-1 text-xs outline-none rounded-[3px] xl:my-1 bg-white placeholder:indent-3"
                   />
                   <div className="m-auto" role="button" onClick={addProjects}>
                     {title === "" ? crossIcon() : checkIcon()}
@@ -206,12 +206,12 @@ export default function Projects( { userData, projectsTitleId }: { userData: typ
                 </div>
               ) : (
                 <div
-                  className="flex mx-2 gap-2 flex-1 my-1 xl:my-2 rounded-[3px]"
+                  className="flex mx-2 gap-2 flex-1 xl:my-1 rounded-[3px]"
                   role="button"
                   onClick={addProjects}
                 >
                   <div className="flex flex-1 mx-3">
-                    <div className="flex-1 m-auto text-xs xl:text-[0.95rem] indent-0">
+                    <div className="flex-1 m-auto text-xs xl:text-[0.8rem] indent-0">
                       Add New Project
                     </div>
                     <div className="py-1.5">
@@ -232,7 +232,7 @@ export default function Projects( { userData, projectsTitleId }: { userData: typ
               editProject === project && showInput === false ? (
                 <li
                   key={project.id}
-                  className="ml-4 mr-2 flex w-full py-1 text-xs xl:text-base lg:text-sm text-gray-400 dark:text-gray-200 dark:hover:bg-gray-600 rounded-[3px] "
+                  className="ml-4 mr-2 flex w-full py-1 text-xs xl:text-[0.8rem] text-gray-400 dark:text-gray-200 dark:hover:bg-gray-600 rounded-[3px] "
                 >
                   <div className="flex">
                     <button disabled={true} className="py-1.5">
@@ -260,16 +260,16 @@ export default function Projects( { userData, projectsTitleId }: { userData: typ
               ) : (
                 <li 
                   key={project.id}
-                  className="ml-4 mr-2 flex py-1 text-xs xl:text-base lg:text-sm text-gray-400 dark:text-gray-200 dark:hover:bg-gray-600 rounded-[3px]"
+                  className="ml-4 mr-2 flex py-1 text-xs xl:text-[0.8rem] text-gray-400 dark:text-gray-200 dark:hover:bg-gray-600 rounded-[3px]"
                 >
-                  <div className="m-auto flex flex-1">
+                  <div className="m-auto flex flex-1 justify-center items-center">
                     <button disabled={true} className="py-1.5">
                       {projectIcon()}
                     </button>
                     <div className="my-auto flex-1 w-[7vw]" key={project.id}>
                       <button onClick={() => (window.location.href=`/projects/${project.id}`)}>
                         <div
-                          className="mx-4 indent-0 break-all cursor-pointer"
+                          className="indent-0 break-all cursor-pointer"
                         >
                           {project.title}{" "}
                         </div>
