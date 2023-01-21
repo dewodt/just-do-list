@@ -25,7 +25,7 @@ export default function NavbarMenu({ userData, projectsTitleId, design }: { user
       <span className="flex items-center w-[70vw] opacity-80 border-[0.6px] bg-white mx-auto sm:w-[15vw] sm:my-1 " />
       {/* Addition Menu */}
       <Link href="/about">
-        <div className={`bg-[${useRouter().pathname === '/about' && '#464449'}] hover:bg-[#4D4B52] rounded-[0.5rem] py-2 flex flex-col mx-8 my-1 md:mb-4 text-[0.87rem]`} role="button">
+        <div className={`bg-[${useRouter().pathname === '/about' && '#464449'}] hover:bg-[#4D4B52] rounded-[0.5rem] py-2 flex flex-col mx-8 my-1 mb-2 md:mb-4 text-[0.87rem]`} role="button">
           <div className="flex mx-8">
             <div className="flex justify-center">
               <svg
